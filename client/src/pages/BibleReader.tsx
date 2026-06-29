@@ -9,28 +9,32 @@ import {
   Sparkles,
   Link2,
   Star,
+  X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "wouter";
 import { CosmicLayout } from "@/components/CosmicLayout";
 import { Streamdown } from "streamdown";
 
 type Testament = "old" | "new";
 
+interface AIPanel {
+  type: "emmanuel" | "interpretation" | "correlations";
+  verseStart: number;
+  verseEnd: number;
+  content: string | any[] | null;
+  loading: boolean;
+}
+
 export default function BibleReader() {
-  const [, setLocation] = useLocation();
   const { user } = useAuth();
 
   const [selectedTestament, setSelectedTestament] = useState<Testament>("new");
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
-  const [showEmmanuel, setShowEmmanuel] = useState(false);
-  const [showInterpretation, setShowInterpretation] = useState(false);
-  const [showCorrelations, setShowCorrelations] = useState(false);
-  const [interpretation, setInterpretation] = useState<string | null>(null);
-  const [emmanuelComment, setEmmanuelComment] = useState<string | null>(null);
-  const [correlationsList, setCorrelationsList] = useState<any[]>([]);
-  const [loadingAI, setLoadingAI] = useState(false);
+
+  // Seleção de versículos
+  const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
+  const [aiPanel, setAiPanel] = useState<AIPanel | null>(null);
 
   const { data: books } = trpc.bible.books.useQuery();
   const { data: chapterData, isLoading: chapterLoading } = trpc.bible.chapter.useQuery(
@@ -72,74 +76,73 @@ export default function BibleReader() {
     }
   }, [selectedBook, selectedChapter]);
 
-  const handleGenerateInterpretation = async () => {
-    if (!chapterData?.verses || !selectedBook || !selectedBookData) return;
-    setShowInterpretation(true);
-    setLoadingAI(true);
-    try {
-      const result = await interpretMutation.mutateAsync({
-        bookAbbrev: selectedBook,
-        bookName: selectedBookData.name,
-        chapter: selectedChapter,
-        verseStart: 1,
-        verseEnd: chapterData.verses.length,
-        verses: chapterData.verses.map((v) => ({ verse: v.verse, text: v.text })),
-      });
-      setInterpretation(result.interpretation);
-    } finally {
-      setLoadingAI(false);
-    }
+  // Limpar seleção ao mudar capítulo
+  useEffect(() => {
+    setSelectedVerses([]);
+    setAiPanel(null);
+  }, [selectedBook, selectedChapter]);
+
+  const toggleVerseSelection = (verseNum: number) => {
+    setSelectedVerses((prev) => {
+      if (prev.includes(verseNum)) {
+        return prev.filter((v) => v !== verseNum);
+      }
+      return [...prev, verseNum].sort((a, b) => a - b);
+    });
   };
 
-  const handleEmmanuelComment = async () => {
-    if (!chapterData?.verses || !selectedBook || !selectedBookData) return;
-    setShowEmmanuel(true);
-    setLoadingAI(true);
-    try {
-      const result = await emmanuelMutation.mutateAsync({
-        bookAbbrev: selectedBook,
-        bookName: selectedBookData.name,
-        chapter: selectedChapter,
-        verseStart: 1,
-        verseEnd: chapterData.verses.length,
-        verses: chapterData.verses.map((v) => ({ verse: v.verse, text: v.text })),
-      });
-      setEmmanuelComment(result.comment);
-    } finally {
-      setLoadingAI(false);
+  const getSelectedVersesData = () => {
+    if (!chapterData?.verses) return [];
+    if (selectedVerses.length > 0) {
+      return chapterData.verses.filter((v) => selectedVerses.includes(v.verse));
     }
+    return chapterData.verses;
   };
 
-  const handleCorrelations = async () => {
-    if (!chapterData?.verses || !selectedBook || !selectedBookData) return;
-    setShowCorrelations(true);
-    setLoadingAI(true);
+  const getVerseRange = () => {
+    const verses = getSelectedVersesData();
+    if (verses.length === 0) return { start: 1, end: 1 };
+    return { start: verses[0].verse, end: verses[verses.length - 1].verse };
+  };
+
+  const handleAI = async (type: "emmanuel" | "interpretation" | "correlations") => {
+    if (!selectedBook || !selectedBookData) return;
+    const verses = getSelectedVersesData();
+    if (verses.length === 0) return;
+    const { start, end } = getVerseRange();
+
+    setAiPanel({ type, verseStart: start, verseEnd: end, content: null, loading: true });
+
     try {
-      const result = await correlationsMutation.mutateAsync({
+      const payload = {
         bookAbbrev: selectedBook,
         bookName: selectedBookData.name,
         chapter: selectedChapter,
-        verseStart: 1,
-        verseEnd: chapterData.verses.length,
-        verses: chapterData.verses.map((v) => ({ verse: v.verse, text: v.text })),
-      });
-      setCorrelationsList(result.correlations ?? []);
-    } finally {
-      setLoadingAI(false);
+        verseStart: start,
+        verseEnd: end,
+        verses: verses.map((v) => ({ verse: v.verse, text: v.text })),
+      };
+
+      if (type === "emmanuel") {
+        const result = await emmanuelMutation.mutateAsync(payload);
+        setAiPanel((p) => p ? { ...p, content: result.comment, loading: false } : null);
+      } else if (type === "interpretation") {
+        const result = await interpretMutation.mutateAsync(payload);
+        setAiPanel((p) => p ? { ...p, content: result.interpretation, loading: false } : null);
+      } else {
+        const result = await correlationsMutation.mutateAsync(payload);
+        setAiPanel((p) => p ? { ...p, content: result.correlations ?? [], loading: false } : null);
+      }
+    } catch {
+      setAiPanel((p) => p ? { ...p, content: "Erro ao gerar conteúdo. Tente novamente.", loading: false } : null);
     }
   };
 
   const navigateChapter = (delta: number) => {
-    const newChapter = selectedChapter + delta;
     if (!selectedBookData) return;
+    const newChapter = selectedChapter + delta;
     if (newChapter >= 1 && newChapter <= selectedBookData.chapterCount) {
       setSelectedChapter(newChapter);
-      setInterpretation(null);
-      setEmmanuelComment(null);
-      setCorrelationsList([]);
-      setShowInterpretation(false);
-      setShowEmmanuel(false);
-      setShowCorrelations(false);
     }
   };
 
@@ -151,9 +154,20 @@ export default function BibleReader() {
     quote: "Citação",
   };
 
+  const referenceLabel = () => {
+    if (!selectedBookData) return "";
+    const { start, end } = getVerseRange();
+    const versesPart = selectedVerses.length > 0
+      ? `:${start}${end > start ? `–${end}` : ""}`
+      : "";
+    return `${selectedBookData.name} ${selectedChapter}${versesPart}`;
+  };
+
+  const hasVerses = (chapterData?.verses.length ?? 0) > 0;
+
   return (
     <CosmicLayout>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Header */}
         <div className="animate-fade-in">
           <div className="flex items-center gap-2 mb-1">
@@ -163,6 +177,11 @@ export default function BibleReader() {
           <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
             {selectedBookData ? `${selectedBookData.name} ${selectedChapter}` : "Selecione um Livro"}
           </h1>
+          {selectedVerses.length > 0 && (
+            <p className="text-xs text-cyan-400/70 mt-1">
+              {selectedVerses.length} versículo{selectedVerses.length > 1 ? "s" : ""} selecionado{selectedVerses.length > 1 ? "s" : ""} — clique nos versículos para selecionar/deselecionar
+            </p>
+          )}
         </div>
 
         {/* Testament Selector */}
@@ -200,9 +219,6 @@ export default function BibleReader() {
                     onClick={() => {
                       setSelectedBook(book.abbrev);
                       setSelectedChapter(1);
-                      setInterpretation(null);
-                      setEmmanuelComment(null);
-                      setCorrelationsList([]);
                     }}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-all border-b border-white/5 last:border-0 ${
                       selectedBook === book.abbrev
@@ -222,31 +238,31 @@ export default function BibleReader() {
           <div className="lg:col-span-3 space-y-4 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
             {/* Chapter Navigation */}
             {selectedBookData && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {Array.from({ length: Math.min(selectedBookData.chapterCount, 30) }, (_, i) => i + 1).map((ch) => (
-                    <button
-                      key={ch}
-                      onClick={() => {
-                        setSelectedChapter(ch);
-                        setInterpretation(null);
-                        setEmmanuelComment(null);
-                        setCorrelationsList([]);
-                      }}
-                      className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
-                        selectedChapter === ch
-                          ? "bg-cyan-400/20 border border-cyan-400/50 text-cyan-400"
-                          : "bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10"
-                      }`}
-                    >
-                      {ch}
-                    </button>
-                  ))}
-                  {selectedBookData.chapterCount > 30 && (
-                    <span className="text-white/30 text-xs">... {selectedBookData.chapterCount} cap.</span>
-                  )}
-                </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                {Array.from({ length: Math.min(selectedBookData.chapterCount, 30) }, (_, i) => i + 1).map((ch) => (
+                  <button
+                    key={ch}
+                    onClick={() => setSelectedChapter(ch)}
+                    className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
+                      selectedChapter === ch
+                        ? "bg-cyan-400/20 border border-cyan-400/50 text-cyan-400"
+                        : "bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    {ch}
+                  </button>
+                ))}
+                {selectedBookData.chapterCount > 30 && (
+                  <span className="text-white/30 text-xs">... {selectedBookData.chapterCount} cap.</span>
+                )}
               </div>
+            )}
+
+            {/* Instruction hint */}
+            {hasVerses && (
+              <p className="text-xs text-white/30 italic">
+                Clique em um ou mais versículos para selecioná-los antes de gerar interpretação, comentário ou correlações. Sem seleção, o capítulo inteiro é usado.
+              </p>
             )}
 
             {/* Verses */}
@@ -256,19 +272,31 @@ export default function BibleReader() {
                   <div className="cosmic-spinner" />
                 </div>
               ) : chapterData?.verses.length ? (
-                <div className="space-y-3">
-                  {chapterData.verses.map((verse) => (
-                    <p key={verse.id} className="verse-text leading-relaxed">
-                      <span className="verse-number">{verse.verse}</span>
-                      {verse.text}
-                    </p>
-                  ))}
+                <div className="space-y-1">
+                  {chapterData.verses.map((verse) => {
+                    const isSelected = selectedVerses.includes(verse.verse);
+                    return (
+                      <p
+                        key={verse.id}
+                        onClick={() => toggleVerseSelection(verse.verse)}
+                        className={`verse-text leading-relaxed rounded-lg px-2 py-1 cursor-pointer transition-all select-none ${
+                          isSelected
+                            ? "bg-cyan-400/12 border border-cyan-400/25"
+                            : "hover:bg-white/5"
+                        }`}
+                      >
+                        <span className={`verse-number ${isSelected ? "text-cyan-400" : ""}`}>
+                          {verse.verse}
+                        </span>
+                        {verse.text}
+                      </p>
+                    );
+                  })}
                 </div>
               ) : selectedBook ? (
                 <div className="text-center py-12 text-white/30">
                   <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p>Versículos sendo carregados...</p>
-                  <p className="text-xs mt-2">O banco de dados está sendo populado. Tente novamente em instantes.</p>
                 </div>
               ) : (
                 <div className="text-center py-12 text-white/30">
@@ -279,113 +307,128 @@ export default function BibleReader() {
             </div>
 
             {/* AI Tools */}
-            {chapterData?.verses.length ? (
-              <div className="flex flex-wrap gap-2 animate-fade-in">
-                <button
-                  onClick={handleEmmanuelComment}
-                  disabled={loadingAI}
-                  className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
-                >
-                  {loadingAI && showEmmanuel ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageCircle className="w-4 h-4" />}
-                  Comentário de Emmanuel
-                </button>
-                <button
-                  onClick={handleGenerateInterpretation}
-                  disabled={loadingAI}
-                  className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
-                  style={{ borderColor: "oklch(0.55 0.22 285 / 0.4)", color: "oklch(0.65 0.22 285)" }}
-                >
-                  {loadingAI && showInterpretation ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                  Interpretação Espírita
-                </button>
-                <button
-                  onClick={handleCorrelations}
-                  disabled={loadingAI}
-                  className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
-                  style={{ borderColor: "oklch(0.82 0.18 75 / 0.4)", color: "oklch(0.82 0.18 75)" }}
-                >
-                  {loadingAI && showCorrelations ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2 className="w-4 h-4" />}
-                  Correlações AT/NT
-                </button>
-              </div>
-            ) : null}
-
-            {/* Emmanuel Comment */}
-            {showEmmanuel && (
-              <div className="animate-fade-in-up">
-                <div className="flex items-center gap-2 mb-3">
-                  <Star className="w-4 h-4 text-cyan-400" />
-                  <h3 className="text-sm font-semibold text-cyan-400 tracking-wide">Comentário de Emmanuel</h3>
-                </div>
-                {loadingAI && !emmanuelComment ? (
-                  <div className="emmanuel-box flex items-center gap-3">
-                    <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
-                    <span className="text-white/50 text-sm italic">Emmanuel está meditando...</span>
+            {hasVerses && (
+              <div className="space-y-2">
+                {selectedVerses.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-cyan-400/70 font-semibold">
+                      Analisando: {referenceLabel()}
+                    </span>
+                    <button
+                      onClick={() => setSelectedVerses([])}
+                      className="text-white/30 hover:text-white/60 transition-colors"
+                      title="Limpar seleção"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                ) : emmanuelComment ? (
-                  <div className="emmanuel-box">
-                    <p className="text-white/80 leading-relaxed mt-2" style={{ fontFamily: "'Crimson Pro', serif", fontSize: "1.05rem", fontStyle: "italic" }}>
-                      {emmanuelComment}
-                    </p>
-                    <p className="text-cyan-400/50 text-xs mt-3 text-right">— Emmanuel</p>
-                  </div>
-                ) : null}
-              </div>
-            )}
-
-            {/* Interpretation */}
-            {showInterpretation && (
-              <div className="animate-fade-in-up">
-                <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-violet-400" />
-                  <h3 className="text-sm font-semibold text-violet-400 tracking-wide">Interpretação Espírita</h3>
-                  <span className="text-xs text-white/30">no estilo de Haroldo Dutra Dias</span>
-                </div>
-                {loadingAI && !interpretation ? (
-                  <div className="interpretation-box flex items-center gap-3">
-                    <Loader2 className="w-4 h-4 animate-spin text-violet-400" />
-                    <span className="text-white/50 text-sm italic">Gerando interpretação...</span>
-                  </div>
-                ) : interpretation ? (
-                  <div className="interpretation-box prose prose-invert max-w-none">
-                    <Streamdown>{interpretation}</Streamdown>
-                  </div>
-                ) : null}
-              </div>
-            )}
-
-            {/* Correlations */}
-            {showCorrelations && (
-              <div className="animate-fade-in-up">
-                <div className="flex items-center gap-2 mb-3">
-                  <Link2 className="w-4 h-4" style={{ color: "oklch(0.82 0.18 75)" }} />
-                  <h3 className="text-sm font-semibold tracking-wide" style={{ color: "oklch(0.82 0.18 75)" }}>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => handleAI("emmanuel")}
+                    disabled={aiPanel?.loading}
+                    className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
+                  >
+                    {aiPanel?.loading && aiPanel.type === "emmanuel" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <MessageCircle className="w-4 h-4" />
+                    )}
+                    Comentário de Emmanuel
+                  </button>
+                  <button
+                    onClick={() => handleAI("interpretation")}
+                    disabled={aiPanel?.loading}
+                    className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
+                    style={{ borderColor: "oklch(0.55 0.22 285 / 0.4)", color: "oklch(0.65 0.22 285)" }}
+                  >
+                    {aiPanel?.loading && aiPanel.type === "interpretation" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    Interpretação Espírita
+                  </button>
+                  <button
+                    onClick={() => handleAI("correlations")}
+                    disabled={aiPanel?.loading}
+                    className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
+                    style={{ borderColor: "oklch(0.82 0.18 75 / 0.4)", color: "oklch(0.82 0.18 75)" }}
+                  >
+                    {aiPanel?.loading && aiPanel.type === "correlations" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Link2 className="w-4 h-4" />
+                    )}
                     Correlações AT/NT
-                  </h3>
+                  </button>
                 </div>
-                {loadingAI && correlationsList.length === 0 ? (
-                  <div className="cosmic-card p-4 flex items-center gap-3">
-                    <Loader2 className="w-4 h-4 animate-spin" style={{ color: "oklch(0.82 0.18 75)" }} />
-                    <span className="text-white/50 text-sm italic">Buscando correlações...</span>
+              </div>
+            )}
+
+            {/* AI Panel */}
+            {aiPanel && (
+              <div className="animate-fade-in-up">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    {aiPanel.type === "emmanuel" && <Star className="w-4 h-4 text-cyan-400" />}
+                    {aiPanel.type === "interpretation" && <Sparkles className="w-4 h-4 text-violet-400" />}
+                    {aiPanel.type === "correlations" && <Link2 className="w-4 h-4" style={{ color: "oklch(0.82 0.18 75)" }} />}
+                    <h3 className={`text-sm font-semibold tracking-wide ${
+                      aiPanel.type === "emmanuel" ? "text-cyan-400" :
+                      aiPanel.type === "interpretation" ? "text-violet-400" : ""
+                    }`} style={aiPanel.type === "correlations" ? { color: "oklch(0.82 0.18 75)" } : {}}>
+                      {aiPanel.type === "emmanuel" && "Comentário de Emmanuel"}
+                      {aiPanel.type === "interpretation" && "Interpretação Espírita"}
+                      {aiPanel.type === "correlations" && "Correlações AT/NT"}
+                    </h3>
+                    <span className="text-xs text-white/30">{referenceLabel()}</span>
                   </div>
-                ) : correlationsList.length > 0 ? (
+                  <button
+                    onClick={() => setAiPanel(null)}
+                    className="text-white/30 hover:text-white/60 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {aiPanel.loading ? (
+                  <div className="cosmic-card p-5 flex items-center gap-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+                    <span className="text-white/50 text-sm">Gerando análise...</span>
+                  </div>
+                ) : aiPanel.type === "emmanuel" && typeof aiPanel.content === "string" ? (
+                  <div className="emmanuel-box">
+                    <p className="text-white/85 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontSize: "1.05rem" }}>
+                      {aiPanel.content}
+                    </p>
+                  </div>
+                ) : aiPanel.type === "interpretation" && typeof aiPanel.content === "string" ? (
+                  <div className="interpretation-box prose prose-invert max-w-none">
+                    <Streamdown>{aiPanel.content}</Streamdown>
+                  </div>
+                ) : aiPanel.type === "correlations" && Array.isArray(aiPanel.content) ? (
                   <div className="space-y-3">
-                    {correlationsList.map((corr, i) => (
-                      <div key={i} className="cosmic-card p-4 animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
-                        <div className="flex items-start gap-3">
-                          <span className={`correlation-badge correlation-${corr.type} flex-shrink-0 mt-0.5`}>
-                            {correlationTypeLabel[corr.type] ?? corr.type}
-                          </span>
-                          <div>
-                            <p className="text-sm font-semibold text-white mb-1">{corr.reference}</p>
-                            <p className="text-white/60 text-sm italic mb-2" style={{ fontFamily: "'Crimson Pro', serif" }}>
-                              "{corr.text}"
-                            </p>
-                            <p className="text-white/40 text-xs">{corr.description}</p>
+                    {aiPanel.content.length === 0 ? (
+                      <div className="cosmic-card p-4 text-white/40 text-sm">Nenhuma correlação encontrada para este trecho.</div>
+                    ) : (
+                      aiPanel.content.map((corr: any, i: number) => (
+                        <div key={i} className="cosmic-card p-4 animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
+                          <div className="flex items-start gap-3">
+                            <span className={`correlation-badge correlation-${corr.type} flex-shrink-0 mt-0.5`}>
+                              {correlationTypeLabel[corr.type] ?? corr.type}
+                            </span>
+                            <div>
+                              <p className="text-sm font-semibold text-white mb-1">{corr.reference}</p>
+                              <p className="text-white/60 text-sm italic mb-2" style={{ fontFamily: "'Crimson Pro', serif" }}>
+                                "{corr.text}"
+                              </p>
+                              <p className="text-white/40 text-xs">{corr.description}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 ) : null}
               </div>

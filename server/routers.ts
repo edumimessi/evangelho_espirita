@@ -177,26 +177,26 @@ const aiRouter = router({
 
       const reference = `${input.bookName} ${input.chapter}:${input.verseStart}${input.verseEnd > input.verseStart ? `-${input.verseEnd}` : ""}`;
 
-      const prompt = `Analise o trecho bíblico abaixo com o rigor exegético e a profundidade espiritual de Haroldo Dutra Dias.
+      const prompt = `Analise o trecho bíblico abaixo. Siga exatamente esta estrutura em parágrafos corridos, sem títulos ou listas:
 
-**Passagem:** ${reference}
+PASSAGEM: ${reference}
 
-**Texto:**
+TEXTO:
 ${versesText}
 
-Sua análise deve cobrir os seguintes aspectos, em parágrafos corridos e sem subtítulos:
+ESTRUTURA DA ANÁLISE:
 
-1. CONTEXTO HISTÓRICO E LINGUÍSTICO: Explique o contexto em que o texto foi escrito. Quando pertinente, esclareça expressões do idioma original (hebraico ou grego) que iluminam o sentido — por exemplo, se o texto menciona que Jesus "se sentou" para ensinar, explique que sentar era a postura formal do mestre judeu ao dar uma instrução oficial; se menciona "abrir a boca", explique que era uma expressão solene indicando que algo de grande importância seria dito.
+Parágrafo 1 — CONTEXTO: Situe o trecho no seu contexto histórico e literário. Quem escreveu, para quem, em que momento. Se houver expressões do grego ou hebraico que mudam o sentido (ex: "sentou-se" como postura formal do rabi ao ensinar; "abriu a boca" como fórmula solene que introduz um discurso importante; "bem-aventurado" como tradução do grego makarios, que significa "feliz" ou "em estado de plênitude"), explique-as diretamente, sem rodeios.
 
-2. EXEGESE DO TEXTO: Explique o que o texto diz de fato, sem alegorias forçadas. Identifique a estrutura do argumento do autor e o que ele pretendia comunicar aos destinatários originais.
+Parágrafo 2 — O QUE O TEXTO DIZ: Explique o que o autor está argumentando. Não parafraseie apenas — explique a lógica interna do texto. Se for uma lista (como as Bem-aventuranças), explique o padrão estrutural e o que cada elemento acrescenta ao conjunto.
 
-3. CORRELAÇÕES BÍBLICAS: Aponte passagens do Antigo Testamento que prefiguram ou dialogam com o trecho, e paralelos no Novo Testamento. Mostre como o texto se encaixa na unidade da mensagem bíblica.
+Parágrafo 3 — CORRELAÇÕES BÍBLICAS: Cite passagens específicas do Antigo Testamento que este trecho cumpre, retoma ou contrasta. Seja preciso: cite o livro, capítulo e versículo. Explique a conexão real, não apenas a semelhança superficial.
 
-4. LEITURA ESPÍRITA: Conecte o trecho com os princípios da Doutrina Espírita — reencarnação, lei de causa e efeito, evolução espiritual, pluralidade dos mundos — citando quando relevante O Evangelho Segundo o Espiritismo ou O Livro dos Espíritos. Seja preciso, não genérico.
+Parágrafo 4 — LEITURA ESPÍRITA: Conecte o trecho com a Doutrina Espírita de forma precisa. Cite questões específicas d'O Evangelho Segundo o Espiritismo ou d'O Livro dos Espíritos quando aplicável. Evite generalidades como "este versículo ensina o amor" — mostre como o princípio espírita específico (reencarnação, lei de causa e efeito, evolução moral, pluralidade dos mundos) ilumina o sentido do texto de forma concreta.
 
-5. APLICAÇÃO PRÁTICA: Termine com uma reflexão objetiva sobre o que o trecho exige de quem o lê hoje.
+Parágrafo 5 — APLICAÇÃO: Uma aplicação prática objetiva. O que este trecho exige concretamente de quem o lê?
 
-Estilo: direto, claro, intelectualmente rigoroso. Sem floreios nem linguagem excessivamente poética. Aproximadamente 400-500 palavras em parágrafos corridos.`;
+TOM: Analítico, direto, sem linguagem mística ou poética. Como um professor que explica, não como um pregador que exorta. Total: 350-450 palavras.`;
 
       const response = await invokeLLM({
         messages: [
