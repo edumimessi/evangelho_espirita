@@ -15,6 +15,20 @@
       "when": 1782757210585,
       "tag": "0001_narrow_ser_duncan",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1782772819838,
+      "tag": "0002_elite_the_watchers",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1782773384955,
+      "tag": "0003_tired_marvel_boy",
+      "breakpoints": true
     }
   ]
 }

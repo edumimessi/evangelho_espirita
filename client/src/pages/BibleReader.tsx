@@ -10,6 +10,9 @@ import {
   Link2,
   Star,
   X,
+  Pencil,
+  Trash2,
+  Check,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CosmicLayout } from "@/components/CosmicLayout";
@@ -25,16 +28,27 @@ interface AIPanel {
   loading: boolean;
 }
 
+interface NoteModal {
+  verse: number;
+  text: string;
+  existingNote: string;
+}
+
 export default function BibleReader() {
   const { user } = useAuth();
 
-  const [selectedTestament, setSelectedTestament] = useState<Testament>("new");
-  const [selectedBook, setSelectedBook] = useState<string | null>(null);
-  const [selectedChapter, setSelectedChapter] = useState<number>(1);
+  // Ler query params para deep link de favoritos
+  const searchParams = new URLSearchParams(window.location.search);
+  const initialBook = searchParams.get("book");
+  const initialChapter = parseInt(searchParams.get("chapter") ?? "1", 10) || 1;
 
-  // Seleção de versículos
+  const [selectedTestament, setSelectedTestament] = useState<Testament>("new");
+  const [selectedBook, setSelectedBook] = useState<string | null>(initialBook);
+  const [selectedChapter, setSelectedChapter] = useState<number>(initialChapter);
   const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
   const [aiPanel, setAiPanel] = useState<AIPanel | null>(null);
+  const [noteModal, setNoteModal] = useState<NoteModal | null>(null);
+  const [noteText, setNoteText] = useState("");
 
   const { data: books } = trpc.bible.books.useQuery();
   const { data: chapterData, isLoading: chapterLoading } = trpc.bible.chapter.useQuery(
@@ -42,10 +56,23 @@ export default function BibleReader() {
     { enabled: !!selectedBook }
   );
 
+  // Notas e favoritos do capítulo atual
+  const { data: chapterNotes, refetch: refetchNotes } = trpc.notes.getChapter.useQuery(
+    { bookAbbrev: selectedBook!, chapter: selectedChapter },
+    { enabled: !!selectedBook && !!user }
+  );
+  const { data: chapterFavorites, refetch: refetchFavorites } = trpc.favorites.getChapter.useQuery(
+    { bookAbbrev: selectedBook!, chapter: selectedChapter },
+    { enabled: !!selectedBook && !!user }
+  );
+
   const interpretMutation = trpc.ai.interpret.useMutation();
   const emmanuelMutation = trpc.ai.emmanuelComment.useMutation();
   const correlationsMutation = trpc.ai.correlations.useMutation();
   const addHistoryMutation = trpc.history.add.useMutation();
+  const saveNoteMutation = trpc.notes.save.useMutation();
+  const deleteNoteMutation = trpc.notes.delete.useMutation();
+  const toggleFavMutation = trpc.favorites.toggle.useMutation();
 
   const filteredBooks = useMemo(
     () => books?.filter((b) => b.testament === selectedTestament) ?? [],
@@ -57,7 +84,15 @@ export default function BibleReader() {
     [books, selectedBook]
   );
 
-  // Auto-select first book
+  // Mapas rápidos de notas e favoritos por versículo
+  const notesMap = useMemo(() => {
+    const m: Record<number, string> = {};
+    chapterNotes?.forEach((n) => { m[n.verse] = n.note; });
+    return m;
+  }, [chapterNotes]);
+
+  const favSet = useMemo(() => new Set(chapterFavorites ?? []), [chapterFavorites]);
+
   useEffect(() => {
     if (filteredBooks.length > 0 && !selectedBook) {
       setSelectedBook(filteredBooks[0].abbrev);
@@ -65,7 +100,6 @@ export default function BibleReader() {
     }
   }, [filteredBooks]);
 
-  // Register reading in history
   useEffect(() => {
     if (selectedBook && selectedBookData && user) {
       addHistoryMutation.mutate({
@@ -76,27 +110,24 @@ export default function BibleReader() {
     }
   }, [selectedBook, selectedChapter]);
 
-  // Limpar seleção ao mudar capítulo
   useEffect(() => {
     setSelectedVerses([]);
     setAiPanel(null);
   }, [selectedBook, selectedChapter]);
 
   const toggleVerseSelection = (verseNum: number) => {
-    setSelectedVerses((prev) => {
-      if (prev.includes(verseNum)) {
-        return prev.filter((v) => v !== verseNum);
-      }
-      return [...prev, verseNum].sort((a, b) => a - b);
-    });
+    setSelectedVerses((prev) =>
+      prev.includes(verseNum)
+        ? prev.filter((v) => v !== verseNum)
+        : [...prev, verseNum].sort((a, b) => a - b)
+    );
   };
 
   const getSelectedVersesData = () => {
     if (!chapterData?.verses) return [];
-    if (selectedVerses.length > 0) {
-      return chapterData.verses.filter((v) => selectedVerses.includes(v.verse));
-    }
-    return chapterData.verses;
+    return selectedVerses.length > 0
+      ? chapterData.verses.filter((v) => selectedVerses.includes(v.verse))
+      : chapterData.verses;
   };
 
   const getVerseRange = () => {
@@ -110,9 +141,7 @@ export default function BibleReader() {
     const verses = getSelectedVersesData();
     if (verses.length === 0) return;
     const { start, end } = getVerseRange();
-
     setAiPanel({ type, verseStart: start, verseEnd: end, content: null, loading: true });
-
     try {
       const payload = {
         bookAbbrev: selectedBook,
@@ -122,7 +151,6 @@ export default function BibleReader() {
         verseEnd: end,
         verses: verses.map((v) => ({ verse: v.verse, text: v.text })),
       };
-
       if (type === "emmanuel") {
         const result = await emmanuelMutation.mutateAsync(payload);
         setAiPanel((p) => p ? { ...p, content: result.comment, loading: false } : null);
@@ -136,6 +164,47 @@ export default function BibleReader() {
     } catch {
       setAiPanel((p) => p ? { ...p, content: "Erro ao gerar conteúdo. Tente novamente.", loading: false } : null);
     }
+  };
+
+  const handleToggleFavorite = async (verse: number, verseText: string) => {
+    if (!selectedBook || !selectedBookData || !user) return;
+    await toggleFavMutation.mutateAsync({
+      bookAbbrev: selectedBook,
+      bookName: selectedBookData.name,
+      chapter: selectedChapter,
+      verse,
+      verseText,
+    });
+    refetchFavorites();
+  };
+
+  const openNoteModal = (verse: number, verseText: string) => {
+    const existing = notesMap[verse] ?? "";
+    setNoteModal({ verse, text: verseText, existingNote: existing });
+    setNoteText(existing);
+  };
+
+  const handleSaveNote = async () => {
+    if (!noteModal || !selectedBook || !noteText.trim()) return;
+    await saveNoteMutation.mutateAsync({
+      bookAbbrev: selectedBook,
+      chapter: selectedChapter,
+      verse: noteModal.verse,
+      note: noteText.trim(),
+    });
+    refetchNotes();
+    setNoteModal(null);
+  };
+
+  const handleDeleteNote = async (verse: number) => {
+    if (!selectedBook) return;
+    await deleteNoteMutation.mutateAsync({
+      bookAbbrev: selectedBook,
+      chapter: selectedChapter,
+      verse,
+    });
+    refetchNotes();
+    setNoteModal(null);
   };
 
   const navigateChapter = (delta: number) => {
@@ -179,7 +248,7 @@ export default function BibleReader() {
           </h1>
           {selectedVerses.length > 0 && (
             <p className="text-xs text-cyan-400/70 mt-1">
-              {selectedVerses.length} versículo{selectedVerses.length > 1 ? "s" : ""} selecionado{selectedVerses.length > 1 ? "s" : ""} — clique nos versículos para selecionar/deselecionar
+              {selectedVerses.length} versículo{selectedVerses.length > 1 ? "s" : ""} selecionado{selectedVerses.length > 1 ? "s" : ""} — clique para deselecionar
             </p>
           )}
         </div>
@@ -258,38 +327,78 @@ export default function BibleReader() {
               </div>
             )}
 
-            {/* Instruction hint */}
+            {/* Hint */}
             {hasVerses && (
-              <p className="text-xs text-white/30 italic">
-                Clique em um ou mais versículos para selecioná-los antes de gerar interpretação, comentário ou correlações. Sem seleção, o capítulo inteiro é usado.
+              <p className="text-xs text-white/25 italic">
+                Clique em versículos para selecioná-los antes de gerar análise. Use ★ para favoritar e ✏ para anotar.
               </p>
             )}
 
             {/* Verses */}
-            <div className="cosmic-card p-6">
+            <div className="cosmic-card p-4 md:p-6">
               {chapterLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="cosmic-spinner" />
                 </div>
               ) : chapterData?.verses.length ? (
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {chapterData.verses.map((verse) => {
                     const isSelected = selectedVerses.includes(verse.verse);
+                    const isFav = favSet.has(verse.verse);
+                    const hasNote = !!notesMap[verse.verse];
                     return (
-                      <p
+                      <div
                         key={verse.id}
-                        onClick={() => toggleVerseSelection(verse.verse)}
-                        className={`verse-text leading-relaxed rounded-lg px-2 py-1 cursor-pointer transition-all select-none ${
+                        className={`group relative rounded-lg px-2 py-1.5 transition-all ${
                           isSelected
-                            ? "bg-cyan-400/12 border border-cyan-400/25"
-                            : "hover:bg-white/5"
+                            ? "bg-cyan-400/10 border border-cyan-400/20"
+                            : "hover:bg-white/4"
                         }`}
                       >
-                        <span className={`verse-number ${isSelected ? "text-cyan-400" : ""}`}>
-                          {verse.verse}
-                        </span>
-                        {verse.text}
-                      </p>
+                        <div className="flex items-start gap-2">
+                          {/* Verse text — clicável para selecionar */}
+                          <p
+                            className="verse-text leading-relaxed flex-1 cursor-pointer select-none"
+                            onClick={() => toggleVerseSelection(verse.verse)}
+                          >
+                            <span className={`verse-number ${isSelected ? "text-cyan-400" : ""}`}>
+                              {verse.verse}
+                            </span>
+                            {verse.text}
+                          </p>
+                          {/* Action buttons */}
+                          {user && (
+                            <div className="flex items-center gap-1 opacity-30 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0 pt-0.5">
+                              <button
+                                onClick={() => handleToggleFavorite(verse.verse, verse.text)}
+                                className={`p-1 rounded transition-colors ${
+                                  isFav ? "text-yellow-400" : "text-white/30 hover:text-yellow-400"
+                                }`}
+                                title={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                              >
+                                <Star className="w-3.5 h-3.5" fill={isFav ? "currentColor" : "none"} />
+                              </button>
+                              <button
+                                onClick={() => openNoteModal(verse.verse, verse.text)}
+                                className={`p-1 rounded transition-colors ${
+                                  hasNote ? "text-violet-400" : "text-white/30 hover:text-violet-400"
+                                }`}
+                                title={hasNote ? "Editar anotação" : "Adicionar anotação"}
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        {/* Nota inline */}
+                        {hasNote && (
+                          <div className="mt-1.5 ml-6 px-3 py-2 rounded-lg bg-violet-500/8 border border-violet-500/20">
+                            <p className="text-violet-300/80 text-xs leading-relaxed italic">
+                              {notesMap[verse.verse]}
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
@@ -329,11 +438,7 @@ export default function BibleReader() {
                     disabled={aiPanel?.loading}
                     className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
                   >
-                    {aiPanel?.loading && aiPanel.type === "emmanuel" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <MessageCircle className="w-4 h-4" />
-                    )}
+                    {aiPanel?.loading && aiPanel.type === "emmanuel" ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageCircle className="w-4 h-4" />}
                     Comentário de Emmanuel
                   </button>
                   <button
@@ -342,11 +447,7 @@ export default function BibleReader() {
                     className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
                     style={{ borderColor: "oklch(0.55 0.22 285 / 0.4)", color: "oklch(0.65 0.22 285)" }}
                   >
-                    {aiPanel?.loading && aiPanel.type === "interpretation" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Sparkles className="w-4 h-4" />
-                    )}
+                    {aiPanel?.loading && aiPanel.type === "interpretation" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                     Interpretação Espírita
                   </button>
                   <button
@@ -355,11 +456,7 @@ export default function BibleReader() {
                     className="cosmic-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
                     style={{ borderColor: "oklch(0.82 0.18 75 / 0.4)", color: "oklch(0.82 0.18 75)" }}
                   >
-                    {aiPanel?.loading && aiPanel.type === "correlations" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Link2 className="w-4 h-4" />
-                    )}
+                    {aiPanel?.loading && aiPanel.type === "correlations" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2 className="w-4 h-4" />}
                     Correlações AT/NT
                   </button>
                 </div>
@@ -384,10 +481,7 @@ export default function BibleReader() {
                     </h3>
                     <span className="text-xs text-white/30">{referenceLabel()}</span>
                   </div>
-                  <button
-                    onClick={() => setAiPanel(null)}
-                    className="text-white/30 hover:text-white/60 transition-colors"
-                  >
+                  <button onClick={() => setAiPanel(null)} className="text-white/30 hover:text-white/60 transition-colors">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -411,24 +505,22 @@ export default function BibleReader() {
                   <div className="space-y-3">
                     {aiPanel.content.length === 0 ? (
                       <div className="cosmic-card p-4 text-white/40 text-sm">Nenhuma correlação encontrada para este trecho.</div>
-                    ) : (
-                      aiPanel.content.map((corr: any, i: number) => (
-                        <div key={i} className="cosmic-card p-4 animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
-                          <div className="flex items-start gap-3">
-                            <span className={`correlation-badge correlation-${corr.type} flex-shrink-0 mt-0.5`}>
-                              {correlationTypeLabel[corr.type] ?? corr.type}
-                            </span>
-                            <div>
-                              <p className="text-sm font-semibold text-white mb-1">{corr.reference}</p>
-                              <p className="text-white/60 text-sm italic mb-2" style={{ fontFamily: "'Crimson Pro', serif" }}>
-                                "{corr.text}"
-                              </p>
-                              <p className="text-white/40 text-xs">{corr.description}</p>
-                            </div>
+                    ) : aiPanel.content.map((corr: any, i: number) => (
+                      <div key={i} className="cosmic-card p-4 animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
+                        <div className="flex items-start gap-3">
+                          <span className={`correlation-badge correlation-${corr.type} flex-shrink-0 mt-0.5`}>
+                            {correlationTypeLabel[corr.type] ?? corr.type}
+                          </span>
+                          <div>
+                            <p className="text-sm font-semibold text-white mb-1">{corr.reference}</p>
+                            <p className="text-white/60 text-sm italic mb-2" style={{ fontFamily: "'Crimson Pro', serif" }}>
+                              "{corr.text}"
+                            </p>
+                            <p className="text-white/40 text-xs">{corr.description}</p>
                           </div>
                         </div>
-                      ))
-                    )}
+                      </div>
+                    ))}
                   </div>
                 ) : null}
               </div>
@@ -445,9 +537,7 @@ export default function BibleReader() {
                   <ChevronLeft className="w-4 h-4" />
                   Capítulo anterior
                 </button>
-                <span className="text-white/30 text-xs">
-                  {selectedChapter} / {selectedBookData.chapterCount}
-                </span>
+                <span className="text-white/30 text-xs">{selectedChapter} / {selectedBookData.chapterCount}</span>
                 <button
                   onClick={() => navigateChapter(1)}
                   disabled={selectedChapter >= selectedBookData.chapterCount}
@@ -461,6 +551,62 @@ export default function BibleReader() {
           </div>
         </div>
       </div>
+
+      {/* Note Modal */}
+      {noteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="cosmic-card w-full max-w-lg p-6 animate-fade-in-up">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Pencil className="w-4 h-4 text-violet-400" />
+                <h3 className="text-sm font-semibold text-violet-400">Minha Anotação</h3>
+              </div>
+              <button onClick={() => setNoteModal(null)} className="text-white/30 hover:text-white/60 transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-white/40 text-xs italic mb-3 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif" }}>
+              "{noteModal.text}"
+            </p>
+            <textarea
+              value={noteText}
+              onChange={(e) => setNoteText(e.target.value)}
+              placeholder="Escreva sua reflexão, meditação ou insight sobre este versículo..."
+              className="w-full h-32 bg-white/5 border border-white/10 rounded-xl p-3 text-white/80 text-sm resize-none focus:outline-none focus:border-violet-400/40 placeholder:text-white/20"
+              autoFocus
+            />
+            <div className="flex items-center justify-between mt-3">
+              <div>
+                {noteModal.existingNote && (
+                  <button
+                    onClick={() => handleDeleteNote(noteModal.verse)}
+                    className="flex items-center gap-1.5 text-xs text-red-400/60 hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Excluir anotação
+                  </button>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setNoteModal(null)}
+                  className="px-4 py-2 rounded-xl text-sm text-white/40 hover:text-white hover:bg-white/5 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSaveNote}
+                  disabled={!noteText.trim() || saveNoteMutation.isPending}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm bg-violet-500/20 border border-violet-500/30 text-violet-300 hover:bg-violet-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                >
+                  {saveNoteMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                  Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </CosmicLayout>
   );
 }

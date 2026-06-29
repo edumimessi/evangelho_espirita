@@ -40,3 +40,15 @@
 ## Testes
 - [x] Testes vitest para routers principais (12 testes passando)
 - [x] Verificação responsividade mobile
+
+## Novas Funcionalidades (rodada 2)
+
+- [x] Schema: tabela verse_notes (anotações pessoais por versículo)
+- [x] Schema: tabela verse_favorites (favoritos por versículo)
+- [x] Router tRPC: notes.save, notes.get, notes.delete
+- [x] Router tRPC: favorites.toggle, favorites.list
+- [x] BibleReader: botão de anotação por versículo com modal de edição
+- [x] BibleReader: botão de favorito (estrela) por versículo
+- [x] Página Favoritos: lista de versículos favoritados com acesso rápido
+- [x] Página Evangelho no Lar: layout especial para reunião em grupo
+- [x] Sidebar: adicionar links para Favoritos e Evangelho no Lar

@@ -10,6 +10,8 @@ import {
   InsertUser,
   readingHistory,
   users,
+  verseNotes,
+  verseFavorites,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -119,6 +121,167 @@ export async function getVerseRange(
     )
     .orderBy(bibleVerses.verse);
 }
+
+// ─── Verse Notes ─────────────────────────────────────────────────────────────
+
+export async function saveVerseNote(
+  userId: number,
+  bookAbbrev: string,
+  chapter: number,
+  verse: number,
+  note: string
+) {
+  const db = await getDb();
+  if (!db) return null;
+  await db
+    .insert(verseNotes)
+    .values({ userId, bookAbbrev, chapter, verse, note })
+    .onDuplicateKeyUpdate({ set: { note, updatedAt: new Date() } });
+  const result = await db
+    .select()
+    .from(verseNotes)
+    .where(
+      and(
+        eq(verseNotes.userId, userId),
+        eq(verseNotes.bookAbbrev, bookAbbrev),
+        eq(verseNotes.chapter, chapter),
+        eq(verseNotes.verse, verse)
+      )
+    )
+    .limit(1);
+  return result[0] ?? null;
+}
+
+export async function getVerseNote(
+  userId: number,
+  bookAbbrev: string,
+  chapter: number,
+  verse: number
+) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db
+    .select()
+    .from(verseNotes)
+    .where(
+      and(
+        eq(verseNotes.userId, userId),
+        eq(verseNotes.bookAbbrev, bookAbbrev),
+        eq(verseNotes.chapter, chapter),
+        eq(verseNotes.verse, verse)
+      )
+    )
+    .limit(1);
+  return result[0] ?? null;
+}
+
+export async function getChapterNotes(userId: number, bookAbbrev: string, chapter: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(verseNotes)
+    .where(
+      and(
+        eq(verseNotes.userId, userId),
+        eq(verseNotes.bookAbbrev, bookAbbrev),
+        eq(verseNotes.chapter, chapter)
+      )
+    )
+    .orderBy(verseNotes.verse);
+}
+
+export async function deleteVerseNote(
+  userId: number,
+  bookAbbrev: string,
+  chapter: number,
+  verse: number
+) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .delete(verseNotes)
+    .where(
+      and(
+        eq(verseNotes.userId, userId),
+        eq(verseNotes.bookAbbrev, bookAbbrev),
+        eq(verseNotes.chapter, chapter),
+        eq(verseNotes.verse, verse)
+      )
+    );
+}
+
+// ─── Verse Favorites ─────────────────────────────────────────────────────────
+
+export async function toggleVerseFavorite(
+  userId: number,
+  bookAbbrev: string,
+  bookName: string,
+  chapter: number,
+  verse: number,
+  verseText: string
+) {
+  const db = await getDb();
+  if (!db) return { isFavorite: false };
+  const existing = await db
+    .select()
+    .from(verseFavorites)
+    .where(
+      and(
+        eq(verseFavorites.userId, userId),
+        eq(verseFavorites.bookAbbrev, bookAbbrev),
+        eq(verseFavorites.chapter, chapter),
+        eq(verseFavorites.verse, verse)
+      )
+    )
+    .limit(1);
+  if (existing.length > 0) {
+    await db
+      .delete(verseFavorites)
+      .where(
+        and(
+          eq(verseFavorites.userId, userId),
+          eq(verseFavorites.bookAbbrev, bookAbbrev),
+          eq(verseFavorites.chapter, chapter),
+          eq(verseFavorites.verse, verse)
+        )
+      );
+    return { isFavorite: false };
+  } else {
+    await db
+      .insert(verseFavorites)
+      .values({ userId, bookAbbrev, bookName, chapter, verse, verseText });
+    return { isFavorite: true };
+  }
+}
+
+export async function getChapterFavorites(userId: number, bookAbbrev: string, chapter: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select({ verse: verseFavorites.verse })
+    .from(verseFavorites)
+    .where(
+      and(
+        eq(verseFavorites.userId, userId),
+        eq(verseFavorites.bookAbbrev, bookAbbrev),
+        eq(verseFavorites.chapter, chapter)
+      )
+    );
+  return rows.map((r) => r.verse);
+}
+
+export async function getUserFavorites(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(verseFavorites)
+    .where(eq(verseFavorites.userId, userId))
+    .orderBy(verseFavorites.createdAt);
+}
+
+// ─── Search ───────────────────────────────────────────────────────────────────
 
 export async function searchVerses(query: string, testament?: "old" | "new") {
   const db = await getDb();

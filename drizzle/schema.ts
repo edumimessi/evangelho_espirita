@@ -7,6 +7,7 @@ import {
   varchar,
   boolean,
   index,
+  uniqueIndex,
   bigint,
 } from "drizzle-orm/mysql-core";
 
@@ -157,3 +158,54 @@ export const aiInterpretations = mysqlTable(
 );
 
 export type AiInterpretation = typeof aiInterpretations.$inferSelect;
+
+// Anotações pessoais por versículo
+export const verseNotes = mysqlTable(
+  "verse_notes",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull(),
+    bookAbbrev: varchar("bookAbbrev", { length: 10 }).notNull(),
+    chapter: int("chapter").notNull(),
+    verse: int("verse").notNull(),
+    note: text("note").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    userVerseUnique: uniqueIndex("note_user_verse_unique").on(
+      table.userId,
+      table.bookAbbrev,
+      table.chapter,
+      table.verse
+    ),
+  })
+);
+
+export type VerseNote = typeof verseNotes.$inferSelect;
+
+// Versículos favoritos
+export const verseFavorites = mysqlTable(
+  "verse_favorites",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull(),
+    bookAbbrev: varchar("bookAbbrev", { length: 10 }).notNull(),
+    bookName: varchar("bookName", { length: 100 }).notNull(),
+    chapter: int("chapter").notNull(),
+    verse: int("verse").notNull(),
+    verseText: text("verseText").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    userFavIdx: index("fav_user_idx").on(table.userId),
+    userVerseUnique: uniqueIndex("fav_user_verse_unique").on(
+      table.userId,
+      table.bookAbbrev,
+      table.chapter,
+      table.verse
+    ),
+  })
+);
+
+export type VerseFavorite = typeof verseFavorites.$inferSelect;

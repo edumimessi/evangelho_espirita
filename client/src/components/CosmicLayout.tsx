@@ -5,6 +5,7 @@ import {
   Calendar,
   Clock,
   History,
+  Home,
   LogIn,
   LogOut,
   Menu,
@@ -19,9 +20,11 @@ import { trpc } from "@/lib/trpc";
 
 const navItems = [
   { href: "/", icon: Star, label: "Início" },
+  { href: "/evangelho-no-lar", icon: Home, label: "Evangelho no Lar" },
   { href: "/leitura-diaria", icon: Calendar, label: "Leitura Diária" },
   { href: "/biblia", icon: BookOpen, label: "Bíblia" },
   { href: "/busca", icon: Search, label: "Busca" },
+  { href: "/favoritos", icon: Star, label: "Favoritos" },
   { href: "/historico", icon: History, label: "Histórico" },
 ];
 

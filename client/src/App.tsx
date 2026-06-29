@@ -9,6 +9,8 @@ import BibleReader from "./pages/BibleReader";
 import DailyReading from "./pages/DailyReading";
 import SearchPage from "./pages/Search";
 import ReadingHistory from "./pages/ReadingHistory";
+import Favorites from "./pages/Favorites";
+import HomeGospel from "./pages/HomeGospel";
 
 function Router() {
   return (
@@ -18,6 +20,8 @@ function Router() {
       <Route path="/leitura-diaria" component={DailyReading} />
       <Route path="/busca" component={SearchPage} />
       <Route path="/historico" component={ReadingHistory} />
+      <Route path="/favoritos" component={Favorites} />
+      <Route path="/evangelho-no-lar" component={HomeGospel} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

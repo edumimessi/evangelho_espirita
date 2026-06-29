@@ -6,17 +6,23 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
   addReadingHistory,
+  deleteVerseNote,
   getAllBooks,
   getBookByAbbrev,
   getCachedInterpretation,
   getChapter,
+  getChapterFavorites,
+  getChapterNotes,
   getDailyReading,
   getEmmanuelComments,
+  getUserFavorites,
   getUserHistory,
   getVerseRange,
   saveEmmanuelComment,
   saveInterpretation,
+  saveVerseNote,
   searchVerses,
+  toggleVerseFavorite,
 } from "./db";
 
 // ─── Bible Router ─────────────────────────────────────────────────────────────
@@ -404,6 +410,71 @@ Máximo 5 correlações mais relevantes.`,
 
 // ─── App Router ───────────────────────────────────────────────────────────────
 
+
+// --- Notes Router ---
+
+const notesRouter = router({
+  save: protectedProcedure
+    .input(z.object({
+      bookAbbrev: z.string(),
+      chapter: z.number().int().positive(),
+      verse: z.number().int().positive(),
+      note: z.string().min(1).max(5000),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return saveVerseNote(ctx.user.id, input.bookAbbrev, input.chapter, input.verse, input.note);
+    }),
+
+  getChapter: protectedProcedure
+    .input(z.object({
+      bookAbbrev: z.string(),
+      chapter: z.number().int().positive(),
+    }))
+    .query(async ({ ctx, input }) => {
+      return getChapterNotes(ctx.user.id, input.bookAbbrev, input.chapter);
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({
+      bookAbbrev: z.string(),
+      chapter: z.number().int().positive(),
+      verse: z.number().int().positive(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await deleteVerseNote(ctx.user.id, input.bookAbbrev, input.chapter, input.verse);
+      return { success: true };
+    }),
+});
+
+// --- Favorites Router ---
+
+const favoritesRouter = router({
+  toggle: protectedProcedure
+    .input(z.object({
+      bookAbbrev: z.string(),
+      bookName: z.string(),
+      chapter: z.number().int().positive(),
+      verse: z.number().int().positive(),
+      verseText: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return toggleVerseFavorite(ctx.user.id, input.bookAbbrev, input.bookName, input.chapter, input.verse, input.verseText);
+    }),
+
+  getChapter: protectedProcedure
+    .input(z.object({
+      bookAbbrev: z.string(),
+      chapter: z.number().int().positive(),
+    }))
+    .query(async ({ ctx, input }) => {
+      return getChapterFavorites(ctx.user.id, input.bookAbbrev, input.chapter);
+    }),
+
+  list: protectedProcedure.query(async ({ ctx }) => {
+    return getUserFavorites(ctx.user.id);
+  }),
+});
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -418,6 +489,8 @@ export const appRouter = router({
   daily: dailyRouter,
   history: historyRouter,
   ai: aiRouter,
+  notes: notesRouter,
+  favorites: favoritesRouter,
 });
 
 export type AppRouter = typeof appRouter;
