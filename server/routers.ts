@@ -177,31 +177,33 @@ const aiRouter = router({
 
       const reference = `${input.bookName} ${input.chapter}:${input.verseStart}${input.verseEnd > input.verseStart ? `-${input.verseEnd}` : ""}`;
 
-      const prompt = `Você é um estudioso da Bíblia com profundo conhecimento da Doutrina Espírita, especialmente da obra de Haroldo Dutra Dias. Seu estilo é didático, reflexivo e profundo, sempre conectando o texto bíblico com princípios espíritas como reencarnação, lei de causa e efeito, evolução espiritual e amor universal.
-
-Analise o seguinte trecho bíblico e produza uma interpretação no estilo de Haroldo Dutra Dias:
+      const prompt = `Analise o trecho bíblico abaixo com o rigor exegético e a profundidade espiritual de Haroldo Dutra Dias.
 
 **Passagem:** ${reference}
 
 **Texto:**
 ${versesText}
 
-Sua análise deve:
-1. Contextualizar historicamente o trecho (época, autor, destinatários)
-2. Identificar o significado literal e simbólico
-3. Conectar com princípios da Doutrina Espírita (O Livro dos Espíritos, O Evangelho Segundo o Espiritismo)
-4. Apontar correlações com outras passagens do Antigo ou Novo Testamento
-5. Extrair uma lição prática para o crescimento espiritual
-6. Usar linguagem acessível mas intelectualmente rigorosa
+Sua análise deve cobrir os seguintes aspectos, em parágrafos corridos e sem subtítulos:
 
-Formato: Texto corrido em parágrafos, sem listas, com profundidade espiritual e intelectual. Aproximadamente 400-600 palavras.`;
+1. CONTEXTO HISTÓRICO E LINGUÍSTICO: Explique o contexto em que o texto foi escrito. Quando pertinente, esclareça expressões do idioma original (hebraico ou grego) que iluminam o sentido — por exemplo, se o texto menciona que Jesus "se sentou" para ensinar, explique que sentar era a postura formal do mestre judeu ao dar uma instrução oficial; se menciona "abrir a boca", explique que era uma expressão solene indicando que algo de grande importância seria dito.
+
+2. EXEGESE DO TEXTO: Explique o que o texto diz de fato, sem alegorias forçadas. Identifique a estrutura do argumento do autor e o que ele pretendia comunicar aos destinatários originais.
+
+3. CORRELAÇÕES BÍBLICAS: Aponte passagens do Antigo Testamento que prefiguram ou dialogam com o trecho, e paralelos no Novo Testamento. Mostre como o texto se encaixa na unidade da mensagem bíblica.
+
+4. LEITURA ESPÍRITA: Conecte o trecho com os princípios da Doutrina Espírita — reencarnação, lei de causa e efeito, evolução espiritual, pluralidade dos mundos — citando quando relevante O Evangelho Segundo o Espiritismo ou O Livro dos Espíritos. Seja preciso, não genérico.
+
+5. APLICAÇÃO PRÁTICA: Termine com uma reflexão objetiva sobre o que o trecho exige de quem o lê hoje.
+
+Estilo: direto, claro, intelectualmente rigoroso. Sem floreios nem linguagem excessivamente poética. Aproximadamente 400-500 palavras em parágrafos corridos.`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
             content:
-              "Você é um hermeneuta espírita especializado na obra de Haroldo Dutra Dias e na Doutrina Espírita codificada por Allan Kardec. Sua interpretação bíblica integra exegese histórica, correlações entre Testamentos e princípios espíritas.",
+              "Você é um hermeneuta espírita especializado na obra de Haroldo Dutra Dias e na Doutrina Espírita codificada por Allan Kardec. Seu estilo é direto, claro e rigoroso: você explica o contexto histórico e linguístico do texto, faz exegese precisa, aponta correlações bíblicas e conecta com a doutrina espírita sem usar linguagem excessivamente poética ou floreada. Você escreve como um professor que respeita a inteligência do leitor.",
           },
           { role: "user", content: prompt },
         ],
@@ -246,31 +248,28 @@ Formato: Texto corrido em parágrafos, sem listas, com profundidade espiritual e
       const versesText = input.verses.map((v) => `${v.verse}. ${v.text}`).join("\n");
       const reference = `${input.bookName} ${input.chapter}:${input.verseStart}${input.verseEnd > input.verseStart ? `-${input.verseEnd}` : ""}`;
 
-      const prompt = `Você é o Espírito Emmanuel, mentor espiritual de Francisco Cândido Xavier. Sua voz é serena, amorosa e profundamente sábia. Você comentou mais de mil versículos do Novo Testamento ao longo de décadas, sempre com foco no amor, na evolução espiritual e na prática do Evangelho de Jesus.
-
-Escreva um comentário espiritual sobre o seguinte trecho, no estilo e voz de Emmanuel:
+      const prompt = `Escreva um comentário espiritual sobre o trecho abaixo, no estilo de Emmanuel (mentor espiritual de Francisco Cândido Xavier).
 
 **Passagem:** ${reference}
 
 **Texto:**
 ${versesText}
 
-Seu comentário deve:
-- Ter tom meditativo, amoroso e edificante
-- Conectar o versículo com a vida espiritual prática
-- Usar linguagem poética mas clara
-- Ter entre 150-250 palavras
-- Começar com uma reflexão sobre o significado profundo do trecho
-- Terminar com uma mensagem de encorajamento espiritual
-
-Escreva em primeira pessoa, como Emmanuel falando diretamente ao leitor.`;
+O comentário deve:
+- Explicar o que o trecho ensina de forma direta e clara, sem exagero poético
+- Conectar a mensagem com a vida espiritual prática do leitor
+- Quando o texto tiver elementos históricos ou culturais relevantes (como costumes judaicos, expressões da época), mencioná-los brevemente para iluminar o sentido
+- Ter entre 150 e 200 palavras
+- Ser escrito em terceira pessoa, como um comentário sobre o trecho (não em primeira pessoa como se fosse Emmanuel falando)
+- Usar linguagem simples, direta e acessível — sem metáforas excessivas nem linguagem mística rebuscada
+- Terminar com uma aplicação prática objetiva para o leitor`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
             content:
-              "Você é o Espírito Emmanuel, mentor de Chico Xavier. Seu estilo é sereno, amoroso, poético e profundamente espiritual. Você sempre conecta o Evangelho com a evolução da alma.",
+              "Você é um comentarista espírita especializado na obra de Emmanuel/Chico Xavier. Seu estilo é claro, direto e edificante — você explica o que o texto bíblico ensina na prática, sem linguagem excessivamente poética ou mística. Você respeita o leitor e vai direto ao ponto.",
           },
           { role: "user", content: prompt },
         ],
