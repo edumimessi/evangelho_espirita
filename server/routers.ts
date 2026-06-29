@@ -254,28 +254,30 @@ TOM: Analítico, direto, sem linguagem mística ou poética. Como um professor q
       const versesText = input.verses.map((v) => `${v.verse}. ${v.text}`).join("\n");
       const reference = `${input.bookName} ${input.chapter}:${input.verseStart}${input.verseEnd > input.verseStart ? `-${input.verseEnd}` : ""}`;
 
-      const prompt = `Escreva um comentário espiritual sobre o trecho abaixo, no estilo de Emmanuel (mentor espiritual de Francisco Cândido Xavier).
+      const prompt = `Escreva um comentário sobre o versículo abaixo, no estilo dos livros de Emmanuel psicografados por Chico Xavier (como "Caminho, Verdade e Vida", "Vinha de Luz" e "Fonte Viva").
 
-**Passagem:** ${reference}
+Passagem: ${reference}
 
-**Texto:**
+Texto:
 ${versesText}
 
-O comentário deve:
-- Explicar o que o trecho ensina de forma direta e clara, sem exagero poético
-- Conectar a mensagem com a vida espiritual prática do leitor
-- Quando o texto tiver elementos históricos ou culturais relevantes (como costumes judaicos, expressões da época), mencioná-los brevemente para iluminar o sentido
-- Ter entre 150 e 200 palavras
-- Ser escrito em terceira pessoa, como um comentário sobre o trecho (não em primeira pessoa como se fosse Emmanuel falando)
-- Usar linguagem simples, direta e acessível — sem metáforas excessivas nem linguagem mística rebuscada
-- Terminar com uma aplicação prática objetiva para o leitor`;
+O estilo de Emmanuel nesses livros é:
+- Começa identificando diretamente o que o versículo ensina, sem introduções longas
+- Usa frases curtas e diretas, sem ornamentos poéticos excessivos
+- Conecta o ensinamento com situações concretas da vida cotidiana e da vida espiritual
+- Menciona, quando relevante, o contexto histórico ou cultural do texto de forma breve e funcional
+- Termina com uma aplicação prática clara: o que o leitor deve fazer ou refletir a partir deste versículo
+- Tom: edificante, mas sóbrio — como um orientador espiritual que fala com clareza, não como um pregador que exorta
+- Extensão: 3 parágrafos curtos (total 150-180 palavras)
+- Não use expressões como "este versículo nos convida", "mergulhemos", "naveguemos", "luz celestial" ou linguagem mística rebuscada
+- Escreva como Emmanuel escreve: direto, claro, prático`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
             content:
-              "Você é um comentarista espírita especializado na obra de Emmanuel/Chico Xavier. Seu estilo é claro, direto e edificante — você explica o que o texto bíblico ensina na prática, sem linguagem excessivamente poética ou mística. Você respeita o leitor e vai direto ao ponto.",
+              "Você escreve comentários bíblicos no estilo de Emmanuel, o espírito mentor de Chico Xavier, como nos livros 'Caminho, Verdade e Vida', 'Vinha de Luz' e 'Fonte Viva'. Nesses livros, Emmanuel isola um versículo e escreve uma reflexão prática e direta sobre ele, sem linguagem mística rebuscada. O estilo é seco, claro, orientado para a vida cotidiana e espiritual do leitor. Sem floreios. Sem exclamações. Sem metáforas excessivas. Como um professor que orienta, não um pregador que exorta.",
           },
           { role: "user", content: prompt },
         ],
