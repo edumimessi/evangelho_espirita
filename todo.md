@@ -1,0 +1,42 @@
+# Evangelho Espírita - TODO
+
+## Banco de Dados e Backend
+- [x] Schema: tabelas bible_books, bible_verses, emmanuel_comments, reading_history, daily_reading
+- [x] Popular banco com livros do AT e NT (66 livros)
+- [x] Popular banco com versículos (31.082 versículos — Bíblia completa)
+- [x] Popular banco com comentários de Emmanuel por trecho (via IA contextual)
+- [x] Router: busca por livro/capítulo/versículo
+- [x] Router: busca por palavras-chave
+- [x] Router: busca por temas espíritas
+- [x] Router: leitura diária (trecho do dia — 365 leituras)
+- [x] Router: histórico de leituras por usuário
+- [x] Router: geração IA de interpretação estilo Haroldo Dutra Dias
+- [x] Router: correlações AT/NT para cada passagem
+
+## Interface Visual Cósmica
+- [x] Fundo gradiente azul meia-noite e violeta
+- [x] Animação de estrelas espalhadas (canvas CSS)
+- [x] Brilhos de nebulosas e lens flares sutis
+- [x] Orbes planetários minimalistas
+- [x] Tipografia bold sans-serif com brilho ciano (Cinzel + Crimson Pro)
+- [x] Layout responsivo (mobile + desktop)
+- [x] Tema escuro imersivo
+
+## Páginas
+- [x] Home: apresentação, leitura diária em destaque, acesso rápido
+- [x] Leitor Bíblico: navegação por livro/capítulo/versículo com comentários
+- [x] Leitura Diária: trecho do dia com meditação e interpretação IA
+- [x] Busca: busca por texto, palavras-chave e temas espíritas
+- [x] Histórico: lista de leituras do usuário com data e trecho
+
+## Funcionalidades Integradas
+- [x] Comentários de Emmanuel vinculados contextualmente aos versículos
+- [x] Interpretação IA estilo Haroldo Dutra Dias (geração completa)
+- [x] Correlações AT/NT destacadas visualmente
+- [x] Registro automático de leitura no histórico ao acessar trecho
+- [x] Navegação entre livros/capítulos com breadcrumb
+- [x] Sistema de autenticação (login Manus OAuth)
+
+## Testes
+- [x] Testes vitest para routers principais (12 testes passando)
+- [x] Verificação responsividade mobile
