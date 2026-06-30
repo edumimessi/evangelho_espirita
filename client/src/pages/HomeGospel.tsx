@@ -42,6 +42,7 @@ export default function HomeGospel() {
   const [interpretationLoading, setInterpretationLoading] = useState(false);
   const [meditationIdx, setMeditationIdx] = useState(0);
   const [diaryNote, setDiaryNote] = useState("");
+  const [diaryInsight, setDiaryInsight] = useState("");
   const [diarySaved, setDiarySaved] = useState(false);
   const [diarySaving, setDiarySaving] = useState(false);
 
@@ -306,34 +307,52 @@ export default function HomeGospel() {
                     </div>
                   </div>
 
-                  {/* Diário Espiritual */}
+                  {/* Diário Espiritual - Campos Estruturados */}
                   {user && dailyData && (
-                    <div className="cosmic-card p-5 space-y-3">
-                      <h4 className="text-sm font-semibold text-white/60 tracking-wide flex items-center gap-2">
+                    <div className="cosmic-card p-5 space-y-4">
+                      <h4 className="text-sm font-cinzel text-cyan-300 tracking-wide flex items-center gap-2">
                         <Save className="w-4 h-4 text-cyan-400/60" />
-                        Diário Espiritual
+                        Registrar no diário
                       </h4>
-                      <textarea
-                        value={diaryNote}
-                        onChange={(e) => {
-                          setDiaryNote(e.target.value);
-                          setDiarySaved(false);
-                        }}
-                        placeholder="Registre aqui suas reflexões sobre a reunião de hoje..."
-                        className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white/80 placeholder:text-white/20 resize-none focus:outline-none focus:border-cyan-500/30 min-h-[120px]"
-                      />
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-cinzel text-indigo-200">O que tocou você?</label>
+                        <textarea
+                          value={diaryNote}
+                          onChange={(e) => {
+                            setDiaryNote(e.target.value);
+                            setDiarySaved(false);
+                          }}
+                          placeholder="Um sentimento, uma percepção..."
+                          className="cosmic-input w-full rounded-lg p-3 text-sm resize-none min-h-[80px]"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-cinzel text-indigo-200">Propósito ou insight</label>
+                        <input
+                          value={diaryInsight}
+                          onChange={(e) => {
+                            setDiaryInsight(e.target.value);
+                            setDiarySaved(false);
+                          }}
+                          placeholder="Uma atitude, uma intenção..."
+                          className="cosmic-input w-full rounded-lg p-3 text-sm"
+                        />
+                      </div>
+
                       <div className="flex items-center justify-between">
                         <p className="text-xs text-white/20">
                           {diarySaved ? (
                             <span className="flex items-center gap-1 text-green-400/60">
                               <Check className="w-3 h-3" /> Salvo
                             </span>
-                          ) : diaryNote.length > 0 ? (
+                          ) : (diaryNote.length > 0 || diaryInsight.length > 0) ? (
                             "Não salvo"
                           ) : null}
                         </p>
                         <button
-                          disabled={!diaryNote.trim() || diarySaving || diarySaved}
+                          disabled={(!diaryNote.trim() && !diaryInsight.trim()) || diarySaving || diarySaved}
                           onClick={async () => {
                             if (!dailyData) return;
                             setDiarySaving(true);
@@ -346,14 +365,17 @@ export default function HomeGospel() {
                                 verse: dailyData.reading.verseStart,
                                 verseText: dailyData.verses[0]?.text,
                                 theme: dailyData.reading.theme ?? undefined,
-                                note: diaryNote,
+                                note: diaryNote || diaryInsight || "",
+                                sentimento: diaryNote || undefined,
+                                insight: diaryInsight || undefined,
+                                contexto: "Evangelho no Lar — " + referenceLabel,
                               });
                               setDiarySaved(true);
                             } catch {} finally {
                               setDiarySaving(false);
                             }
                           }}
-                          className="px-4 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                          className="cosmic-btn px-4 py-1.5 rounded-lg text-xs"
                         >
                           {diarySaving ? "Salvando..." : "Salvar"}
                         </button>

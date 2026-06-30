@@ -474,13 +474,24 @@ export async function saveMeetingNote(data: {
   verseText: string | null;
   theme: string | null;
   note: string;
+  sentimento?: string | null;
+  insight?: string | null;
+  contexto?: string | null;
 }) {
   const db = await getDb();
   if (!db) return null;
   await db
     .insert(gospelMeetingNotes)
     .values(data)
-    .onDuplicateKeyUpdate({ set: { note: data.note, updatedAt: new Date() } });
+    .onDuplicateKeyUpdate({
+      set: {
+        note: data.note,
+        sentimento: data.sentimento ?? null,
+        insight: data.insight ?? null,
+        contexto: data.contexto ?? null,
+        updatedAt: new Date(),
+      },
+    });
   return { success: true };
 }
 

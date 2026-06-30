@@ -1,9 +1,8 @@
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Loader2, BookHeart, Calendar, ChevronRight } from "lucide-react";
-import { getLoginUrl } from "@/const";
-import { Button } from "@/components/ui/button";
 import { CosmicLayout } from "@/components/CosmicLayout";
+import { Loader2, Flame } from "lucide-react";
+import { getLoginUrl } from "@/const";
 
 export default function DiaryPage() {
   const { isAuthenticated, loading: authLoading } = useAuth();
@@ -11,7 +10,7 @@ export default function DiaryPage() {
     enabled: isAuthenticated,
   });
 
-  if (authLoading) {
+  if (authLoading || isLoading) {
     return (
       <CosmicLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -24,105 +23,80 @@ export default function DiaryPage() {
   if (!isAuthenticated) {
     return (
       <CosmicLayout>
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <BookHeart className="w-12 h-12 text-slate-500" />
-        <p className="text-slate-400 text-center">
-          Faça login para acessar seu diário espiritual.
-        </p>
-        <Button
-          variant="outline"
-          className="border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10"
-          onClick={() => (window.location.href = getLoginUrl())}
-        >
-          Entrar
-        </Button>
-      </div>
-      </CosmicLayout>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <CosmicLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-8 h-8 animate-spin text-cyan-400" />
+          <div className="text-center space-y-4">
+            <Flame className="w-12 h-12 text-amber-400/60 mx-auto" />
+            <p className="text-indigo-200/60 font-serif">Faça login para acessar seu diário espiritual.</p>
+            <a href={getLoginUrl()} className="cosmic-btn px-6 py-2 rounded-lg inline-block text-sm">
+              Entrar
+            </a>
+          </div>
         </div>
       </CosmicLayout>
     );
   }
+
+  const formatDate = (dateStr: string) => {
+    const [y, m, d] = dateStr.split("-");
+    return `${d}/${m}/${y}`;
+  };
 
   return (
     <CosmicLayout>
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-slate-100 flex items-center gap-3">
-          <BookHeart className="w-7 h-7 text-cyan-400" />
-          Diário Espiritual
-        </h1>
-        <p className="text-slate-400 text-sm">
-          Suas reflexões e anotações das reuniões do Evangelho no Lar
-        </p>
-      </div>
+      <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <p className="font-cinzel text-xs tracking-[3px] uppercase text-cyan-300">Diário Espiritual</p>
+          <h1 className="text-2xl md:text-3xl font-cinzel text-white glow-cyan">Minhas Meditações</h1>
+        </div>
 
-      {/* Lista de notas */}
-      {!notes || notes.length === 0 ? (
-        <div className="text-center py-16 space-y-4">
-          <Calendar className="w-12 h-12 text-slate-600 mx-auto" />
-          <p className="text-slate-500">
-            Nenhuma anotação ainda. Faça seu Evangelho no Lar e registre suas reflexões.
-          </p>
-          <Button
-            variant="outline"
-            className="border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10"
-            onClick={() => (window.location.href = "/evangelho-no-lar")}
-          >
-            Ir para Evangelho no Lar
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {notes.map((note) => (
-            <div
-              key={note.id}
-              className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5 hover:border-cyan-500/30 transition-colors"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 space-y-2">
+        {/* Lista de notas */}
+        {!notes || notes.length === 0 ? (
+          <div className="text-center py-16 space-y-4">
+            <Flame className="w-12 h-12 text-amber-400/40 mx-auto" />
+            <p className="text-indigo-200/50 font-serif">
+              Nenhuma meditação registrada ainda. Ao estudar, registre o que tocou seu coração.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {notes.map((entry) => (
+              <article key={entry.id} className="cosmic-card p-5 space-y-3">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-cyan-400 font-medium uppercase tracking-wider">
-                      {new Date(note.date + "T12:00:00").toLocaleDateString("pt-BR", {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
+                    <span className="text-xs font-cinzel text-amber-400 bg-amber-400/10 px-2 py-1 rounded">
+                      {entry.contexto || entry.theme || `${entry.bookName} ${entry.chapter}:${entry.verse}`}
                     </span>
-                    {note.theme && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/20">
-                        {note.theme}
-                      </span>
-                    )}
                   </div>
-                  <p className="text-sm text-slate-300 font-medium">
-                    {note.bookName} {note.chapter}:{note.verse}
-                  </p>
-                  {note.verseText && (
-                    <p className="text-xs text-slate-500 italic line-clamp-1">
-                      "{note.verseText}"
-                    </p>
-                  )}
-                  <p className="text-sm text-slate-300 line-clamp-3 mt-2">
-                    {note.note}
-                  </p>
+                  <span className="text-xs text-indigo-300/40">{formatDate(entry.date)}</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-slate-600 flex-shrink-0 mt-1" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+
+                {entry.verseText && (
+                  <p className="text-sm text-indigo-200/60 font-serif italic border-l-2 border-cyan-500/30 pl-3">
+                    "{entry.verseText}"
+                  </p>
+                )}
+
+                {entry.sentimento && (
+                  <p className="text-indigo-100/90 font-serif leading-relaxed">{entry.sentimento}</p>
+                )}
+
+                {entry.insight && (
+                  <p className="text-indigo-200/70 font-serif text-sm">
+                    <span className="text-amber-400 font-cinzel text-xs mr-2">Propósito:</span>
+                    {entry.insight}
+                  </p>
+                )}
+
+                {/* Fallback para notas antigas sem campos estruturados */}
+                {!entry.sentimento && !entry.insight && entry.note && (
+                  <p className="text-indigo-100/90 font-serif leading-relaxed">{entry.note}</p>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
     </CosmicLayout>
   );
 }

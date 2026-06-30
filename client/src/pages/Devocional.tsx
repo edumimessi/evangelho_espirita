@@ -1,10 +1,66 @@
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Loader2, BookOpen, Heart, Sparkles } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { Loader2, BookOpen, Heart, Sparkles, Star, RefreshCw, PenLine, ExternalLink } from "lucide-react";
 import { Streamdown } from "streamdown";
 import { CosmicLayout } from "@/components/CosmicLayout";
+import { toast } from "sonner";
 
 export default function Devocional() {
-  const { data, isLoading, error } = trpc.devocional.today.useQuery();
+  const { user, isAuthenticated } = useAuth();
+  const [showDiaryModal, setShowDiaryModal] = useState(false);
+  const [sentimento, setSentimento] = useState("");
+  const [insight, setInsight] = useState("");
+
+  const { data, isLoading, error, refetch } = trpc.devocional.today.useQuery(undefined, {
+    staleTime: 0,
+  });
+
+  const saveMeetingNote = trpc.meetingNotes.save.useMutation({
+    onSuccess: () => {
+      toast.success("Registrado no diário!");
+      setShowDiaryModal(false);
+      setSentimento("");
+      setInsight("");
+    },
+    onError: () => toast.error("Erro ao salvar no diário."),
+  });
+
+  const toggleFav = trpc.favorites.toggle.useMutation({
+    onSuccess: (result) => {
+      toast.success(result.isFavorite ? "Favoritado!" : "Removido dos favoritos");
+    },
+  });
+
+  const handleFavorite = () => {
+    if (!isAuthenticated || !data) return toast.error("Faça login para favoritar");
+    toggleFav.mutate({
+      bookAbbrev: "NT",
+      bookName: data.bookName || "Novo Testamento",
+      chapter: data.chapter || 1,
+      verse: data.verse || 1,
+      verseText: data.verseText,
+    });
+  };
+
+  const handleSaveDiary = () => {
+    if (!isAuthenticated || !data) return;
+    const today = new Date().toISOString().split("T")[0];
+    saveMeetingNote.mutate({
+      date: today,
+      bookAbbrev: "NT",
+      bookName: data.bookName || "Novo Testamento",
+      chapter: data.chapter || 1,
+      verse: data.verse || 1,
+      verseText: data.verseText,
+      theme: "Devocional — " + (data.reference || ""),
+      note: sentimento || insight || "",
+    });
+  };
+
+  const handleGerarOutro = () => {
+    refetch();
+  };
 
   if (isLoading) {
     return (
@@ -12,7 +68,7 @@ export default function Devocional() {
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center space-y-4">
             <Loader2 className="w-8 h-8 animate-spin text-cyan-400 mx-auto" />
-            <p className="text-slate-400 text-sm">Preparando seu devocional do dia...</p>
+            <p className="text-indigo-300/60 font-serif text-sm">Preparando o devocional...</p>
           </div>
         </div>
       </CosmicLayout>
@@ -23,7 +79,12 @@ export default function Devocional() {
     return (
       <CosmicLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
-          <p className="text-slate-400">Devocional não disponível hoje. Tente novamente mais tarde.</p>
+          <div className="text-center space-y-4">
+            <p className="text-indigo-300/60 font-serif">Devocional não disponível. Tente novamente.</p>
+            <button onClick={() => refetch()} className="cosmic-btn px-4 py-2 rounded-lg text-sm">
+              Tentar novamente
+            </button>
+          </div>
         </div>
       </CosmicLayout>
     );
@@ -31,67 +92,132 @@ export default function Devocional() {
 
   return (
     <CosmicLayout>
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs uppercase tracking-wider">
-          <Sparkles className="w-3 h-3" />
-          Devocional do Dia
+      <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <p className="font-cinzel text-xs tracking-[3px] uppercase text-cyan-300">Devocional do Dia</p>
+          <p className="text-indigo-300/50 text-sm font-serif">
+            {new Date().toLocaleDateString("pt-BR", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
-        <p className="text-slate-500 text-sm">
-          {new Date().toLocaleDateString("pt-BR", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </p>
-      </div>
 
-      {/* Versículo */}
-      <div className="relative">
-        <div className="absolute -left-2 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-violet-500 rounded-full" />
-        <div className="pl-6 space-y-3">
-          <div className="flex items-center gap-2 text-cyan-400 text-sm font-medium">
-            <BookOpen className="w-4 h-4" />
-            {data.reference}
+        {/* Card principal */}
+        <div className="cosmic-card p-6 md:p-8 space-y-6">
+          {/* Referência + Favoritar */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-amber-400 font-cinzel text-xs tracking-wide uppercase">
+              <BookOpen className="w-4 h-4" />
+              {data.reference}
+            </div>
+            <button
+              onClick={handleFavorite}
+              className="p-2 rounded-full hover:bg-white/10 transition-colors"
+              title="Favoritar"
+            >
+              <Star className="w-5 h-5 text-amber-400" />
+            </button>
           </div>
-          <blockquote className="text-xl md:text-2xl font-serif text-slate-100 leading-relaxed italic">
+
+          {/* Versículo */}
+          <blockquote className="border-l-3 border-cyan-400 pl-5 py-2 text-xl md:text-2xl font-serif text-indigo-100 leading-relaxed italic">
             "{data.verseText}"
           </blockquote>
-        </div>
-      </div>
 
-      {/* Reflexão */}
-      <div className="space-y-3">
-        <h2 className="text-sm uppercase tracking-wider text-slate-400 font-medium">
-          Reflexão
-        </h2>
-        <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 text-slate-200 leading-relaxed">
-          <Streamdown>{data.reflexao}</Streamdown>
-        </div>
-      </div>
+          {/* Reflexão */}
+          <div className="space-y-3">
+            <h3 className="font-cinzel text-xs tracking-[1.4px] uppercase text-cyan-300 pb-2 border-b border-white/10">
+              Reflexão
+            </h3>
+            <div className="text-indigo-100/90 font-serif leading-relaxed">
+              <Streamdown>{data.reflexao}</Streamdown>
+            </div>
+          </div>
 
-      {/* Oração */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Heart className="w-4 h-4 text-rose-400" />
-          <h2 className="text-sm uppercase tracking-wider text-slate-400 font-medium">
-            Oração
-          </h2>
-        </div>
-        <div className="bg-gradient-to-br from-violet-900/30 to-indigo-900/30 border border-violet-500/20 rounded-xl p-6 text-slate-200 leading-relaxed italic">
-          <Streamdown>{data.oracao}</Streamdown>
-        </div>
-      </div>
+          {/* Oração */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Heart className="w-4 h-4 text-rose-400" />
+              <h3 className="font-cinzel text-xs tracking-[1.4px] uppercase text-cyan-300">Oração</h3>
+            </div>
+            <div className="p-5 rounded-xl bg-white/[0.03] border border-violet-500/20 text-indigo-100/90 font-serif leading-relaxed italic">
+              <Streamdown>{data.oracao}</Streamdown>
+            </div>
+          </div>
 
-      {/* Footer */}
-      <div className="text-center pt-4">
-        <p className="text-xs text-slate-600">
-          Baseado na Doutrina Espírita e no estilo de Emmanuel
+          {/* Ações */}
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/10">
+            <button
+              onClick={handleGerarOutro}
+              className="inline-flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 font-cinzel transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" /> Gerar outro
+            </button>
+            <button
+              onClick={() => setShowDiaryModal(true)}
+              className="inline-flex items-center gap-2 text-sm text-violet-300 hover:text-violet-100 font-cinzel transition-colors"
+            >
+              <PenLine className="w-4 h-4" /> Registrar no diário
+            </button>
+            <a
+              href="https://bibliadocaminho.com/ocaminho/TKP/Ev/EvIndex.htm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-amber-400/70 hover:text-amber-300 font-cinzel transition-colors ml-auto"
+            >
+              <ExternalLink className="w-3 h-3" /> Bíblia do Caminho
+            </a>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <p className="text-center text-xs text-indigo-400/40 font-serif italic">
+          Reflexões geradas de forma original, inspiradas no estilo de Emmanuel — não reproduzem os livros protegidos.
         </p>
       </div>
-    </div>
+
+      {/* Modal Diário */}
+      {showDiaryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setShowDiaryModal(false)}>
+          <div className="w-full max-w-md cosmic-card p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-cinzel text-lg text-white">Registrar no diário</h3>
+            <p className="text-xs text-indigo-300/60 font-serif">Devocional — {data.reference}</p>
+
+            <div className="space-y-2">
+              <label className="text-sm text-indigo-200 font-cinzel">O que tocou você?</label>
+              <textarea
+                value={sentimento}
+                onChange={(e) => setSentimento(e.target.value)}
+                placeholder="Um sentimento, uma percepção..."
+                className="cosmic-input w-full rounded-lg p-3 min-h-[80px] resize-none text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-indigo-200 font-cinzel">Propósito ou insight</label>
+              <input
+                value={insight}
+                onChange={(e) => setInsight(e.target.value)}
+                placeholder="Uma atitude, uma intenção..."
+                className="cosmic-input w-full rounded-lg p-3 text-sm"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button onClick={() => setShowDiaryModal(false)} className="text-sm text-indigo-300/60 hover:text-indigo-200 font-cinzel transition-colors">
+                Cancelar
+              </button>
+              <button onClick={handleSaveDiary} className="cosmic-btn px-4 py-2 rounded-lg text-sm">
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </CosmicLayout>
   );
 }

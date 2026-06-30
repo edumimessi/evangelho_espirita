@@ -11,6 +11,7 @@ import {
   LogIn,
   LogOut,
   Menu,
+  Scroll,
   Search,
   Star,
   X,
@@ -23,6 +24,7 @@ import { trpc } from "@/lib/trpc";
 const navItems = [
   { href: "/", icon: Star, label: "Início" },
   { href: "/devocional", icon: Coffee, label: "Devocional" },
+  { href: "/ese", icon: Scroll, label: "ESE — Estudo" },
   { href: "/evangelho-no-lar", icon: Home, label: "Evangelho no Lar" },
   { href: "/leitura-diaria", icon: Calendar, label: "Leitura Diária" },
   { href: "/biblia", icon: BookOpen, label: "Bíblia" },
@@ -178,6 +180,19 @@ export function CosmicLayout({ children }: Props) {
         <div className="max-w-5xl mx-auto px-4 py-6 lg:px-8 lg:py-8">
           {children}
         </div>
+
+        {/* Footer com disclaimer */}
+        <footer className="border-t border-white/5 mt-12 py-6 px-4 lg:px-8">
+          <div className="max-w-5xl mx-auto text-center space-y-2">
+            <p className="text-xs text-indigo-200/30 font-serif">
+              Conteúdo inspirado nas obras de Allan Kardec, Emmanuel (psicografia de Chico Xavier) e nas palestras de Haroldo Dutra Dias.
+              Interpretações geradas por IA para fins de estudo pessoal.
+            </p>
+            <p className="text-xs text-indigo-200/20">
+              Referências: <a href="https://bibliadocaminho.com" target="_blank" rel="noopener noreferrer" className="text-cyan-400/40 hover:text-cyan-400/70 underline transition-colors">Bíblia do Caminho</a>
+            </p>
+          </div>
+        </footer>
       </main>
     </div>
   );

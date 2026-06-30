@@ -413,6 +413,92 @@ Máximo 5 correlações mais relevantes.`,
       const results = await searchVerses(words[0]);
       return results;
     }),
+
+  // Estudo do ESE (Evangelho Segundo o Espiritismo)
+  eseStudy: publicProcedure
+    .input(z.object({ chapterNum: z.number(), chapterTitle: z.string(), chapterTheme: z.string() }))
+    .query(async ({ input }) => {
+      const response = await invokeLLM({
+        messages: [
+          {
+            role: "system",
+            content: `Você é um estudioso espírita especializado em exegese bíblica e na obra de Allan Kardec. Seu método combina análise filológica (grego koiné, hebraico, aramaico) com a hermenêutica espírita.
+
+Responda SEMPRE em JSON válido com esta estrutura exata:
+{
+  "passagem": "O versículo ou trecho bíblico central do capítulo (texto literal)",
+  "referencia": "Referência bíblica (ex: Mateus 5:3-12)",
+  "contexto": "2-3 parágrafos explicando o que Kardec desenvolve neste capítulo do ESE. Seja direto e analítico.",
+  "filologia": "2-3 parágrafos de análise filológica: termos originais em grego/hebraico/aramaico, significados que se perdem na tradução, contexto linguístico e cultural da época. Exemplo: 'ptochoi to pneumati' (pobres de espírito) — ptochoi vem de ptossein (encolher-se), indicando não pobreza material mas despojamento interior.",
+  "reflexao": "2 parágrafos de reflexão devocional prática no estilo Emmanuel: direta, sem floreios, orientada para a transformação moral cotidiana.",
+  "correlacoes": [
+    {
+      "referencia": "Referência bíblica do AT",
+      "texto": "Texto do versículo correlacionado",
+      "ligacao": "Breve explicação da conexão com o tema do capítulo"
+    }
+  ],
+  "meditacao": "Roteiro para meditação no lar em 3 partes: FOCO (tema central em 1 frase), PERGUNTA AO CORAÇÃO (pergunta reflexiva pessoal), PROPÓSITO (ação prática para a semana)."
+}
+
+Máximo 3 correlações. Seja preciso nas referências bíblicas.`,
+          },
+          {
+            role: "user",
+            content: `Gere o estudo completo para o Capítulo ${input.chapterNum} do Evangelho Segundo o Espiritismo: "${input.chapterTitle}". Tema: ${input.chapterTheme}.`,
+          },
+        ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "ese_study",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                passagem: { type: "string" },
+                referencia: { type: "string" },
+                contexto: { type: "string" },
+                filologia: { type: "string" },
+                reflexao: { type: "string" },
+                correlacoes: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      referencia: { type: "string" },
+                      texto: { type: "string" },
+                      ligacao: { type: "string" },
+                    },
+                    required: ["referencia", "texto", "ligacao"],
+                    additionalProperties: false,
+                  },
+                },
+                meditacao: { type: "string" },
+              },
+              required: ["passagem", "referencia", "contexto", "filologia", "reflexao", "correlacoes", "meditacao"],
+              additionalProperties: false,
+            },
+          },
+        },
+      });
+
+      try {
+        const raw = response?.choices?.[0]?.message?.content;
+        const content = typeof raw === "string" ? raw : "{}";
+        return JSON.parse(content);
+      } catch {
+        return {
+          passagem: "",
+          referencia: "",
+          contexto: "Erro ao gerar estudo. Tente novamente.",
+          filologia: "",
+          reflexao: "",
+          correlacoes: [],
+          meditacao: "",
+        };
+      }
+    }),
 });
 
 // ─── Meeting Notes Router (Diário Espiritual) ─────────────────────────────────
@@ -427,7 +513,10 @@ const meetingNotesRouter = router({
       verse: z.number().int().positive(),
       verseText: z.string().optional(),
       theme: z.string().optional(),
-      note: z.string().min(1).max(10000),
+      note: z.string().max(10000),
+      sentimento: z.string().optional(),
+      insight: z.string().optional(),
+      contexto: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       return saveMeetingNote({
@@ -439,7 +528,10 @@ const meetingNotesRouter = router({
         verse: input.verse,
         verseText: input.verseText ?? null,
         theme: input.theme ?? null,
-        note: input.note,
+        note: input.note || input.sentimento || "",
+        sentimento: input.sentimento ?? null,
+        insight: input.insight ?? null,
+        contexto: input.contexto ?? null,
       });
     }),
   get: protectedProcedure

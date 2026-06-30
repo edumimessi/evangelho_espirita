@@ -13,6 +13,7 @@ import Favorites from "./pages/Favorites";
 import HomeGospel from "./pages/HomeGospel";
 import Devocional from "./pages/Devocional";
 import DiaryPage from "./pages/DiaryPage";
+import EseStudy from "./pages/EseStudy";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/evangelho-no-lar" component={HomeGospel} />
       <Route path="/devocional" component={Devocional} />
       <Route path="/diario" component={DiaryPage} />
+      <Route path="/ese" component={EseStudy} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
