@@ -6,7 +6,9 @@ import {
   bibleVerses,
   correlations,
   dailyReadings,
+  devocionalCache,
   emmanuelComments,
+  gospelMeetingNotes,
   InsertUser,
   readingHistory,
   users,
@@ -457,4 +459,82 @@ export async function saveInterpretation(data: {
     .insert(aiInterpretations)
     .values(data)
     .onDuplicateKeyUpdate({ set: { interpretation: data.interpretation, updatedAt: new Date() } });
+}
+
+
+// ─── Gospel Meeting Notes (Diário Espiritual) ────────────────────────────────
+
+export async function saveMeetingNote(data: {
+  userId: number;
+  date: string;
+  bookAbbrev: string;
+  bookName: string;
+  chapter: number;
+  verse: number;
+  verseText: string | null;
+  theme: string | null;
+  note: string;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  await db
+    .insert(gospelMeetingNotes)
+    .values(data)
+    .onDuplicateKeyUpdate({ set: { note: data.note, updatedAt: new Date() } });
+  return { success: true };
+}
+
+export async function getMeetingNote(userId: number, date: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db
+    .select()
+    .from(gospelMeetingNotes)
+    .where(and(eq(gospelMeetingNotes.userId, userId), eq(gospelMeetingNotes.date, date)))
+    .limit(1);
+  return result[0] ?? null;
+}
+
+export async function getMeetingNotesList(userId: number, limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(gospelMeetingNotes)
+    .where(eq(gospelMeetingNotes.userId, userId))
+    .orderBy(desc(gospelMeetingNotes.date))
+    .limit(limit);
+}
+
+// ─── Devocional Cache ────────────────────────────────────────────────────────
+
+export async function getDevocionalCache(date: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(devocionalCache)
+    .where(eq(devocionalCache.date, date))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function saveDevocionalCache(data: {
+  date: string;
+  reference: string;
+  verseText: string;
+  reflexao: string;
+  oracao: string;
+}) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .insert(devocionalCache)
+    .values(data)
+    .onDuplicateKeyUpdate({
+      set: {
+        reflexao: data.reflexao,
+        oracao: data.oracao,
+      },
+    });
 }

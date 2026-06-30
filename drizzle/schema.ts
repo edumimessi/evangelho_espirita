@@ -209,3 +209,48 @@ export const verseFavorites = mysqlTable(
 );
 
 export type VerseFavorite = typeof verseFavorites.$inferSelect;
+
+// Anotações das reuniões do Evangelho no Lar
+export const gospelMeetingNotes = mysqlTable(
+  "gospel_meeting_notes",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull(),
+    date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD
+    bookAbbrev: varchar("bookAbbrev", { length: 10 }).notNull(),
+    bookName: varchar("bookName", { length: 100 }).notNull(),
+    chapter: int("chapter").notNull(),
+    verse: int("verse").notNull(),
+    verseText: text("verseText"),
+    theme: varchar("theme", { length: 200 }),
+    note: text("note").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    userDateUnique: uniqueIndex("meeting_user_date_unique").on(
+      table.userId,
+      table.date
+    ),
+    userIdx: index("meeting_user_idx").on(table.userId),
+  })
+);
+
+export type GospelMeetingNote = typeof gospelMeetingNotes.$inferSelect;
+export type InsertGospelMeetingNote = typeof gospelMeetingNotes.$inferInsert;
+
+// Cache do devocional diário (evita regenerar no mesmo dia)
+export const devocionalCache = mysqlTable(
+  "devocional_cache",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    date: varchar("date", { length: 10 }).notNull().unique(), // YYYY-MM-DD
+    reference: varchar("reference", { length: 200 }).notNull(),
+    verseText: text("verseText").notNull(),
+    reflexao: text("reflexao").notNull(),
+    oracao: text("oracao").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  }
+);
+
+export type DevocionalCache = typeof devocionalCache.$inferSelect;

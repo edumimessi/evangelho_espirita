@@ -9,7 +9,8 @@ import {
   Loader2,
   ChevronLeft,
   ChevronRight,
-  Printer,
+  Save,
+  Check,
 } from "lucide-react";
 import { CosmicLayout } from "@/components/CosmicLayout";
 import { Streamdown } from "streamdown";
@@ -40,6 +41,9 @@ export default function HomeGospel() {
   const [emmanuelLoading, setEmmanuelLoading] = useState(false);
   const [interpretationLoading, setInterpretationLoading] = useState(false);
   const [meditationIdx, setMeditationIdx] = useState(0);
+  const [diaryNote, setDiaryNote] = useState("");
+  const [diarySaved, setDiarySaved] = useState(false);
+  const [diarySaving, setDiarySaving] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
   const { data: dailyData, isLoading } = trpc.daily.today.useQuery();
@@ -47,6 +51,18 @@ export default function HomeGospel() {
   const emmanuelMutation = trpc.ai.emmanuelComment.useMutation();
   const interpretMutation = trpc.ai.interpret.useMutation();
   const addHistoryMutation = trpc.history.add.useMutation();
+  const saveMeetingNote = trpc.meetingNotes.save.useMutation();
+  const { data: existingNote } = trpc.meetingNotes.get.useQuery(
+    { date: today },
+    { enabled: !!user }
+  );
+
+  useEffect(() => {
+    if (existingNote?.note) {
+      setDiaryNote(existingNote.note);
+      setDiarySaved(true);
+    }
+  }, [existingNote]);
 
   useEffect(() => {
     if (dailyData && user) {
@@ -289,6 +305,62 @@ export default function HomeGospel() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Diário Espiritual */}
+                  {user && dailyData && (
+                    <div className="cosmic-card p-5 space-y-3">
+                      <h4 className="text-sm font-semibold text-white/60 tracking-wide flex items-center gap-2">
+                        <Save className="w-4 h-4 text-cyan-400/60" />
+                        Diário Espiritual
+                      </h4>
+                      <textarea
+                        value={diaryNote}
+                        onChange={(e) => {
+                          setDiaryNote(e.target.value);
+                          setDiarySaved(false);
+                        }}
+                        placeholder="Registre aqui suas reflexões sobre a reunião de hoje..."
+                        className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white/80 placeholder:text-white/20 resize-none focus:outline-none focus:border-cyan-500/30 min-h-[120px]"
+                      />
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-white/20">
+                          {diarySaved ? (
+                            <span className="flex items-center gap-1 text-green-400/60">
+                              <Check className="w-3 h-3" /> Salvo
+                            </span>
+                          ) : diaryNote.length > 0 ? (
+                            "Não salvo"
+                          ) : null}
+                        </p>
+                        <button
+                          disabled={!diaryNote.trim() || diarySaving || diarySaved}
+                          onClick={async () => {
+                            if (!dailyData) return;
+                            setDiarySaving(true);
+                            try {
+                              await saveMeetingNote.mutateAsync({
+                                date: today,
+                                bookAbbrev: dailyData.reading.bookAbbrev,
+                                bookName: dailyData.reading.bookName,
+                                chapter: dailyData.reading.chapter,
+                                verse: dailyData.reading.verseStart,
+                                verseText: dailyData.verses[0]?.text,
+                                theme: dailyData.reading.theme ?? undefined,
+                                note: diaryNote,
+                              });
+                              setDiarySaved(true);
+                            } catch {} finally {
+                              setDiarySaving(false);
+                            }
+                          }}
+                          className="px-4 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                        >
+                          {diarySaving ? "Salvando..." : "Salvar"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="cosmic-card p-5 text-center">
                     <p className="text-white/30 text-sm mb-3">Versículos lidos hoje</p>
                     <p className="text-cyan-400 font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>

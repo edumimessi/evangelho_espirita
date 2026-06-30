@@ -14,12 +14,17 @@ import {
   getChapterFavorites,
   getChapterNotes,
   getDailyReading,
+  getDevocionalCache,
   getEmmanuelComments,
+  getMeetingNote,
+  getMeetingNotesList,
   getUserFavorites,
   getUserHistory,
   getVerseRange,
+  saveDevocionalCache,
   saveEmmanuelComment,
   saveInterpretation,
+  saveMeetingNote,
   saveVerseNote,
   searchVerses,
   toggleVerseFavorite,
@@ -410,6 +415,134 @@ Máximo 5 correlações mais relevantes.`,
     }),
 });
 
+// ─── Meeting Notes Router (Diário Espiritual) ─────────────────────────────────
+
+const meetingNotesRouter = router({
+  save: protectedProcedure
+    .input(z.object({
+      date: z.string(),
+      bookAbbrev: z.string(),
+      bookName: z.string(),
+      chapter: z.number().int().positive(),
+      verse: z.number().int().positive(),
+      verseText: z.string().optional(),
+      theme: z.string().optional(),
+      note: z.string().min(1).max(10000),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return saveMeetingNote({
+        userId: ctx.user.id,
+        date: input.date,
+        bookAbbrev: input.bookAbbrev,
+        bookName: input.bookName,
+        chapter: input.chapter,
+        verse: input.verse,
+        verseText: input.verseText ?? null,
+        theme: input.theme ?? null,
+        note: input.note,
+      });
+    }),
+  get: protectedProcedure
+    .input(z.object({ date: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return getMeetingNote(ctx.user.id, input.date);
+    }),
+  list: protectedProcedure.query(async ({ ctx }) => {
+    return getMeetingNotesList(ctx.user.id);
+  }),
+});
+
+// ─── Devocional Diário Router (estilo Café com Deus Pai) ─────────────────────
+
+const devocionalRouter = router({
+  today: publicProcedure.query(async () => {
+    const reading = await getDailyReading();
+    if (!reading) return null;
+
+    const verses = await getVerseRange(
+      reading.bookAbbrev,
+      reading.chapter,
+      reading.verseStart,
+      reading.verseEnd
+    );
+    if (!verses.length) return null;
+
+    const verseText = verses.map(v => v.text).join(" ");
+    const reference = `${reading.bookName} ${reading.chapter}:${reading.verseStart}`;
+
+    // Check cache first
+    const today = new Date().toISOString().slice(0, 10);
+    const cached = await getDevocionalCache(today);
+    if (cached) {
+      return {
+        reference,
+        bookName: reading.bookName,
+        chapter: reading.chapter,
+        verse: reading.verseStart,
+        verseText,
+        theme: reading.theme,
+        reflexao: cached.reflexao,
+        oracao: cached.oracao,
+      };
+    }
+
+    const response = await invokeLLM({
+      messages: [
+        {
+          role: "system",
+          content: `Você escreve devocionais diários espíritas no estilo do livro "Café com Deus Pai", mas sob a ótica da Doutrina Espírita e no tom de Emmanuel (Chico Xavier). O formato é:\n\n1. Uma reflexão curta e direta sobre o versículo (3-4 parágrafos, 150-200 palavras). Sem floreios. Linguagem clara, acolhedora mas sóbria. Conecta o versículo com a vida prática e com princípios espíritas (reencarnação, lei de causa e efeito, evolução moral, caridade).\n\n2. Uma oração/pensamento de encerramento (3-5 linhas). Tom íntimo, como quem conversa com Deus/Pai. Sem linguagem eclesiástica formal. Simples e sincero.\n\nResponda em JSON com os campos: "reflexao" e "oracao".`,
+        },
+        {
+          role: "user",
+          content: `Versículo do dia: ${reference}\n\n"${verseText}"\n\nEscreva o devocional diário para este versículo.`,
+        },
+      ],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "devocional",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: {
+              reflexao: { type: "string", description: "Reflexão espírita sobre o versículo" },
+              oracao: { type: "string", description: "Oração/pensamento de encerramento" },
+            },
+            required: ["reflexao", "oracao"],
+            additionalProperties: false,
+          },
+        },
+      },
+    });
+
+    let reflexao = "Reflexão não disponível.";
+    let oracao = "Oração não disponível.";
+
+    try {
+      const raw = response?.choices?.[0]?.message?.content;
+      if (typeof raw === "string") {
+        const parsed = JSON.parse(raw);
+        reflexao = parsed.reflexao || reflexao;
+        oracao = parsed.oracao || oracao;
+      }
+    } catch {}
+
+    // Save to cache
+    await saveDevocionalCache({ date: today, reference, verseText, reflexao, oracao });
+
+    return {
+      reference,
+      bookName: reading.bookName,
+      chapter: reading.chapter,
+      verse: reading.verseStart,
+      verseText,
+      theme: reading.theme,
+      reflexao,
+      oracao,
+    };
+  }),
+});
+
 // ─── App Router ───────────────────────────────────────────────────────────────
 
 
@@ -493,6 +626,8 @@ export const appRouter = router({
   ai: aiRouter,
   notes: notesRouter,
   favorites: favoritesRouter,
+  meetingNotes: meetingNotesRouter,
+  devocional: devocionalRouter,
 });
 
 export type AppRouter = typeof appRouter;

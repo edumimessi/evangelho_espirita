@@ -11,6 +11,8 @@ import SearchPage from "./pages/Search";
 import ReadingHistory from "./pages/ReadingHistory";
 import Favorites from "./pages/Favorites";
 import HomeGospel from "./pages/HomeGospel";
+import Devocional from "./pages/Devocional";
+import DiaryPage from "./pages/DiaryPage";
 
 function Router() {
   return (
@@ -22,6 +24,8 @@ function Router() {
       <Route path="/historico" component={ReadingHistory} />
       <Route path="/favoritos" component={Favorites} />
       <Route path="/evangelho-no-lar" component={HomeGospel} />
+      <Route path="/devocional" component={Devocional} />
+      <Route path="/diario" component={DiaryPage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

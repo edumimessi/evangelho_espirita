@@ -52,3 +52,22 @@
 - [x] Página Favoritos: lista de versículos favoritados com acesso rápido
 - [x] Página Evangelho no Lar: layout especial para reunião em grupo
 - [x] Sidebar: adicionar links para Favoritos e Evangelho no Lar
+
+## Rodada 4 - Diário Espiritual e Temas Aprofundados
+
+- [x] Schema: tabela gospel_meeting_notes (anotações do Evangelho no Lar por data)
+- [x] Router tRPC: meetingNotes.save, meetingNotes.get, meetingNotes.list
+- [x] Evangelho no Lar: campo de anotação na etapa Meditação com salvamento automático
+- [x] Página Diário Espiritual: histórico de reuniões com anotações por data
+- [x] Sidebar: adicionar link para Diário Espiritual
+- [x] Busca: expandir temas espíritas com subtemas detalhados (15 temas, 60 subtemas)
+- [x] Busca: exibir versículos mais relevantes por subtema com interpretação
+
+## Rodada 5 - Devocional Diário (estilo Café com Deus Pai espírita)
+
+- [x] Router tRPC: devocional.getToday (gera versículo + reflexão + oração via IA)
+- [x] Página Devocional Diário: layout imersivo com versículo, reflexão e oração
+- [x] Devocional: geração IA de reflexão espírita direta e prática (estilo Emmanuel)
+- [x] Devocional: oração/pensamento de encerramento espírita
+- [x] Sidebar: adicionar link para Devocional Diário
+- [x] Cache: salvar devocional gerado no banco para não regenerar no mesmo dia

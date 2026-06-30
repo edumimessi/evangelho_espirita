@@ -1,9 +1,11 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import {
+  BookHeart,
   BookOpen,
   Calendar,
   Clock,
+  Coffee,
   History,
   Home,
   LogIn,
@@ -20,11 +22,13 @@ import { trpc } from "@/lib/trpc";
 
 const navItems = [
   { href: "/", icon: Star, label: "Início" },
+  { href: "/devocional", icon: Coffee, label: "Devocional" },
   { href: "/evangelho-no-lar", icon: Home, label: "Evangelho no Lar" },
   { href: "/leitura-diaria", icon: Calendar, label: "Leitura Diária" },
   { href: "/biblia", icon: BookOpen, label: "Bíblia" },
   { href: "/busca", icon: Search, label: "Busca" },
   { href: "/favoritos", icon: Star, label: "Favoritos" },
+  { href: "/diario", icon: BookHeart, label: "Diário Espiritual" },
   { href: "/historico", icon: History, label: "Histórico" },
 ];
 

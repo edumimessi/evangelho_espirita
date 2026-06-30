@@ -7,16 +7,81 @@ type Testament = "old" | "new" | undefined;
 type SearchMode = "text" | "reference";
 
 const spiritThemes = [
-  { label: "Reencarnação", icon: "♾️" },
-  { label: "Lei de Causa e Efeito", icon: "⚖️" },
-  { label: "Caridade", icon: "💫" },
-  { label: "Evolução Espiritual", icon: "🌟" },
-  { label: "Mediunidade", icon: "🔮" },
-  { label: "Vida após a morte", icon: "✨" },
-  { label: "Oração", icon: "🙏" },
-  { label: "Perdão", icon: "🕊️" },
-  { label: "Humildade", icon: "🌿" },
-  { label: "Amor", icon: "💛" },
+  {
+    label: "Reencarnação",
+    icon: "♾️",
+    subtemas: ["nascer de novo", "vidas sucessivas", "renascimento", "retorno à carne"],
+  },
+  {
+    label: "Lei de Causa e Efeito",
+    icon: "⚖️",
+    subtemas: ["colher e semear", "justiça divina", "consequências", "retribuíção"],
+  },
+  {
+    label: "Caridade",
+    icon: "💫",
+    subtemas: ["amor ao próximo", "serviço", "generosidade", "compaixao"],
+  },
+  {
+    label: "Evolução Espiritual",
+    icon: "🌟",
+    subtemas: ["perfeição moral", "progresso", "transformação interior", "aprendizado"],
+  },
+  {
+    label: "Mediunidade",
+    icon: "🔮",
+    subtemas: ["dons espirituais", "revelação", "profecia", "visão"],
+  },
+  {
+    label: "Vida após a morte",
+    icon: "✨",
+    subtemas: ["ressurreição", "vida eterna", "moradas do Pai", "mundo espiritual"],
+  },
+  {
+    label: "Oração",
+    icon: "🙏",
+    subtemas: ["orar", "pedir", "buscar", "comunhão com Deus"],
+  },
+  {
+    label: "Perdão",
+    icon: "🕊️",
+    subtemas: ["perdoar", "misericórdia", "reconciliação", "compaixao"],
+  },
+  {
+    label: "Humildade",
+    icon: "🌿",
+    subtemas: ["servo", "manso", "pobre de espírito", "simplicidade"],
+  },
+  {
+    label: "Amor",
+    icon: "💛",
+    subtemas: ["amar", "amor fraterno", "amor universal", "benevolencia"],
+  },
+  {
+    label: "Fé",
+    icon: "💠",
+    subtemas: ["crer", "confiança", "fé raciocinada", "certeza"],
+  },
+  {
+    label: "Livre-arbítrio",
+    icon: "🛤️",
+    subtemas: ["escolha", "vontade", "caminho", "decisão"],
+  },
+  {
+    label: "Trabalho e Missão",
+    icon: "🌱",
+    subtemas: ["talento", "servo", "vinha", "obra"],
+  },
+  {
+    label: "Desapego Material",
+    icon: "🌊",
+    subtemas: ["tesouro no céu", "riqueza", "pobreza", "desprendimento"],
+  },
+  {
+    label: "Obsessão e Vigilância",
+    icon: "🛡️",
+    subtemas: ["vigiar", "tentação", "espírito impuro", "resistência"],
+  },
 ];
 
 const bookNameMap: Record<string, string> = {
@@ -84,11 +149,20 @@ export default function SearchPage() {
     { enabled: refEnabled && !!refBook && !!refChapter }
   );
 
+  const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
+
   const handleTheme = (theme: string) => {
     setMode("text");
     setActiveTheme(theme);
     setQuery(theme);
     setDebouncedQuery(theme);
+    setExpandedTheme(expandedTheme === theme ? null : theme);
+  };
+
+  const handleSubtema = (subtema: string) => {
+    setMode("text");
+    setQuery(subtema);
+    setDebouncedQuery(subtema);
   };
 
   const clearSearch = () => {
@@ -216,6 +290,26 @@ export default function SearchPage() {
                   </button>
                 ))}
               </div>
+
+              {/* Subtemas expandidos */}
+              {expandedTheme && (
+                <div className="mt-3 pl-2 border-l-2 border-cyan-500/20">
+                  <p className="text-xs text-white/30 mb-2">Subtemas de "{expandedTheme}":</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {spiritThemes
+                      .find((t) => t.label === expandedTheme)
+                      ?.subtemas.map((sub) => (
+                        <button
+                          key={sub}
+                          onClick={() => handleSubtema(sub)}
+                          className="px-2.5 py-1 rounded-lg text-xs bg-violet-500/10 border border-violet-500/20 text-violet-300 hover:bg-violet-500/20 transition-all"
+                        >
+                          {sub}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Text Results */}
