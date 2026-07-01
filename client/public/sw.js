@@ -4,8 +4,16 @@
 //  - NUNCA cacheia /api/ (dados dinâmicos, login, IA) — sempre rede.
 //  - Navegações: rede primeiro, com index.html do cache como reserva offline.
 //  - Demais estáticos: usa cache e atualiza em segundo plano (stale-while-revalidate).
-const CACHE = "evangelho-espirita-v1";
-const APP_SHELL = ["/", "/index.html", "/icon.svg", "/manifest.webmanifest"];
+const CACHE = "evangelho-espirita-v2";
+// offline.html é autossuficiente (sem JS/CSS externos), então funciona mesmo
+// que os assets com hash do build ainda não estejam em cache.
+const APP_SHELL = [
+  "/",
+  "/index.html",
+  "/offline.html",
+  "/icon.svg",
+  "/manifest.webmanifest",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -29,10 +37,13 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/api/")) return;
 
-  // Navegação (abrir páginas): tenta a rede; se offline, cai no index em cache.
+  // Navegação (abrir páginas): tenta a rede; se offline, mostra a tela
+  // offline autossuficiente (não depende dos assets com hash do build).
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() => caches.match("/index.html").then((r) => r || caches.match("/")))
+      fetch(request).catch(() =>
+        caches.match("/offline.html").then((r) => r || caches.match("/index.html"))
+      )
     );
     return;
   }

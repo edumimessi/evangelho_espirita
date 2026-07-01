@@ -421,24 +421,26 @@ Máximo 5 correlações mais relevantes.`,
   themeSearch: publicProcedure
     .input(z.object({ theme: z.string().min(2) }))
     .query(async ({ input }) => {
-      const spiritThemes: Record<string, string> = {
-        reencarnação: "reencarnação renascer nascer de novo",
-        "lei de causa e efeito": "colher semear plantou colherá",
-        caridade: "amor próximo caridade dar",
-        "evolução espiritual": "perfeição crescer aprender",
-        mediunidade: "espírito comunicação revelação",
-        "vida após a morte": "ressurreição vida eterna morte",
-        oração: "orar oração pedir buscar",
-        perdão: "perdoar perdão misericórdia",
-        humildade: "humilde humildade servo",
-        amor: "amor amar amados",
+      // Termos por tema como LISTA de expressões inteiras: cada item é buscado
+      // como um LIKE completo (OR entre eles). Manter frases como "nascer de
+      // novo" juntas evita que palavras vazias (ex.: "de") virem termo isolado
+      // e casem com quase toda a Bíblia.
+      const spiritThemes: Record<string, string[]> = {
+        reencarnação: ["renascer", "nascer de novo", "regenera"],
+        "lei de causa e efeito": ["semea", "ceifa", "colher", "segar"],
+        caridade: ["caridade", "esmola", "misericórdia", "compaixão"],
+        "evolução espiritual": ["perfeit", "santifica", "transforma", "renova"],
+        mediunidade: ["profe", "revela", "visão", "dons"],
+        "vida após a morte": ["ressurreição", "ressuscit", "vida eterna", "morada"],
+        oração: ["oração", "orai", "orando", "orou", "rogai", "súplica"],
+        perdão: ["perdoa", "perdão", "remissão", "misericórdia"],
+        humildade: ["humild", "manso", "mansidão", "servo"],
+        amor: ["amai", "amados", "amarás", "amor"],
       };
 
-      const searchTerm = spiritThemes[input.theme.toLowerCase()] ?? input.theme;
-      const words = searchTerm.split(" ").filter(Boolean);
-      // OR de todos os termos do tema, não só o primeiro (que às vezes é
-      // justamente o rótulo conceitual inexistente no texto bíblico).
-      const results = await searchVerses(words);
+      // Tema conhecido → termos bíblicos; senão, usa o próprio texto como frase.
+      const terms = spiritThemes[input.theme.toLowerCase()] ?? [input.theme];
+      const results = await searchVerses(terms);
       return results;
     }),
 
