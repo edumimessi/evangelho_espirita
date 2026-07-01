@@ -103,9 +103,8 @@
     };
     const ORDER = ["mt","mc","lc","jo","at","rm","1co","2co","gl","ef","fp","cl","1ts","1tm"];
 
-    // Livros-fonte de Emmanuel com URL direta conhecida na Bíblia do Caminho
-    // (padrão /ocaminho/TX/{Code}/{Code}{NNN}.htm, ex.: Cvv174).
-    const LIVROS_LINK = { Fv:1, Pn:1, Vl:1, Cvv:1, Pve:1, Le:1, Cel:1, Bp:1 };
+    // Padrão de URL da Bíblia do Caminho (confirmado): TX/{Code}/{Code}{NNN}.htm
+    // (ex.: Fv174, Cvv001). Aplica-se a qualquer código "Letras.Número".
     // Índice do volume (fallback) por livro bíblico — URLs reais do documento-fonte.
     const VOL_INDEX = {
       mt:"Oee1", mc:"Oee2", lc:"Oee3", jo:"Oee4", at:"Oee5",
@@ -121,7 +120,7 @@
     function commentUrl(x, code) {
       if (!code) return volIndexUrl(x);
       const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code);
-      if (m && LIVROS_LINK[m[1]]) {
+      if (m) {
         const c = m[1], n = String(m[2]).padStart(3, "0");
         return `https://bibliadocaminho.com/ocaminho/TX/${c}/${c}${n}.htm`;
       }
