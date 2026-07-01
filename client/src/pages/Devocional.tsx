@@ -159,6 +159,33 @@ export default function Devocional() {
             </div>
           </div>
 
+          {/* Referências de Emmanuel */}
+          {data.emmanuelRefs && (data.emmanuelRefs as Array<{title: string; source: string; code: string}>).length > 0 && (
+            <div className="space-y-3 pt-4 border-t border-white/10">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <h3 className="font-cinzel text-xs tracking-[1.4px] uppercase text-amber-400">Emmanuel comentou este versículo</h3>
+              </div>
+              <div className="space-y-2">
+                {(data.emmanuelRefs as Array<{title: string; source: string; code: string}>).map((ref, i) => (
+                  <a
+                    key={i}
+                    href={bibliaCaminhoVerseUrl(data.bookAbbrev, data.chapter, data.verse)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-3 p-3 rounded-lg bg-amber-400/5 border border-amber-400/20 hover:bg-amber-400/10 transition-colors group"
+                  >
+                    <div>
+                      <p className="text-amber-200 text-sm font-serif">{ref.title}</p>
+                      <p className="text-amber-400/60 text-xs font-cinzel">{ref.code}</p>
+                    </div>
+                    <ExternalLink className="w-3 h-3 text-amber-400/60 group-hover:text-amber-300 flex-shrink-0" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Ações */}
           <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/10">
             <button

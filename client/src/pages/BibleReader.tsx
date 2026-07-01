@@ -431,7 +431,9 @@ export default function BibleReader() {
                             {isEmmanuelOpen && (
                               <div className="mt-1.5 px-3 py-2 rounded-lg bg-amber-400/[0.06] border border-amber-400/20 space-y-1.5">
                                 {emmanuelRefs.map((ref, i) => {
-                                  const bdcUrl = bibliaCaminhoVerseUrl(
+                                  // Usa ref.url (URL direta do comentário no livro de Emmanuel)
+                                  // ou fallback para a URL do versículo na Bíblia do Caminho
+                                  const linkUrl = (ref as any).url ?? bibliaCaminhoVerseUrl(
                                     selectedBook ?? undefined,
                                     selectedChapter,
                                     verse.verse
@@ -448,11 +450,11 @@ export default function BibleReader() {
                                         )}
                                       </div>
                                       <a
-                                        href={bdcUrl}
+                                        href={linkUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="shrink-0 text-amber-300/50 hover:text-amber-300 transition-colors mt-0.5"
-                                        title="Ler na Bíblia do Caminho"
+                                        title="Ler comentário de Emmanuel na Bíblia do Caminho"
                                       >
                                         <ExternalLink className="w-3 h-3" />
                                       </a>

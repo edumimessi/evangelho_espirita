@@ -31,7 +31,7 @@ import {
   toggleVerseFavorite,
 } from "./db";
 import { fetchEseChapterSource } from "./services/bibliaCaminhoScraper";
-import { getEmmanuelChapterIndex, emmanuelSiglas } from "./data/emmanuelIndex";
+import { getEmmanuelChapterIndex, emmanuelSiglas, emmanuelIndex } from "./data/emmanuelIndex";
 
 // ─── Bible Router ─────────────────────────────────────────────────────────────
 
@@ -113,13 +113,14 @@ const bibleRouter = router({
     .input(z.object({ bookAbbrev: z.string(), chapter: z.number().int().positive() }))
     .query(({ input }) => {
       const chapterIndex = getEmmanuelChapterIndex(input.bookAbbrev, input.chapter);
-      // Enriquece cada referência com o nome amigável da fonte (quando conhecido).
-      const result: Record<string, { title: string; code: string | null; source: string | null }[]> = {};
+      // Enriquece cada referência com o nome amigável da fonte e URL direta.
+      const result: Record<string, { title: string; code: string | null; source: string | null; url: string | null }[]> = {};
       for (const [verse, refs] of Object.entries(chapterIndex)) {
         result[verse] = refs.map((r) => {
           const prefix = r.code ? r.code.split(".")[0] : null;
-          const source = prefix ? emmanuelSiglas[prefix] ?? null : null;
-          return { title: r.title, code: r.code, source };
+          // Usa source do índice se disponível, senão busca no mapa de siglas
+          const source = r.source ?? (prefix ? emmanuelSiglas[prefix] ?? null : null);
+          return { title: r.title, code: r.code, source, url: r.url ?? null };
         });
       }
       return result;
@@ -663,6 +664,7 @@ const devocionalRouter = router({
         theme: reading.theme,
         reflexao: cached.reflexao,
         oracao: cached.oracao,
+        emmanuelRefs: [] as Array<{title: string; source: string; code: string}>,
       };
     }
 
@@ -708,7 +710,7 @@ const devocionalRouter = router({
     } catch {}
 
         // Save to cache
-    await saveDevocionalCache({ date: today, reference, verseText, reflexao, oracao });
+        await saveDevocionalCache({ date: today, reference, verseText, reflexao, oracao });
     return {
       reference,
       bookAbbrev: reading.bookAbbrev,
@@ -719,36 +721,59 @@ const devocionalRouter = router({
       theme: reading.theme,
       reflexao,
       oracao,
+      emmanuelRefs: [] as Array<{title: string; source: string; code: string}>,
     };
   }),
-
-  // Gera um novo devocional para o mesmo versículo do dia (ignora cache)
+  // Gera um novo devocional sorteando um versículo aleatório que Emmanuel comentou
   generate: publicProcedure.mutation(async () => {
-    const reading = await getDailyReading();
-    if (!reading) throw new TRPCError({ code: "NOT_FOUND", message: "Leitura do dia não encontrada" });
-    const verses = await getVerseRange(
-      reading.bookAbbrev,
-      reading.chapter,
-      reading.verseStart,
-      reading.verseEnd
-    );
-    if (!verses.length) throw new TRPCError({ code: "NOT_FOUND", message: "Versículos não encontrados" });
-    const verseText = verses.map(v => v.text).join(" ");
-    const reference = `${reading.bookName} ${reading.chapter}:${reading.verseStart}`;
+    // Obter todos os versículos do índice de Emmanuel
+    const allEntries: Array<{ book: string; chapter: number; verse: number }> = [];
+    for (const [book, chapters] of Object.entries(emmanuelIndex)) {
+      for (const [chap, verses] of Object.entries(chapters as Record<number, Record<number, unknown>>)) {
+        for (const verse of Object.keys(verses)) {
+          allEntries.push({ book, chapter: Number(chap), verse: Number(verse) });
+        }
+      }
+    }
+    if (!allEntries.length) throw new TRPCError({ code: "NOT_FOUND", message: "Índice de Emmanuel vazio" });
+
+    // Sortear um versículo aleatório
+    const pick = allEntries[Math.floor(Math.random() * allEntries.length)];
+
+    // Buscar o livro para obter o nome
+    const book = await getBookByAbbrev(pick.book);
+    if (!book) throw new TRPCError({ code: "NOT_FOUND", message: `Livro ${pick.book} não encontrado` });
+
+    // Buscar o texto do versículo
+    const verses = await getVerseRange(pick.book, pick.chapter, pick.verse, pick.verse);
+    if (!verses.length) throw new TRPCError({ code: "NOT_FOUND", message: "Versículo não encontrado" });
+
+    const verseText = verses[0].text;
+    const reference = `${book.name} ${pick.chapter}:${pick.verse}`;
+
+    // Buscar referências de Emmanuel para este versículo
+    const emmanuelRefs: Array<{title: string; source: string; code: string}> =
+      ((emmanuelIndex as Record<string, Record<number, Record<number, Array<{title: string; source: string; code: string}>>>>)
+      [pick.book]?.[pick.chapter]?.[pick.verse]) ?? [];
+
+    // Gerar reflexão
     const { reflexao, oracao } = await generateDevocionalContent(reference, verseText);
-    // Salva com chave única baseada em timestamp para não sobrescrever o original
+
+    // Salvar no cache com chave única
     const slotKey = `${new Date().toISOString().slice(0, 10)}_${Date.now()}`;
     await saveDevocionalCache({ date: slotKey, reference, verseText, reflexao, oracao });
+
     return {
       reference,
-      bookAbbrev: reading.bookAbbrev,
-      bookName: reading.bookName,
-      chapter: reading.chapter,
-      verse: reading.verseStart,
+      bookAbbrev: pick.book,
+      bookName: book.name,
+      chapter: pick.chapter,
+      verse: pick.verse,
       verseText,
-      theme: reading.theme,
+      theme: null,
       reflexao,
       oracao,
+      emmanuelRefs,
     };
   }),
 });
