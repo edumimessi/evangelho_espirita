@@ -1,4 +1,10 @@
-// Utilitário para gerar URLs diretas para versículos na Bíblia do Caminho.
+// Monta links DIRECIONADOS para o site bibliadocaminho.com.
+//
+// A busca no site NÃO deve ser genérica (índice/home): cada versículo tem uma
+// URL exata. O padrão (documentado em pesquisa-biblia-caminho.md) é:
+//   https://bibliadocaminho.com/ocaminho/TRP/{Livro}/{Livro}{Cap}.htm#V{Versiculo}
+// Ex.: Mateus 5:17 -> .../TRP/Mt/Mt05.htm#V17
+//
 // O capítulo é preenchido com no mínimo 2 dígitos (Mt05, Sl119).
 
 const TRP_BASE = "https://bibliadocaminho.com/ocaminho/TRP";

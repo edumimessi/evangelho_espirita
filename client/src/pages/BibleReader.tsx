@@ -15,10 +15,12 @@ import {
   Check,
   BookMarked,
   ChevronDown,
+  ExternalLink,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CosmicLayout } from "@/components/CosmicLayout";
 import { Streamdown } from "streamdown";
+import { bibliaCaminhoVerseUrl } from "@/lib/bibliaCaminho";
 
 type Testament = "old" | "new";
 
@@ -428,19 +430,37 @@ export default function BibleReader() {
                             </button>
                             {isEmmanuelOpen && (
                               <div className="mt-1.5 px-3 py-2 rounded-lg bg-amber-400/[0.06] border border-amber-400/20 space-y-1.5">
-                                {emmanuelRefs.map((ref, i) => (
-                                  <div key={i} className="text-xs leading-snug">
-                                    <span className="text-white/80">{ref.title}</span>
-                                    {ref.code && (
-                                      <span className="text-amber-300/60 ml-1.5">
-                                        — {ref.source ?? ref.code}
-                                        {ref.source ? ` (${ref.code})` : ""}
-                                      </span>
-                                    )}
-                                  </div>
-                                ))}
+                                {emmanuelRefs.map((ref, i) => {
+                                  const bdcUrl = bibliaCaminhoVerseUrl(
+                                    selectedBook ?? undefined,
+                                    selectedChapter,
+                                    verse.verse
+                                  );
+                                  return (
+                                    <div key={i} className="text-xs leading-snug flex items-start gap-1.5">
+                                      <div className="flex-1">
+                                        <span className="text-white/80">{ref.title}</span>
+                                        {ref.code && (
+                                          <span className="text-amber-300/60 ml-1.5">
+                                            — {ref.source ?? ref.code}
+                                            {ref.source ? ` (${ref.code})` : ""}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <a
+                                        href={bdcUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="shrink-0 text-amber-300/50 hover:text-amber-300 transition-colors mt-0.5"
+                                        title="Ler na Bíblia do Caminho"
+                                      >
+                                        <ExternalLink className="w-3 h-3" />
+                                      </a>
+                                    </div>
+                                  );
+                                })}
                                 <p className="text-white/25 text-[10px] pt-1 italic">
-                                  Índice de referência (FEB, "O Evangelho por Emmanuel"). O texto dos comentários é protegido por direitos autorais.
+                                  Clique em <ExternalLink className="inline w-2.5 h-2.5" /> para ler o comentário na Bíblia do Caminho.
                                 </p>
                               </div>
                             )}

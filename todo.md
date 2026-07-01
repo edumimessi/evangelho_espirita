@@ -97,3 +97,10 @@
 - [x] PWA: manifest.webmanifest, ícones SVG/PNG/apple-touch, sw.js, offline.html
 - [x] Metatags PWA no index.html e registro do service worker em main.tsx
 - [x] 17 testes passando (era 12)
+
+## Rodada 9 - Links diretos para Emmanuel na Bíblia do Caminho
+
+- [x] Atualizar bibliaCaminho.ts com comentários e fallback correto (sync GitHub)
+- [x] BibleReader: ícone ExternalLink em cada ref de Emmanuel → abre capítulo na Bíblia do Caminho
+- [x] Instrução "Clique em ↗ para ler o comentário na Bíblia do Caminho" no painel expandido
+- [x] 17 testes passando
