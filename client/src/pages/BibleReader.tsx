@@ -13,6 +13,8 @@ import {
   Pencil,
   Trash2,
   Check,
+  BookMarked,
+  ChevronDown,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CosmicLayout } from "@/components/CosmicLayout";
@@ -66,6 +68,13 @@ export default function BibleReader() {
     { enabled: !!selectedBook && !!user }
   );
 
+  // Índice de comentários de Emmanuel (título + livro-fonte) por versículo.
+  const { data: emmanuelIndex } = trpc.bible.emmanuelIndex.useQuery(
+    { bookAbbrev: selectedBook!, chapter: selectedChapter },
+    { enabled: !!selectedBook, staleTime: Infinity }
+  );
+  const [expandedEmmanuel, setExpandedEmmanuel] = useState<number | null>(null);
+
   const interpretMutation = trpc.ai.interpret.useMutation();
   const emmanuelMutation = trpc.ai.emmanuelComment.useMutation();
   const correlationsMutation = trpc.ai.correlations.useMutation();
@@ -113,6 +122,7 @@ export default function BibleReader() {
   useEffect(() => {
     setSelectedVerses([]);
     setAiPanel(null);
+    setExpandedEmmanuel(null);
   }, [selectedBook, selectedChapter]);
 
   const toggleVerseSelection = (verseNum: number) => {
@@ -346,6 +356,8 @@ export default function BibleReader() {
                     const isSelected = selectedVerses.includes(verse.verse);
                     const isFav = favSet.has(verse.verse);
                     const hasNote = !!notesMap[verse.verse];
+                    const emmanuelRefs = emmanuelIndex?.[String(verse.verse)] ?? [];
+                    const isEmmanuelOpen = expandedEmmanuel === verse.verse;
                     return (
                       <div
                         key={verse.id}
@@ -396,6 +408,42 @@ export default function BibleReader() {
                             <p className="text-violet-300/80 text-xs leading-relaxed italic">
                               {notesMap[verse.verse]}
                             </p>
+                          </div>
+                        )}
+                        {/* Índice de comentários de Emmanuel para este versículo */}
+                        {emmanuelRefs.length > 0 && (
+                          <div className="mt-1.5 ml-6">
+                            <button
+                              onClick={() =>
+                                setExpandedEmmanuel(isEmmanuelOpen ? null : verse.verse)
+                              }
+                              className="inline-flex items-center gap-1.5 text-[11px] text-amber-300/70 hover:text-amber-300 transition-colors"
+                              title="Onde Emmanuel comentou este versículo"
+                            >
+                              <BookMarked className="w-3 h-3" />
+                              Emmanuel comentou ({emmanuelRefs.length})
+                              <ChevronDown
+                                className={`w-3 h-3 transition-transform ${isEmmanuelOpen ? "rotate-180" : ""}`}
+                              />
+                            </button>
+                            {isEmmanuelOpen && (
+                              <div className="mt-1.5 px-3 py-2 rounded-lg bg-amber-400/[0.06] border border-amber-400/20 space-y-1.5">
+                                {emmanuelRefs.map((ref, i) => (
+                                  <div key={i} className="text-xs leading-snug">
+                                    <span className="text-white/80">{ref.title}</span>
+                                    {ref.code && (
+                                      <span className="text-amber-300/60 ml-1.5">
+                                        — {ref.source ?? ref.code}
+                                        {ref.source ? ` (${ref.code})` : ""}
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                                <p className="text-white/25 text-[10px] pt-1 italic">
+                                  Índice de referência (FEB, "O Evangelho por Emmanuel"). O texto dos comentários é protegido por direitos autorais.
+                                </p>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>

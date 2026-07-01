@@ -30,6 +30,7 @@ import {
   toggleVerseFavorite,
 } from "./db";
 import { fetchEseChapterSource } from "./services/bibliaCaminhoScraper";
+import { getEmmanuelChapterIndex, emmanuelSiglas } from "./data/emmanuelIndex";
 
 // ─── Bible Router ─────────────────────────────────────────────────────────────
 
@@ -103,6 +104,24 @@ const bibleRouter = router({
         return getVerseRange(input.bookAbbrev, input.chapter, input.verse, input.verse);
       }
       return getChapter(input.bookAbbrev, input.chapter);
+    }),
+
+  // Índice de comentários de Emmanuel para um capítulo (versículo -> referências).
+  // Apenas a estrutura (título + livro-fonte), sem o texto protegido.
+  emmanuelIndex: publicProcedure
+    .input(z.object({ bookAbbrev: z.string(), chapter: z.number().int().positive() }))
+    .query(({ input }) => {
+      const chapterIndex = getEmmanuelChapterIndex(input.bookAbbrev, input.chapter);
+      // Enriquece cada referência com o nome amigável da fonte (quando conhecido).
+      const result: Record<string, { title: string; code: string | null; source: string | null }[]> = {};
+      for (const [verse, refs] of Object.entries(chapterIndex)) {
+        result[verse] = refs.map((r) => {
+          const prefix = r.code ? r.code.split(".")[0] : null;
+          const source = prefix ? emmanuelSiglas[prefix] ?? null : null;
+          return { title: r.title, code: r.code, source };
+        });
+      }
+      return result;
     }),
 });
 
