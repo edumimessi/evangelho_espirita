@@ -80,3 +80,9 @@
 - [x] Router ESE: usar texto-fonte como base factual da IA
 - [x] Frontend ESE: indicador de verificação (✓ verificado / ⚠ não verificado)
 - [x] Dependência: cheerio no package.json
+
+## Rodada 7 - Links diretos para versículos na Bíblia do Caminho
+
+- [x] Criar client/src/lib/bibliaCaminho.ts com mapeamento completo AT+NT
+- [x] Atualizar Devocional.tsx para usar bibliaCaminhoVerseUrl()
+- [x] Atualizar routers.ts para retornar bookAbbrev no devocional
