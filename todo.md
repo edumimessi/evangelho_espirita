@@ -86,3 +86,14 @@
 - [x] Criar client/src/lib/bibliaCaminho.ts com mapeamento completo AT+NT
 - [x] Atualizar Devocional.tsx para usar bibliaCaminhoVerseUrl()
 - [x] Atualizar routers.ts para retornar bookAbbrev no devocional
+
+## Rodada 8 - PR #2: Índice de Emmanuel, busca por temas e PWA
+
+- [x] Criar server/data/emmanuelIndex.ts com 635 versículos do NT indexados
+- [x] Router bible.emmanuelIndex para retornar índice do capítulo com nomes amigáveis das fontes
+- [x] BibleReader.tsx: botão expansível "Emmanuel comentou (N)" por versículo
+- [x] Correção da busca por temas espíritas (palavras bíblicas reais em vez de rótulos literais)
+- [x] searchVerses aceita lista de termos (OR de LIKE)
+- [x] PWA: manifest.webmanifest, ícones SVG/PNG/apple-touch, sw.js, offline.html
+- [x] Metatags PWA no index.html e registro do service worker em main.tsx
+- [x] 17 testes passando (era 12)

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sem conexão — Evangelho Espírita</title>
+    <style>
+      /* Página autossuficiente: sem CSS/JS externos, funciona 100% offline. */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+        font-family: Georgia, "Times New Roman", serif;
+        color: #e6e2ff;
+        background:
+          radial-gradient(ellipse at 50% 32%, #241a52 0%, #140f33 55%, #080614 100%);
+      }
+      .wrap { max-width: 360px; }
+      .flame {
+        width: 72px; height: 72px; margin: 0 auto 20px;
+        display: block;
+        filter: drop-shadow(0 0 16px rgba(125, 227, 255, 0.45));
+      }
+      h1 {
+        font-size: 20px; font-weight: 600; letter-spacing: 0.5px;
+        margin-bottom: 10px; color: #fff;
+      }
+      p { font-size: 15px; line-height: 1.55; color: #b9b2e6; margin-bottom: 22px; }
+      button {
+        font: inherit; font-size: 14px; cursor: pointer;
+        color: #7de3ff; background: rgba(125, 227, 255, 0.08);
+        border: 1px solid rgba(125, 227, 255, 0.35);
+        padding: 10px 22px; border-radius: 12px; transition: background 0.2s;
+      }
+      button:hover { background: rgba(125, 227, 255, 0.16); }
+      .hint { margin-top: 16px; font-size: 12px; color: #6f68a0; font-style: italic; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <svg class="flame" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="f" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#7de3ff" />
+            <stop offset="45%" stop-color="#9a6bff" />
+            <stop offset="100%" stop-color="#e7c98a" />
+          </linearGradient>
+        </defs>
+        <path d="M256 120 C 306 190, 342 214, 342 288 C 342 352, 302 392, 256 392 C 210 392, 170 352, 170 288 C 170 214, 206 190, 256 120 Z" fill="url(#f)" />
+        <path d="M256 210 C 284 250, 300 266, 300 302 C 300 334, 280 356, 256 356 C 232 356, 212 334, 212 302 C 212 266, 228 250, 256 210 Z" fill="#fef6e6" opacity="0.92" />
+      </svg>
+      <h1>Você está offline</h1>
+      <p>O Evangelho Espírita precisa de conexão para carregar as leituras, a busca e os devocionais. Reconecte-se para continuar.</p>
+      <button onclick="location.reload()">Tentar novamente</button>
+      <p class="hint">Reconecte à internet e toque em "Tentar novamente".</p>
+    </div>
+  </body>
+</html>
