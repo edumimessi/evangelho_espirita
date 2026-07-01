@@ -14,6 +14,7 @@ import {
   users,
   verseNotes,
   verseFavorites,
+  bibliaCaminhoSource,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -546,6 +547,40 @@ export async function saveDevocionalCache(data: {
       set: {
         reflexao: data.reflexao,
         oracao: data.oracao,
+      },
+    });
+}
+
+// ─── Cache de texto-fonte (bibliadocaminho.com) ───────────────────────────────
+
+export async function getBibliaCaminhoSource(sourceKey: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(bibliaCaminhoSource)
+    .where(eq(bibliaCaminhoSource.sourceKey, sourceKey))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function saveBibliaCaminhoSource(data: {
+  sourceKey: string;
+  sourceUrl: string;
+  pageTitle: string;
+  cleanedText: string;
+}) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .insert(bibliaCaminhoSource)
+    .values(data)
+    .onDuplicateKeyUpdate({
+      set: {
+        sourceUrl: data.sourceUrl,
+        pageTitle: data.pageTitle,
+        cleanedText: data.cleanedText,
+        fetchedAt: new Date(),
       },
     });
 }

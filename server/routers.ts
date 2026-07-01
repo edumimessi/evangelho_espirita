@@ -29,6 +29,7 @@ import {
   searchVerses,
   toggleVerseFavorite,
 } from "./db";
+import { fetchEseChapterSource } from "./services/bibliaCaminhoScraper";
 
 // ─── Bible Router ─────────────────────────────────────────────────────────────
 
@@ -418,6 +419,13 @@ Máximo 5 correlações mais relevantes.`,
   eseStudy: publicProcedure
     .input(z.object({ chapterNum: z.number(), chapterTitle: z.string(), chapterTheme: z.string() }))
     .query(async ({ input }) => {
+      // Busca o texto-fonte EXATO do capítulo direto em bibliadocaminho.com
+      const source = await fetchEseChapterSource(input.chapterNum);
+
+      const sourceBlock = source?.cleanedText
+        ? `\n\nTEXTO-FONTE OFICIAL (extraído diretamente de ${source.sourceUrl}):\n"""\n${source.cleanedText.slice(0, 6000)}\n"""\n\nUse EXCLUSIVAMENTE este texto-fonte como base factual. A "passagem" deve ser uma citação literal extraída dele (não parafraseie, não invente). "Contexto" e "filologia" devem se apoiar apenas no que está de fato no texto-fonte acima — se algo não estiver lá, não afirme.`
+        : `\n\n(Aviso: não foi possível recuperar o texto-fonte de bibliadocaminho.com para este capítulo agora. Gere o estudo com o maior rigor possível a partir do seu conhecimento do ESE, mas deixe claro que não houve verificação contra a fonte primária.)`;
+
       const response = await invokeLLM({
         messages: [
           {
@@ -426,7 +434,7 @@ Máximo 5 correlações mais relevantes.`,
 
 Responda SEMPRE em JSON válido com esta estrutura exata:
 {
-  "passagem": "O versículo ou trecho bíblico central do capítulo (texto literal)",
+  "passagem": "O versículo ou trecho bíblico central do capítulo (texto literal, extraído do texto-fonte fornecido quando disponível)",
   "referencia": "Referência bíblica (ex: Mateus 5:3-12)",
   "contexto": "2-3 parágrafos explicando o que Kardec desenvolve neste capítulo do ESE. Seja direto e analítico.",
   "filologia": "2-3 parágrafos de análise filológica: termos originais em grego/hebraico/aramaico, significados que se perdem na tradução, contexto linguístico e cultural da época. Exemplo: 'ptochoi to pneumati' (pobres de espírito) — ptochoi vem de ptossein (encolher-se), indicando não pobreza material mas despojamento interior.",
@@ -441,7 +449,7 @@ Responda SEMPRE em JSON válido com esta estrutura exata:
   "meditacao": "Roteiro para meditação no lar em 3 partes: FOCO (tema central em 1 frase), PERGUNTA AO CORAÇÃO (pergunta reflexiva pessoal), PROPÓSITO (ação prática para a semana)."
 }
 
-Máximo 3 correlações. Seja preciso nas referências bíblicas.`,
+Máximo 3 correlações. Seja preciso nas referências bíblicas.${sourceBlock}`,
           },
           {
             role: "user",
@@ -486,7 +494,13 @@ Máximo 3 correlações. Seja preciso nas referências bíblicas.`,
       try {
         const raw = response?.choices?.[0]?.message?.content;
         const content = typeof raw === "string" ? raw : "{}";
-        return JSON.parse(content);
+        const parsed = JSON.parse(content);
+        return {
+          ...parsed,
+          fonte: source
+            ? { url: source.sourceUrl, verificado: true }
+            : { url: null, verificado: false },
+        };
       } catch {
         return {
           passagem: "",
@@ -496,6 +510,7 @@ Máximo 3 correlações. Seja preciso nas referências bíblicas.`,
           reflexao: "",
           correlacoes: [],
           meditacao: "",
+          fonte: { url: source?.sourceUrl ?? null, verificado: !!source },
         };
       }
     }),

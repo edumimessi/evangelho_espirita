@@ -257,3 +257,21 @@ export const devocionalCache = mysqlTable(
 );
 
 export type DevocionalCache = typeof devocionalCache.$inferSelect;
+
+// Cache do texto-fonte extraído diretamente do site bibliadocaminho.com
+// Evita re-scraping a cada geração e garante que a IA seja ancorada (grounded)
+// no texto oficial em vez de "alucinar" a passagem.
+export const bibliaCaminhoSource = mysqlTable(
+  "biblia_caminho_source",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    // chave estável: ex. "ese-01", "ese-05", "cvv-032"
+    sourceKey: varchar("sourceKey", { length: 40 }).notNull().unique(),
+    sourceUrl: varchar("sourceUrl", { length: 500 }).notNull(),
+    pageTitle: varchar("pageTitle", { length: 300 }),
+    cleanedText: text("cleanedText").notNull(),
+    fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+  }
+);
+
+export type BibliaCaminhoSource = typeof bibliaCaminhoSource.$inferSelect;

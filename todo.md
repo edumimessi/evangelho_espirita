@@ -71,3 +71,12 @@
 - [x] Devocional: oração/pensamento de encerramento espírita
 - [x] Sidebar: adicionar link para Devocional Diário
 - [x] Cache: salvar devocional gerado no banco para não regenerar no mesmo dia
+
+## Rodada 6 - Scraper Bíblia do Caminho (ancoragem factual da IA)
+
+- [x] Schema: tabela biblia_caminho_source para cache do texto-fonte
+- [x] db.ts: helpers getBibliaCaminhoSource e saveBibliaCaminhoSource
+- [x] Serviço: server/services/bibliaCaminhoScraper.ts com cheerio
+- [x] Router ESE: usar texto-fonte como base factual da IA
+- [x] Frontend ESE: indicador de verificação (✓ verificado / ⚠ não verificado)
+- [x] Dependência: cheerio no package.json

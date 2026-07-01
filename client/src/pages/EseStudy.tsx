@@ -160,6 +160,22 @@ export default function EseStudy() {
               {studyQuery.data.referencia && (
                 <p className="mt-2 font-cinzel text-xs text-amber-400 tracking-wide">{studyQuery.data.referencia}</p>
               )}
+              {studyQuery.data.fonte && (
+                studyQuery.data.fonte.verificado ? (
+                  <a
+                    href={studyQuery.data.fonte.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-emerald-300/90 hover:text-emerald-200 font-serif"
+                  >
+                    ✓ Verificado no texto-fonte (bibliadocaminho.com)
+                  </a>
+                ) : (
+                  <p className="mt-2 text-[11px] text-amber-300/70 font-serif">
+                    ⚠ Fonte não verificada — gerado sem confirmação em bibliadocaminho.com
+                  </p>
+                )
+              )}
             </section>
 
             {/* Contexto */}
