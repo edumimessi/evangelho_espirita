@@ -286,9 +286,32 @@ export async function getUserFavorites(userId: number) {
 
 // ─── Search ───────────────────────────────────────────────────────────────────
 
-export async function searchVerses(query: string, testament?: "old" | "new") {
+// Aceita um único termo (busca por texto do usuário) ou uma lista de termos
+// (busca por tema): a lista vira um OR de LIKE, de modo que um tema espírita
+// ("Reencarnação") encontre versículos por qualquer palavra bíblica associada
+// ("nascer de novo", "renascer"...), em vez de procurar o rótulo literal —
+// que nunca existe no texto sagrado.
+export async function searchVerses(query: string | string[], testament?: "old" | "new") {
   const db = await getDb();
   if (!db) return [];
+
+  const terms = (Array.isArray(query) ? query : [query])
+    .map((t) => t.trim())
+    .filter((t) => t.length > 0);
+  if (terms.length === 0) return [];
+
+  const textMatch =
+    terms.length === 1
+      ? like(bibleVerses.text, `%${terms[0]}%`)
+      : or(...terms.map((t) => like(bibleVerses.text, `%${t}%`)));
+
+  const columns = {
+    id: bibleVerses.id,
+    bookAbbrev: bibleVerses.bookAbbrev,
+    chapter: bibleVerses.chapter,
+    verse: bibleVerses.verse,
+    text: bibleVerses.text,
+  };
 
   if (testament) {
     const books = await db
@@ -299,34 +322,18 @@ export async function searchVerses(query: string, testament?: "old" | "new") {
     if (abbrevs.length === 0) return [];
 
     return db
-      .select({
-        id: bibleVerses.id,
-        bookAbbrev: bibleVerses.bookAbbrev,
-        chapter: bibleVerses.chapter,
-        verse: bibleVerses.verse,
-        text: bibleVerses.text,
-      })
+      .select(columns)
       .from(bibleVerses)
       .where(
         and(
-          like(bibleVerses.text, `%${query}%`),
+          textMatch,
           sql`${bibleVerses.bookAbbrev} IN (${sql.join(abbrevs.map((a) => sql`${a}`), sql`, `)})`
         )
       )
       .limit(50);
   }
 
-  return db
-    .select({
-      id: bibleVerses.id,
-      bookAbbrev: bibleVerses.bookAbbrev,
-      chapter: bibleVerses.chapter,
-      verse: bibleVerses.verse,
-      text: bibleVerses.text,
-    })
-    .from(bibleVerses)
-    .where(like(bibleVerses.text, `%${query}%`))
-    .limit(50);
+  return db.select(columns).from(bibleVerses).where(textMatch).limit(50);
 }
 
 // ─── Emmanuel Comments ────────────────────────────────────────────────────────

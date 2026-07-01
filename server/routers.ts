@@ -71,16 +71,22 @@ const bibleRouter = router({
       return getVerseRange(input.bookAbbrev, input.chapter, input.verseStart, input.verseEnd);
     }),
 
-  // Busca por texto
+  // Busca por texto (query livre) ou por tema (lista de termos, OR)
   search: publicProcedure
     .input(
-      z.object({
-        query: z.string().min(2),
-        testament: z.enum(["old", "new"]).optional(),
-      })
+      z
+        .object({
+          query: z.string().optional(),
+          terms: z.array(z.string()).optional(),
+          testament: z.enum(["old", "new"]).optional(),
+        })
+        .refine(
+          (v) => (v.query?.trim().length ?? 0) >= 2 || (v.terms?.length ?? 0) > 0,
+          { message: "Informe ao menos 2 caracteres ou selecione um tema." }
+        )
     )
     .query(async ({ input }) => {
-      return searchVerses(input.query, input.testament);
+      return searchVerses(input.terms ?? input.query ?? "", input.testament);
     }),
 
   // Busca por referência específica (livro, capítulo, versículo)
@@ -410,8 +416,10 @@ Máximo 5 correlações mais relevantes.`,
       };
 
       const searchTerm = spiritThemes[input.theme.toLowerCase()] ?? input.theme;
-      const words = searchTerm.split(" ");
-      const results = await searchVerses(words[0]);
+      const words = searchTerm.split(" ").filter(Boolean);
+      // OR de todos os termos do tema, não só o primeiro (que às vezes é
+      // justamente o rótulo conceitual inexistente no texto bíblico).
+      const results = await searchVerses(words);
       return results;
     }),
 

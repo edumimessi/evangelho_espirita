@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { appRouter } from "./routers";
+import { searchVerses } from "./db";
 import type { TrpcContext } from "./_core/context";
 
 // Mock db module
@@ -89,6 +90,28 @@ describe("bible router", () => {
     const caller = appRouter.createCaller(createPublicCtx());
     const results = await caller.bible.search({ query: "bem-aventurados" });
     expect(results).toHaveLength(1);
+  });
+
+  it("should search verses by a list of theme terms (OR)", async () => {
+    vi.mocked(searchVerses).mockClear();
+    const caller = appRouter.createCaller(createPublicCtx());
+    const results = await caller.bible.search({ terms: ["amai", "amados", "amor"] });
+    expect(results).toHaveLength(1);
+    expect(searchVerses).toHaveBeenCalledWith(["amai", "amados", "amor"], undefined);
+  });
+
+  it("should reject a search with neither query nor terms", async () => {
+    const caller = appRouter.createCaller(createPublicCtx());
+    await expect(caller.bible.search({})).rejects.toThrow();
+  });
+
+  it("themeSearch should search all mapped words, not just the first", async () => {
+    vi.mocked(searchVerses).mockClear();
+    const caller = appRouter.createCaller(createPublicCtx());
+    await caller.ai.themeSearch({ theme: "reencarnação" });
+    const arg = vi.mocked(searchVerses).mock.calls[0]?.[0];
+    expect(Array.isArray(arg)).toBe(true);
+    expect((arg as string[]).length).toBeGreaterThan(1);
   });
 });
 
