@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evangelho do Dia</title>
+  <meta name="description" content="Um versículo do Evangelho por dia, com link para o estudo completo na Bíblia do Caminho." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 24px;
+      font-family: "Crimson Pro", Georgia, serif;
+      color: #e6e2ff;
+      background: radial-gradient(ellipse at 50% 28%, #241a52 0%, #140f33 55%, #080614 100%);
+      background-attachment: fixed;
+    }
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .stars i {
+      position: absolute; width: 2px; height: 2px; border-radius: 50%;
+      background: #cfe6ff; opacity: .5;
+    }
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 520px; text-align: center; }
+    .flame { width: 54px; height: 54px; margin: 0 auto 14px; display: block;
+      filter: drop-shadow(0 0 14px rgba(125,227,255,.45)); }
+    .kicker {
+      font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 3px;
+      text-transform: uppercase; color: #7de3ff; margin-bottom: 4px;
+    }
+    .date { font-size: 14px; color: #9a92cf; margin-bottom: 26px; }
+    .card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      padding: 30px 26px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 40px rgba(125,227,255,.06);
+    }
+    .ref {
+      font-family: "Cinzel", serif; font-size: 15px; letter-spacing: 1px;
+      color: #e7c98a; margin-bottom: 18px;
+    }
+    .verse {
+      font-size: 23px; line-height: 1.5; font-style: italic; color: #f2eeff;
+      border-left: 3px solid #7de3ff; padding-left: 18px; text-align: left;
+      min-height: 60px;
+    }
+    .verse.loading { color: #8b83bd; font-size: 16px; border-color: #3a3468; }
+    .theme { margin-top: 14px; font-size: 14px; color: #b9b2e6; }
+    .actions { margin-top: 26px; display: flex; flex-direction: column; gap: 12px; }
+    button, a.btn {
+      font: inherit; font-size: 15px; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 20px; border-radius: 14px; transition: all .18s;
+    }
+    .primary {
+      color: #081018; font-weight: 600;
+      background: linear-gradient(120deg, #7de3ff, #9a6bff);
+      border: none;
+    }
+    .primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .ghost {
+      color: #e7c98a; background: rgba(231,201,138,.08);
+      border: 1px solid rgba(231,201,138,.35);
+    }
+    .ghost:hover { background: rgba(231,201,138,.16); }
+    .foot { margin-top: 22px; font-size: 12px; color: #6f68a0; line-height: 1.6; }
+    .foot a { color: #8a83c0; }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="wrap">
+    <svg class="flame" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><linearGradient id="f" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="#7de3ff"/><stop offset="45%" stop-color="#9a6bff"/><stop offset="100%" stop-color="#e7c98a"/>
+      </linearGradient></defs>
+      <path d="M256 120 C 306 190, 342 214, 342 288 C 342 352, 302 392, 256 392 C 210 392, 170 352, 170 288 C 170 214, 206 190, 256 120 Z" fill="url(#f)"/>
+      <path d="M256 210 C 284 250, 300 266, 300 302 C 300 334, 280 356, 256 356 C 232 356, 212 334, 212 302 C 212 266, 228 250, 256 210 Z" fill="#fef6e6" opacity=".92"/>
+    </svg>
+    <div class="kicker">Evangelho do Dia</div>
+    <div class="date" id="date"></div>
+
+    <div class="card">
+      <div class="ref" id="ref">—</div>
+      <blockquote class="verse loading" id="verse">Carregando o versículo…</blockquote>
+      <div class="theme" id="theme"></div>
+
+      <div class="actions">
+        <a class="btn ghost" id="caminho" href="#" target="_blank" rel="noopener noreferrer">📖 Ler na Bíblia do Caminho</a>
+        <button class="primary" id="novo">✨ Novo versículo</button>
+      </div>
+    </div>
+
+    <p class="foot">
+      Texto bíblico: Bíblia Livre (por_blj) ·
+      Estudo completo em <a href="https://bibliadocaminho.com" target="_blank" rel="noopener noreferrer">Bíblia do Caminho</a>
+    </p>
+  </div>
+
+  <script>
+    // Versículos do Evangelho (referências). O texto é buscado ao vivo.
+    const VERSES = [
+      { ab:"mt", c:5,  v:3,  tema:"Bem-aventurados os pobres de espírito" },
+      { ab:"mt", c:5,  v:4,  tema:"Bem-aventurados os que choram" },
+      { ab:"mt", c:5,  v:6,  tema:"Fome e sede de justiça" },
+      { ab:"mt", c:5,  v:9,  tema:"Bem-aventurados os pacificadores" },
+      { ab:"mt", c:5,  v:14, tema:"Vós sois a luz do mundo" },
+      { ab:"mt", c:5,  v:16, tema:"Brilhe a vossa luz" },
+      { ab:"mt", c:5,  v:44, tema:"Amai os vossos inimigos" },
+      { ab:"mt", c:6,  v:33, tema:"Buscai primeiro o Reino" },
+      { ab:"mt", c:6,  v:34, tema:"Não vos preocupeis com o amanhã" },
+      { ab:"mt", c:7,  v:7,  tema:"Pedi, e dar-se-vos-á" },
+      { ab:"mt", c:7,  v:12, tema:"A Regra de Ouro" },
+      { ab:"mt", c:11, v:28, tema:"Vinde a mim, ó cansados" },
+      { ab:"mt", c:22, v:39, tema:"Amarás o teu próximo" },
+      { ab:"mt", c:25, v:40, tema:"A um destes pequeninos" },
+      { ab:"mt", c:28, v:20, tema:"Estou convosco todos os dias" },
+      { ab:"mc", c:11, v:24, tema:"Crede que recebereis" },
+      { ab:"mc", c:12, v:31, tema:"Não há mandamento maior" },
+      { ab:"mc", c:16, v:15, tema:"Ide e pregai o Evangelho" },
+      { ab:"lc", c:6,  v:31, tema:"Fazei aos outros" },
+      { ab:"lc", c:6,  v:37, tema:"Não julgueis" },
+      { ab:"lc", c:10, v:27, tema:"Amarás a Deus e ao próximo" },
+      { ab:"lc", c:11, v:9,  tema:"Pedi, buscai, batei" },
+      { ab:"lc", c:15, v:20, tema:"O pai correu ao filho" },
+      { ab:"lc", c:23, v:34, tema:"Pai, perdoa-lhes" },
+      { ab:"jo", c:3,  v:16, tema:"Porque Deus amou o mundo" },
+      { ab:"jo", c:8,  v:12, tema:"Eu sou a luz do mundo" },
+      { ab:"jo", c:8,  v:32, tema:"A verdade vos libertará" },
+      { ab:"jo", c:13, v:34, tema:"Amai-vos uns aos outros" },
+      { ab:"jo", c:14, v:1,  tema:"Não se turbe o vosso coração" },
+      { ab:"jo", c:14, v:6,  tema:"Eu sou o caminho, a verdade e a vida" },
+      { ab:"jo", c:14, v:27, tema:"A minha paz vos deixo" },
+      { ab:"jo", c:15, v:12, tema:"Que vos ameis como eu vos amei" },
+      { ab:"jo", c:16, v:33, tema:"Tende bom ânimo" },
+    ];
+
+    // Códigos: abreviação interna -> API (helloao) e -> Bíblia do Caminho
+    const API_ID = { mt:"MAT", mc:"MRK", lc:"LUK", jo:"JHN" };
+    const CAM_AB = { mt:"Mt", mc:"Mc", lc:"Lc", jo:"Jo" };
+
+    const el = (id) => document.getElementById(id);
+    const pad2 = (n) => String(n).padStart(2, "0");
+
+    function caminhoUrl(x) {
+      const ab = CAM_AB[x.ab];
+      return `https://bibliadocaminho.com/ocaminho/TRP/${ab}/${ab}${pad2(x.c)}.htm#V${x.v}`;
+    }
+
+    // Cache simples do texto já buscado (por referência)
+    const textCache = {};
+
+    async function fetchVerseText(x) {
+      const key = `${x.ab}-${x.c}-${x.v}`;
+      if (textCache[key]) return textCache[key];
+      const url = `https://bible.helloao.org/api/por_blj/${API_ID[x.ab]}/${x.c}.json`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const items = (data && data.chapter && data.chapter.content) || [];
+      const verse = items.find((it) => it.type === "verse" && it.number === x.v);
+      if (!verse) throw new Error("versículo não encontrado");
+      const text = (Array.isArray(verse.content) ? verse.content : [verse.content])
+        .filter((c) => typeof c === "string").join(" ").trim();
+      textCache[key] = text;
+      return text;
+    }
+
+    let current = -1;
+
+    async function show(index) {
+      current = index;
+      const x = VERSES[index];
+      const nomes = { mt:"Mateus", mc:"Marcos", lc:"Lucas", jo:"João" };
+      el("ref").textContent = `${nomes[x.ab]} ${x.c}:${x.v}`;
+      el("theme").textContent = x.tema;
+      el("caminho").href = caminhoUrl(x);
+      const box = el("verse");
+      box.classList.add("loading");
+      box.textContent = "Carregando o versículo…";
+      try {
+        const text = await fetchVerseText(x);
+        box.classList.remove("loading");
+        box.textContent = `“${text}”`;
+      } catch (e) {
+        box.classList.remove("loading");
+        // Fallback: mostra o tema e convida a abrir na Bíblia do Caminho
+        box.textContent = `“${x.tema}.” — toque em “Ler na Bíblia do Caminho” para o texto completo.`;
+      }
+    }
+
+    function dayOfYear() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 0);
+      return Math.floor((now - start) / 86400000);
+    }
+
+    function novo() {
+      let i;
+      do { i = Math.floor(Math.random() * VERSES.length); } while (i === current && VERSES.length > 1);
+      show(i);
+    }
+
+    // Estrelas decorativas
+    (function () {
+      const c = el("stars");
+      for (let i = 0; i < 40; i++) {
+        const s = document.createElement("i");
+        s.style.left = Math.random() * 100 + "%";
+        s.style.top = Math.random() * 100 + "%";
+        s.style.opacity = (0.2 + Math.random() * 0.5).toFixed(2);
+        c.appendChild(s);
+      }
+    })();
+
+    // Data + versículo do dia
+    el("date").textContent = new Date().toLocaleDateString("pt-BR", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+    });
+    el("novo").addEventListener("click", novo);
+    show(dayOfYear() % VERSES.length);
+  </script>
+</body>
+</html>
