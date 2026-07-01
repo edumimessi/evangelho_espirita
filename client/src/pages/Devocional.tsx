@@ -4,6 +4,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Loader2, BookOpen, Heart, Sparkles, Star, RefreshCw, PenLine, ExternalLink } from "lucide-react";
 import { Streamdown } from "streamdown";
 import { CosmicLayout } from "@/components/CosmicLayout";
+import { bibliaCaminhoVerseUrl } from "@/lib/bibliaCaminho";
 import { toast } from "sonner";
 
 export default function Devocional() {
@@ -164,12 +165,13 @@ export default function Devocional() {
               <PenLine className="w-4 h-4" /> Registrar no diário
             </button>
             <a
-              href="https://bibliadocaminho.com/ocaminho/TKP/Ev/EvIndex.htm"
+              href={bibliaCaminhoVerseUrl(data.bookAbbrev, data.chapter, data.verse)}
               target="_blank"
               rel="noopener noreferrer"
+              title={`Ler ${data.reference} na Bíblia do Caminho`}
               className="inline-flex items-center gap-2 text-sm text-amber-400/70 hover:text-amber-300 font-cinzel transition-colors ml-auto"
             >
-              <ExternalLink className="w-3 h-3" /> Bíblia do Caminho
+              <ExternalLink className="w-3 h-3" /> Ler {data.reference} na Bíblia do Caminho
             </a>
           </div>
         </div>
