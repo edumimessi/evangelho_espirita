@@ -247,7 +247,7 @@ export const devocionalCache = mysqlTable(
   "devocional_cache",
   {
     id: int("id").autoincrement().primaryKey(),
-    date: varchar("date", { length: 10 }).notNull().unique(), // YYYY-MM-DD
+    date: varchar("date", { length: 20 }).notNull().unique(), // YYYY-MM-DD or YYYY-MM-DD_N
     reference: varchar("reference", { length: 200 }).notNull(),
     verseText: text("verseText").notNull(),
     reflexao: text("reflexao").notNull(),

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { systemRouter } from "./_core/systemRouter";
+import { TRPCError } from "@trpc/server";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
   addReadingHistory,
@@ -590,6 +591,48 @@ const meetingNotesRouter = router({
 
 // ─── Devocional Diário Router (estilo Café com Deus Pai) ─────────────────────
 
+async function generateDevocionalContent(reference: string, verseText: string) {
+  const response = await invokeLLM({
+    messages: [
+      {
+        role: "system",
+        content: `Você escreve devocionais diários espíritas no estilo do livro "Café com Deus Pai", mas sob a ótica da Doutrina Espírita e no tom de Emmanuel (Chico Xavier). O formato é:\n\n1. Uma reflexão curta e direta sobre o versículo (3-4 parágrafos, 150-200 palavras). Sem floreios. Linguagem clara, acolhedora mas sóbria. Conecta o versículo com a vida prática e com princípios espíritas (reencarnação, lei de causa e efeito, evolução moral, caridade).\n\n2. Uma oração/pensamento de encerramento (3-5 linhas). Tom íntimo, como quem conversa com Deus/Pai. Sem linguagem eclesiástica formal. Simples e sincero.\n\nResponda em JSON com os campos: "reflexao" e "oracao".`,
+      },
+      {
+        role: "user",
+        content: `Versículo do dia: ${reference}\n\n"${verseText}"\n\nEscreva o devocional diário para este versículo.`,
+      },
+    ],
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "devocional",
+        strict: true,
+        schema: {
+          type: "object",
+          properties: {
+            reflexao: { type: "string", description: "Reflexão espírita sobre o versículo" },
+            oracao: { type: "string", description: "Oração/pensamento de encerramento" },
+          },
+          required: ["reflexao", "oracao"],
+          additionalProperties: false,
+        },
+      },
+    },
+  });
+  let reflexao = "Reflexão não disponível.";
+  let oracao = "Oração não disponível.";
+  try {
+    const raw = response?.choices?.[0]?.message?.content;
+    if (typeof raw === "string") {
+      const parsed = JSON.parse(raw);
+      reflexao = parsed.reflexao || reflexao;
+      oracao = parsed.oracao || oracao;
+    }
+  } catch {}
+  return { reflexao, oracao };
+}
+
 const devocionalRouter = router({
   today: publicProcedure.query(async () => {
     const reading = await getDailyReading();
@@ -664,9 +707,38 @@ const devocionalRouter = router({
       }
     } catch {}
 
-    // Save to cache
+        // Save to cache
     await saveDevocionalCache({ date: today, reference, verseText, reflexao, oracao });
+    return {
+      reference,
+      bookAbbrev: reading.bookAbbrev,
+      bookName: reading.bookName,
+      chapter: reading.chapter,
+      verse: reading.verseStart,
+      verseText,
+      theme: reading.theme,
+      reflexao,
+      oracao,
+    };
+  }),
 
+  // Gera um novo devocional para o mesmo versículo do dia (ignora cache)
+  generate: publicProcedure.mutation(async () => {
+    const reading = await getDailyReading();
+    if (!reading) throw new TRPCError({ code: "NOT_FOUND", message: "Leitura do dia não encontrada" });
+    const verses = await getVerseRange(
+      reading.bookAbbrev,
+      reading.chapter,
+      reading.verseStart,
+      reading.verseEnd
+    );
+    if (!verses.length) throw new TRPCError({ code: "NOT_FOUND", message: "Versículos não encontrados" });
+    const verseText = verses.map(v => v.text).join(" ");
+    const reference = `${reading.bookName} ${reading.chapter}:${reading.verseStart}`;
+    const { reflexao, oracao } = await generateDevocionalContent(reference, verseText);
+    // Salva com chave única baseada em timestamp para não sobrescrever o original
+    const slotKey = `${new Date().toISOString().slice(0, 10)}_${Date.now()}`;
+    await saveDevocionalCache({ date: slotKey, reference, verseText, reflexao, oracao });
     return {
       reference,
       bookAbbrev: reading.bookAbbrev,

@@ -13,8 +13,17 @@ export default function Devocional() {
   const [sentimento, setSentimento] = useState("");
   const [insight, setInsight] = useState("");
 
-  const { data, isLoading, error, refetch } = trpc.devocional.today.useQuery(undefined, {
-    staleTime: 0,
+  const [currentData, setCurrentData] = useState<typeof todayData | null>(null);
+  const { data: todayData, isLoading, error } = trpc.devocional.today.useQuery(undefined, {
+    staleTime: Infinity,
+  });
+  const data = currentData ?? todayData;
+
+  const generateMutation = trpc.devocional.generate.useMutation({
+    onSuccess: (result) => {
+      setCurrentData(result);
+    },
+    onError: () => toast.error("Erro ao gerar novo devocional. Tente novamente."),
   });
 
   const saveMeetingNote = trpc.meetingNotes.save.useMutation({
@@ -60,7 +69,7 @@ export default function Devocional() {
   };
 
   const handleGerarOutro = () => {
-    refetch();
+    generateMutation.mutate();
   };
 
   if (isLoading) {
@@ -82,7 +91,7 @@ export default function Devocional() {
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center space-y-4">
             <p className="text-indigo-300/60 font-serif">Devocional não disponível. Tente novamente.</p>
-            <button onClick={() => refetch()} className="cosmic-btn px-4 py-2 rounded-lg text-sm">
+            <button onClick={() => generateMutation.mutate()} className="cosmic-btn px-4 py-2 rounded-lg text-sm">
               Tentar novamente
             </button>
           </div>
@@ -154,9 +163,11 @@ export default function Devocional() {
           <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/10">
             <button
               onClick={handleGerarOutro}
-              className="inline-flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 font-cinzel transition-colors"
+              disabled={generateMutation.isPending}
+              className="inline-flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 font-cinzel transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <RefreshCw className="w-4 h-4" /> Gerar outro
+              <RefreshCw className={`w-4 h-4 ${generateMutation.isPending ? 'animate-spin' : ''}`} />
+              {generateMutation.isPending ? 'Gerando...' : 'Gerar outro'}
             </button>
             <button
               onClick={() => setShowDiaryModal(true)}

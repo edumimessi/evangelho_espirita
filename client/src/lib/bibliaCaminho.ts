@@ -24,13 +24,30 @@ const BOOK_ABBREV_MAP: Record<string, string> = {
   ez: "Ez", dn: "Dn", os: "Os", jl: "Jl", am: "Am",
   ob: "Ob", jn: "Jn", mq: "Mq", na: "Na", hc: "Hc",
   sf: "Sf", ag: "Ag", zc: "Zc", ml: "Ml",
-  // Novo Testamento
-  mt: "Mt", mc: "Mc", lc: "Lc", jo: "Jo", at: "At",
-  rm: "Rm", "1co": "1Co", "2co": "2Co", gl: "Gl", ef: "Ef",
-  fp: "Fp", cl: "Cl", "1ts": "1Ts", "2ts": "2Ts", "1tm": "1Tm",
-  "2tm": "2Tm", tt: "Tt", fm: "Fm", hb: "Hb", tg: "Tg",
-  "1pe": "1Pe", "2pe": "2Pe", "1jo": "1Jo", "2jo": "2Jo", "3jo": "3Jo",
-  jd: "Jd", ap: "Ap",
+  // Novo Testamento — abreviações verificadas com HTTP 200 em 2026-07-01
+  mt: "Mt",      // Mateus
+  mc: "Mc",      // Marcos
+  lc: "Lc",      // Lucas
+  jo: "Jo",      // João
+  at: "At",      // Atos
+  rm: "Rom",     // Romanos (pasta: Rom, não Rm)
+  "1co": "1Cor", // 1 Coríntios (pasta: 1Cor)
+  "2co": "2Cor", // 2 Coríntios (pasta: 2Cor)
+  gl: "Gal",     // Gálatas (pasta: Gal)
+  ef: "Ef",      // Efésios
+  fp: "Flp",     // Filipenses (pasta: Flp)
+  cl: "Col",     // Colossenses (pasta: Col)
+  "1ts": "1Tes", // 1 Tessalonicenses (pasta: 1Tes)
+  "2ts": "2Tes", // 2 Tessalonicenses (pasta: 2Tes)
+  "1tm": "1Tim", // 1 Timóteo (pasta: 1Tim)
+  "2tm": "2Tim", // 2 Timóteo (pasta: 2Tim)
+  tt: "Tt",      // Tito
+  hb: "Heb",     // Hebreus (pasta: Heb)
+  tg: "Tg",      // Tiago
+  "1pe": "1Pe",  // 1 Pedro
+  "2pe": "2Pe",  // 2 Pedro
+  "1jo": "1Jo",  // 1 João
+  // Sem cobertura TRP verificada: fm, 2jo, 3jo, jd, ap → usam fallback
 };
 
 /**

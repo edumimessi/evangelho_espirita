@@ -1,0 +1,1 @@
+ALTER TABLE `devocional_cache` MODIFY COLUMN `date` varchar(20) NOT NULL;
