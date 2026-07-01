@@ -123,10 +123,48 @@ const bibleRouter = router({
           return { title: r.title, code: r.code, source, url: r.url ?? null };
         });
       }
-      return result;
+            return result;
+    }),
+
+  // Busca o texto completo de um comentário de Emmanuel na Bíblia do Caminho
+  emmanuelText: publicProcedure
+    .input(z.object({ url: z.string().url() }))
+    .query(async ({ input }) => {
+      try {
+        const axios = (await import("axios")).default;
+        const cheerio = await import("cheerio");
+        const response = await axios.get(input.url, {
+          timeout: 10000,
+          responseType: "arraybuffer",
+        });
+        // Decodificar como UTF-8
+        const html = Buffer.from(response.data).toString("utf-8");
+        const $ = cheerio.load(html);
+
+        // Remover elementos desnecessários
+        $("script, style, nav, header, footer, .nav, .menu").remove();
+
+        // Extrair título (parágrafo BT)
+        const titleEl = $("p.BT").first();
+        const title = titleEl.text().trim();
+
+        // Extrair parágrafos do comentário (excluir BT, Sgn, FnT)
+        const paragraphs: string[] = [];
+        $("p").each((_, el) => {
+          const cls = $(el).attr("class") ?? "";
+          if (cls === "BT" || cls === "Sgn" || cls === "FnT") return;
+          const txt = $(el).text().trim();
+          // Remover numeração inicial (ex: "1Texto" → "Texto")
+          const cleaned = txt.replace(/^\d+/, "").trim();
+          if (cleaned.length > 5) paragraphs.push(cleaned);
+        });
+
+        return { title, paragraphs };
+      } catch (err) {
+        throw new Error("Não foi possível carregar o comentário. Tente novamente.");
+      }
     }),
 });
-
 // ─── Daily Reading Router ─────────────────────────────────────────────────────
 
 const dailyRouter = router({

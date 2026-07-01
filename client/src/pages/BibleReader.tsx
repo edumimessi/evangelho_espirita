@@ -76,6 +76,13 @@ export default function BibleReader() {
     { enabled: !!selectedBook, staleTime: Infinity }
   );
   const [expandedEmmanuel, setExpandedEmmanuel] = useState<number | null>(null);
+  // Estado para o texto expandido de um comentário específico: "verseNum-refIndex"
+  const [expandedRefKey, setExpandedRefKey] = useState<string | null>(null);
+  const [emmanuelTextUrl, setEmmanuelTextUrl] = useState<string | null>(null);
+  const { data: emmanuelTextData, isLoading: emmanuelTextLoading } = trpc.bible.emmanuelText.useQuery(
+    { url: emmanuelTextUrl! },
+    { enabled: !!emmanuelTextUrl, staleTime: 1000 * 60 * 30 }
+  );
 
   const interpretMutation = trpc.ai.interpret.useMutation();
   const emmanuelMutation = trpc.ai.emmanuelComment.useMutation();
@@ -431,39 +438,76 @@ export default function BibleReader() {
                             {isEmmanuelOpen && (
                               <div className="mt-1.5 px-3 py-2 rounded-lg bg-amber-400/[0.06] border border-amber-400/20 space-y-1.5">
                                 {emmanuelRefs.map((ref, i) => {
-                                  // Usa ref.url (URL direta do comentário no livro de Emmanuel)
-                                  // ou fallback para a URL do versículo na Bíblia do Caminho
-                                  const linkUrl = (ref as any).url ?? bibliaCaminhoVerseUrl(
-                                    selectedBook ?? undefined,
-                                    selectedChapter,
-                                    verse.verse
-                                  );
+                                  const refKey = `${verse.verse}-${i}`;
+                                  const isRefOpen = expandedRefKey === refKey;
+                                  const refUrl = (ref as any).url ?? null;
+                                  const isLoadingThis = emmanuelTextLoading && emmanuelTextUrl === refUrl;
+                                  const textData = isRefOpen && emmanuelTextUrl === refUrl ? emmanuelTextData : null;
                                   return (
-                                    <div key={i} className="text-xs leading-snug flex items-start gap-1.5">
-                                      <div className="flex-1">
-                                        <span className="text-white/80">{ref.title}</span>
-                                        {ref.code && (
-                                          <span className="text-amber-300/60 ml-1.5">
-                                            — {ref.source ?? ref.code}
-                                            {ref.source ? ` (${ref.code})` : ""}
-                                          </span>
+                                    <div key={i} className="space-y-1.5">
+                                      <div className="text-xs leading-snug flex items-start gap-1.5">
+                                        <div className="flex-1">
+                                          {/* Título clicável para expandir o texto */}
+                                          <button
+                                            onClick={() => {
+                                              if (isRefOpen) {
+                                                setExpandedRefKey(null);
+                                              } else {
+                                                setExpandedRefKey(refKey);
+                                                if (refUrl) setEmmanuelTextUrl(refUrl);
+                                              }
+                                            }}
+                                            className="text-left text-amber-200/90 hover:text-amber-200 font-medium transition-colors"
+                                          >
+                                            {ref.title}
+                                            <ChevronDown className={`inline w-3 h-3 ml-1 transition-transform ${isRefOpen ? 'rotate-180' : ''}`} />
+                                          </button>
+                                          {ref.code && (
+                                            <span className="text-amber-300/50 ml-1.5 text-[10px]">
+                                              {ref.source ?? ref.code}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {refUrl && (
+                                          <a
+                                            href={refUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="shrink-0 text-amber-300/40 hover:text-amber-300 transition-colors mt-0.5"
+                                            title="Abrir na Bíblia do Caminho"
+                                          >
+                                            <ExternalLink className="w-3 h-3" />
+                                          </a>
                                         )}
                                       </div>
-                                      <a
-                                        href={linkUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="shrink-0 text-amber-300/50 hover:text-amber-300 transition-colors mt-0.5"
-                                        title="Ler comentário de Emmanuel na Bíblia do Caminho"
-                                      >
-                                        <ExternalLink className="w-3 h-3" />
-                                      </a>
+                                      {/* Texto expandido do comentário */}
+                                      {isRefOpen && (
+                                        <div className="ml-2 pl-3 border-l-2 border-amber-400/30 space-y-2">
+                                          {isLoadingThis ? (
+                                            <div className="flex items-center gap-2 text-amber-300/50 text-xs py-2">
+                                              <Loader2 className="w-3 h-3 animate-spin" />
+                                              Carregando...
+                                            </div>
+                                          ) : textData ? (
+                                            <>
+                                              {textData.title && (
+                                                <p className="text-amber-300/70 text-[10px] italic">{textData.title}</p>
+                                              )}
+                                              {textData.paragraphs.map((p, pi) => (
+                                                <p key={pi} className="text-white/75 text-xs leading-relaxed">{p}</p>
+                                              ))}
+                                              <p className="text-white/25 text-[10px] italic pt-1">
+                                                Emmanuel — {ref.source ?? ref.code}
+                                              </p>
+                                            </>
+                                          ) : (
+                                            <p className="text-white/30 text-xs italic">Clique no título para carregar o texto.</p>
+                                          )}
+                                        </div>
+                                      )}
                                     </div>
                                   );
                                 })}
-                                <p className="text-white/25 text-[10px] pt-1 italic">
-                                  Clique em <ExternalLink className="inline w-2.5 h-2.5" /> para ler o comentário na Bíblia do Caminho.
-                                </p>
                               </div>
                             )}
                           </div>
