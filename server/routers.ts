@@ -583,6 +583,7 @@ const devocionalRouter = router({
     if (cached) {
       return {
         reference,
+        bookAbbrev: reading.bookAbbrev,
         bookName: reading.bookName,
         chapter: reading.chapter,
         verse: reading.verseStart,
@@ -639,6 +640,7 @@ const devocionalRouter = router({
 
     return {
       reference,
+      bookAbbrev: reading.bookAbbrev,
       bookName: reading.bookName,
       chapter: reading.chapter,
       verse: reading.verseStart,
