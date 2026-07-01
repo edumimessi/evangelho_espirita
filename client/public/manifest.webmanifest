@@ -1,0 +1,19 @@
+{
+  "name": "Evangelho Espírita — Estudo Bíblico",
+  "short_name": "Evangelho Espírita",
+  "description": "Estudo bíblico com viés espírita: devocional diário, comentários de Emmanuel, interpretações e busca por temas.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080614",
+  "theme_color": "#140f33",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/icon-256.png", "type": "image/png", "sizes": "256x256", "purpose": "any" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/icon-256.png", "type": "image/png", "sizes": "256x256", "purpose": "maskable" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

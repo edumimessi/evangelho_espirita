@@ -6,81 +6,100 @@ import { CosmicLayout } from "@/components/CosmicLayout";
 type Testament = "old" | "new" | undefined;
 type SearchMode = "text" | "reference";
 
+// Cada tema espírita é conceitual e NÃO aparece literalmente na Bíblia. Por
+// isso cada tema carrega `termos`: palavras/expressões que de fato ocorrem no
+// texto bíblico. A busca por tema procura QUALQUER um desses termos (OR),
+// enquanto os `subtemas` são atalhos de busca por texto já concretos.
 const spiritThemes = [
   {
     label: "Reencarnação",
     icon: "♾️",
-    subtemas: ["nascer de novo", "vidas sucessivas", "renascimento", "retorno à carne"],
+    termos: ["nascer de novo", "renascer", "renascimento", "regenera"],
+    subtemas: ["nascer de novo", "renascer", "regeneração"],
   },
   {
     label: "Lei de Causa e Efeito",
     icon: "⚖️",
-    subtemas: ["colher e semear", "justiça divina", "consequências", "retribuíção"],
+    termos: ["semea", "ceifa", "colher", "segar"],
+    subtemas: ["semear", "ceifar", "colher"],
   },
   {
     label: "Caridade",
     icon: "💫",
-    subtemas: ["amor ao próximo", "serviço", "generosidade", "compaixao"],
+    termos: ["caridade", "esmola", "misericórdia", "compaixão"],
+    subtemas: ["caridade", "esmola", "misericórdia"],
   },
   {
     label: "Evolução Espiritual",
     icon: "🌟",
-    subtemas: ["perfeição moral", "progresso", "transformação interior", "aprendizado"],
+    termos: ["perfeit", "santifica", "transforma", "renova"],
+    subtemas: ["perfeitos", "santificação", "transformai"],
   },
   {
     label: "Mediunidade",
     icon: "🔮",
-    subtemas: ["dons espirituais", "revelação", "profecia", "visão"],
+    termos: ["profe", "revela", "visão", "dons"],
+    subtemas: ["profeta", "profecia", "revelação"],
   },
   {
     label: "Vida após a morte",
     icon: "✨",
-    subtemas: ["ressurreição", "vida eterna", "moradas do Pai", "mundo espiritual"],
+    termos: ["ressurreição", "ressuscit", "vida eterna", "morada"],
+    subtemas: ["ressurreição", "vida eterna", "moradas"],
   },
   {
     label: "Oração",
     icon: "🙏",
-    subtemas: ["orar", "pedir", "buscar", "comunhão com Deus"],
+    termos: ["oração", "orai", "orando", "orou", "rogai", "súplica"],
+    subtemas: ["orai", "oração", "rogai"],
   },
   {
     label: "Perdão",
     icon: "🕊️",
-    subtemas: ["perdoar", "misericórdia", "reconciliação", "compaixao"],
+    termos: ["perdoa", "perdão", "remissão", "misericórdia"],
+    subtemas: ["perdoar", "perdão", "misericórdia"],
   },
   {
     label: "Humildade",
     icon: "🌿",
-    subtemas: ["servo", "manso", "pobre de espírito", "simplicidade"],
+    termos: ["humild", "manso", "mansidão", "servo"],
+    subtemas: ["humilde", "manso", "servo"],
   },
   {
     label: "Amor",
     icon: "💛",
-    subtemas: ["amar", "amor fraterno", "amor universal", "benevolencia"],
+    termos: ["amai", "amados", "amarás", "amor"],
+    subtemas: ["amai", "amados", "amarás"],
   },
   {
     label: "Fé",
     icon: "💠",
-    subtemas: ["crer", "confiança", "fé raciocinada", "certeza"],
+    termos: ["crede", "crer", "crê", "fiel", "confia"],
+    subtemas: ["crer", "crede", "fiel"],
   },
   {
     label: "Livre-arbítrio",
     icon: "🛤️",
-    subtemas: ["escolha", "vontade", "caminho", "decisão"],
+    termos: ["escolh", "vontade", "querei"],
+    subtemas: ["escolher", "vontade", "quereis"],
   },
   {
     label: "Trabalho e Missão",
     icon: "🌱",
-    subtemas: ["talento", "servo", "vinha", "obra"],
+    termos: ["seara", "messe", "vinha", "talento", "obreiro"],
+    subtemas: ["seara", "vinha", "talento"],
   },
   {
     label: "Desapego Material",
     icon: "🌊",
-    subtemas: ["tesouro no céu", "riqueza", "pobreza", "desprendimento"],
+    termos: ["tesouro", "riqueza", "mamon", "avareza"],
+    subtemas: ["tesouro", "riqueza", "mamon"],
   },
   {
     label: "Obsessão e Vigilância",
     icon: "🛡️",
-    subtemas: ["vigiar", "tentação", "espírito impuro", "resistência"],
+    termos: ["vigiai", "vigil", "tentação", "imundo"],
+    subtemas: ["vigiai", "tentação", "espírito imundo"],
   },
 ];
 
@@ -107,6 +126,9 @@ export default function SearchPage() {
   const [testament, setTestament] = useState<Testament>(undefined);
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
+  // Termos bíblicos do tema selecionado (busca OR). Null = busca por texto livre.
+  const [themeTerms, setThemeTerms] = useState<string[] | null>(null);
+  const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
 
   // Reference search state
   const [refBook, setRefBook] = useState("");
@@ -121,9 +143,17 @@ export default function SearchPage() {
     const params = new URLSearchParams(window.location.search);
     const tema = params.get("tema");
     if (tema) {
-      setActiveTheme(tema);
-      setQuery(tema);
-      setDebouncedQuery(tema);
+      const match = spiritThemes.find((t) => t.label.toLowerCase() === tema.toLowerCase());
+      setActiveTheme(match?.label ?? tema);
+      // Se casar com um tema conhecido, busca pelos termos bíblicos (OR);
+      // caso contrário, trata o parâmetro como busca por texto.
+      if (match) {
+        setThemeTerms(match.termos);
+        setExpandedTheme(match.label);
+      } else {
+        setQuery(tema);
+        setDebouncedQuery(tema);
+      }
     }
   }, []);
 
@@ -135,9 +165,11 @@ export default function SearchPage() {
     return () => clearTimeout(timer);
   }, [query]);
 
+  const usingTheme = mode === "text" && !!themeTerms && themeTerms.length > 0;
+
   const { data: results, isLoading } = trpc.bible.search.useQuery(
-    { query: debouncedQuery, testament },
-    { enabled: mode === "text" && debouncedQuery.length >= 2 }
+    usingTheme ? { terms: themeTerms!, testament } : { query: debouncedQuery, testament },
+    { enabled: mode === "text" && (usingTheme || debouncedQuery.length >= 2) }
   );
 
   const { data: refResults, isLoading: refLoading } = trpc.bible.reference.useQuery(
@@ -149,18 +181,22 @@ export default function SearchPage() {
     { enabled: refEnabled && !!refBook && !!refChapter }
   );
 
-  const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
-
   const handleTheme = (theme: string) => {
+    const match = spiritThemes.find((t) => t.label === theme);
     setMode("text");
     setActiveTheme(theme);
-    setQuery(theme);
-    setDebouncedQuery(theme);
+    // Busca pelos termos bíblicos do tema (OR), não pelo rótulo conceitual.
+    setThemeTerms(match?.termos ?? [theme]);
+    setQuery("");
+    setDebouncedQuery("");
     setExpandedTheme(expandedTheme === theme ? null : theme);
   };
 
   const handleSubtema = (subtema: string) => {
     setMode("text");
+    // Subtema é uma busca por texto concreta: sai do modo tema.
+    setThemeTerms(null);
+    setActiveTheme(null);
     setQuery(subtema);
     setDebouncedQuery(subtema);
   };
@@ -169,6 +205,7 @@ export default function SearchPage() {
     setQuery("");
     setDebouncedQuery("");
     setActiveTheme(null);
+    setThemeTerms(null);
     setRefEnabled(false);
     setRefBook("");
     setRefChapter("");
@@ -237,7 +274,11 @@ export default function SearchPage() {
               <input
                 type="text"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setThemeTerms(null);
+                  setActiveTheme(null);
+                }}
                 placeholder="Buscar por palavras, frases ou temas..."
                 className="cosmic-input w-full pl-11 pr-10 py-3.5 rounded-xl text-sm"
               />
@@ -314,13 +355,13 @@ export default function SearchPage() {
 
             {/* Text Results */}
             <div className="animate-fade-in-up" style={{ animationDelay: "150ms" }}>
-              {isLoading && debouncedQuery.length >= 2 && (
+              {isLoading && (usingTheme || debouncedQuery.length >= 2) && (
                 <div className="flex items-center justify-center py-12">
                   <div className="cosmic-spinner" />
                 </div>
               )}
 
-              {!isLoading && debouncedQuery.length >= 2 && results && (
+              {!isLoading && (usingTheme || debouncedQuery.length >= 2) && results && (
                 <div>
                   <p className="text-xs text-white/40 mb-3">
                     {results.length === 0
@@ -350,7 +391,7 @@ export default function SearchPage() {
                 </div>
               )}
 
-              {debouncedQuery.length < 2 && !activeTheme && (
+              {!usingTheme && debouncedQuery.length < 2 && !activeTheme && (
                 <div className="text-center py-12 text-white/30">
                   <SearchIcon className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p>Digite pelo menos 2 caracteres para buscar</p>

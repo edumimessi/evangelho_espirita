@@ -79,3 +79,13 @@ createRoot(document.getElementById("root")!).render(
     </QueryClientProvider>
   </trpc.Provider>
 );
+
+// Registra o service worker (PWA / app instalável) apenas no build de produção,
+// para não interferir no hot-reload e no preview de desenvolvimento.
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch((err) => {
+      console.warn("[PWA] Falha ao registrar service worker:", err);
+    });
+  });
+}

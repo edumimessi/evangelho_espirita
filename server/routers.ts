@@ -30,6 +30,7 @@ import {
   toggleVerseFavorite,
 } from "./db";
 import { fetchEseChapterSource } from "./services/bibliaCaminhoScraper";
+import { getEmmanuelChapterIndex, emmanuelSiglas } from "./data/emmanuelIndex";
 
 // ─── Bible Router ─────────────────────────────────────────────────────────────
 
@@ -71,16 +72,22 @@ const bibleRouter = router({
       return getVerseRange(input.bookAbbrev, input.chapter, input.verseStart, input.verseEnd);
     }),
 
-  // Busca por texto
+  // Busca por texto (query livre) ou por tema (lista de termos, OR)
   search: publicProcedure
     .input(
-      z.object({
-        query: z.string().min(2),
-        testament: z.enum(["old", "new"]).optional(),
-      })
+      z
+        .object({
+          query: z.string().optional(),
+          terms: z.array(z.string()).optional(),
+          testament: z.enum(["old", "new"]).optional(),
+        })
+        .refine(
+          (v) => (v.query?.trim().length ?? 0) >= 2 || (v.terms?.length ?? 0) > 0,
+          { message: "Informe ao menos 2 caracteres ou selecione um tema." }
+        )
     )
     .query(async ({ input }) => {
-      return searchVerses(input.query, input.testament);
+      return searchVerses(input.terms ?? input.query ?? "", input.testament);
     }),
 
   // Busca por referência específica (livro, capítulo, versículo)
@@ -97,6 +104,24 @@ const bibleRouter = router({
         return getVerseRange(input.bookAbbrev, input.chapter, input.verse, input.verse);
       }
       return getChapter(input.bookAbbrev, input.chapter);
+    }),
+
+  // Índice de comentários de Emmanuel para um capítulo (versículo -> referências).
+  // Apenas a estrutura (título + livro-fonte), sem o texto protegido.
+  emmanuelIndex: publicProcedure
+    .input(z.object({ bookAbbrev: z.string(), chapter: z.number().int().positive() }))
+    .query(({ input }) => {
+      const chapterIndex = getEmmanuelChapterIndex(input.bookAbbrev, input.chapter);
+      // Enriquece cada referência com o nome amigável da fonte (quando conhecido).
+      const result: Record<string, { title: string; code: string | null; source: string | null }[]> = {};
+      for (const [verse, refs] of Object.entries(chapterIndex)) {
+        result[verse] = refs.map((r) => {
+          const prefix = r.code ? r.code.split(".")[0] : null;
+          const source = prefix ? emmanuelSiglas[prefix] ?? null : null;
+          return { title: r.title, code: r.code, source };
+        });
+      }
+      return result;
     }),
 });
 
@@ -396,22 +421,26 @@ Máximo 5 correlações mais relevantes.`,
   themeSearch: publicProcedure
     .input(z.object({ theme: z.string().min(2) }))
     .query(async ({ input }) => {
-      const spiritThemes: Record<string, string> = {
-        reencarnação: "reencarnação renascer nascer de novo",
-        "lei de causa e efeito": "colher semear plantou colherá",
-        caridade: "amor próximo caridade dar",
-        "evolução espiritual": "perfeição crescer aprender",
-        mediunidade: "espírito comunicação revelação",
-        "vida após a morte": "ressurreição vida eterna morte",
-        oração: "orar oração pedir buscar",
-        perdão: "perdoar perdão misericórdia",
-        humildade: "humilde humildade servo",
-        amor: "amor amar amados",
+      // Termos por tema como LISTA de expressões inteiras: cada item é buscado
+      // como um LIKE completo (OR entre eles). Manter frases como "nascer de
+      // novo" juntas evita que palavras vazias (ex.: "de") virem termo isolado
+      // e casem com quase toda a Bíblia.
+      const spiritThemes: Record<string, string[]> = {
+        reencarnação: ["renascer", "nascer de novo", "regenera"],
+        "lei de causa e efeito": ["semea", "ceifa", "colher", "segar"],
+        caridade: ["caridade", "esmola", "misericórdia", "compaixão"],
+        "evolução espiritual": ["perfeit", "santifica", "transforma", "renova"],
+        mediunidade: ["profe", "revela", "visão", "dons"],
+        "vida após a morte": ["ressurreição", "ressuscit", "vida eterna", "morada"],
+        oração: ["oração", "orai", "orando", "orou", "rogai", "súplica"],
+        perdão: ["perdoa", "perdão", "remissão", "misericórdia"],
+        humildade: ["humild", "manso", "mansidão", "servo"],
+        amor: ["amai", "amados", "amarás", "amor"],
       };
 
-      const searchTerm = spiritThemes[input.theme.toLowerCase()] ?? input.theme;
-      const words = searchTerm.split(" ");
-      const results = await searchVerses(words[0]);
+      // Tema conhecido → termos bíblicos; senão, usa o próprio texto como frase.
+      const terms = spiritThemes[input.theme.toLowerCase()] ?? [input.theme];
+      const results = await searchVerses(terms);
       return results;
     }),
 
