@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>O Evangelho comentado por Emmanuel</title>
-  <meta name="description" content="Para cada versículo do Evangelho, onde Emmanuel o comentou (título e livro-fonte), com link para a Bíblia do Caminho." />
+  <meta name="description" content="Cada versículo do Evangelho com o texto e a correlação dos comentários de Emmanuel (título e livro-fonte), com link para a Bíblia do Caminho." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
@@ -25,15 +25,20 @@
     .subkicker { font-size: 14px; color: #9a92cf; margin: 4px 0 24px; }
     .card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10); border-radius: 22px;
       padding: 28px 24px; backdrop-filter: blur(6px); box-shadow: 0 0 40px rgba(125,227,255,.06); text-align: left; }
-    .ref { font-family: "Cinzel", serif; font-size: 22px; letter-spacing: .5px; color: #e7c98a; text-align: center; }
-    .refsub { text-align: center; font-size: 13px; color: #8b83bd; margin-top: 4px; margin-bottom: 20px; }
+    .ref { font-family: "Cinzel", serif; font-size: 22px; letter-spacing: .5px; color: #e7c98a; text-align: center; margin-bottom: 18px; }
+    .verse { font-size: 20px; line-height: 1.5; font-style: italic; color: #f2eeff; border-left: 3px solid #7de3ff;
+      padding-left: 16px; margin-bottom: 24px; }
+    .verse.loading { color: #8b83bd; font-size: 15px; border-color: #3a3468; font-style: normal; }
     .listtitle { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
       color: #7de3ff; border-bottom: 1px solid rgba(255,255,255,.10); padding-bottom: 8px; margin-bottom: 14px; }
-    ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .listtitle .count { color: #8b83bd; letter-spacing: 0; text-transform: none; font-family: "Crimson Pro", serif; }
+    ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
     li { line-height: 1.4; }
-    .title { color: #f2eeff; font-size: 17px; }
-    .src { display: block; font-size: 13px; color: #a99fe0; margin-top: 1px; }
-    .count { color: #8b83bd; font-size: 13px; }
+    a.entry { display: block; text-decoration: none; padding: 10px 12px; border-radius: 12px;
+      background: rgba(125,227,255,.05); border: 1px solid rgba(125,227,255,.14); transition: all .16s; }
+    a.entry:hover { background: rgba(125,227,255,.11); border-color: rgba(125,227,255,.35); }
+    .title { color: #f2eeff; font-size: 16px; }
+    .src { display: block; font-size: 12.5px; color: #7de3ff; margin-top: 2px; }
     .actions { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
     button, a.btn { font: inherit; font-size: 15px; cursor: pointer; text-decoration: none; display: inline-flex;
       align-items: center; justify-content: center; gap: 8px; padding: 13px 20px; border-radius: 14px; transition: all .18s; }
@@ -60,8 +65,8 @@
 
     <div class="card">
       <div class="ref" id="ref">—</div>
-      <div class="refsub" id="refsub"></div>
-      <div class="listtitle">Onde Emmanuel comentou este versículo</div>
+      <blockquote class="verse loading" id="verse">Carregando o versículo…</blockquote>
+      <div class="listtitle">Comentários de Emmanuel <span class="count" id="count"></span></div>
       <ul id="list"></ul>
       <div class="actions">
         <a class="btn ghost" id="caminho" href="#" target="_blank" rel="noopener noreferrer">📖 Estudar na Bíblia do Caminho</a>
@@ -70,8 +75,8 @@
     </div>
 
     <p class="foot">
-      Índice de referência da coleção <em>"O Evangelho por Emmanuel"</em> (FEB) ·
-      apenas título e localização; o texto dos comentários é protegido por direitos autorais.
+      Texto: Bíblia Livre · Correlações da coleção <em>"O Evangelho por Emmanuel"</em> (FEB) — apenas
+      título e localização; o texto dos comentários é protegido por direitos autorais.
     </p>
   </div>
 
@@ -91,7 +96,37 @@
       mt:"Mt", mc:"Mc", lc:"Lc", jo:"Jo", at:"At", rm:"Rom", "1co":"1Cor", "2co":"2Cor",
       gl:"Gal", ef:"Ef", fp:"Flp", cl:"Col", "1ts":"1Tes", "1tm":"1Tim"
     };
+    // Códigos da API de texto bíblico (helloao)
+    const API_ID = {
+      mt:"MAT", mc:"MRK", lc:"LUK", jo:"JHN", at:"ACT", rm:"ROM", "1co":"1CO", "2co":"2CO",
+      gl:"GAL", ef:"EPH", fp:"PHP", cl:"COL", "1ts":"1TH", "1tm":"1TI"
+    };
     const ORDER = ["mt","mc","lc","jo","at","rm","1co","2co","gl","ef","fp","cl","1ts","1tm"];
+
+    // Livros-fonte de Emmanuel com URL direta conhecida na Bíblia do Caminho
+    // (padrão /ocaminho/TX/{Code}/{Code}{NNN}.htm, ex.: Cvv174).
+    const LIVROS_LINK = { Fv:1, Pn:1, Vl:1, Cvv:1, Pve:1, Le:1, Cel:1, Bp:1 };
+    // Índice do volume (fallback) por livro bíblico — URLs reais do documento-fonte.
+    const VOL_INDEX = {
+      mt:"Oee1", mc:"Oee2", lc:"Oee3", jo:"Oee4", at:"Oee5",
+      rm:"Oee6", "1co":"Oee6", "2co":"Oee6", gl:"Oee6", ef:"Oee6",
+      fp:"Oee6", cl:"Oee6", "1ts":"Oee6", "1tm":"Oee6"
+    };
+    function volIndexUrl(x) {
+      const v = VOL_INDEX[x.ab];
+      return `https://bibliadocaminho.com/ocaminho/TX/${v}/${v}Index.htm`;
+    }
+    // Link para o comentário: direto quando o livro-fonte é conhecido e o
+    // capítulo é numérico; senão, cai no índice do volume (link sempre válido).
+    function commentUrl(x, code) {
+      if (!code) return volIndexUrl(x);
+      const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code);
+      if (m && LIVROS_LINK[m[1]]) {
+        const c = m[1], n = String(m[2]).padStart(3, "0");
+        return `https://bibliadocaminho.com/ocaminho/TX/${c}/${c}${n}.htm`;
+      }
+      return volIndexUrl(x);
+    }
 
     const el = (id) => document.getElementById(id);
     const pad2 = (n) => String(n).padStart(2, "0");
@@ -113,34 +148,75 @@
       return `https://bibliadocaminho.com/ocaminho/TRP/${ab}/${ab}${pad2(x.c)}.htm#V${x.v}`;
     }
 
+    const textCache = {};
+    async function fetchVerseText(x) {
+      const key = x.ab + "-" + x.c + "-" + x.v;
+      if (textCache[key]) return textCache[key];
+      const url = `https://bible.helloao.org/api/por_blj/${API_ID[x.ab]}/${x.c}.json`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const items = (data && data.chapter && data.chapter.content) || [];
+      const verse = items.find((it) => it.type === "verse" && it.number === x.v);
+      if (!verse) throw new Error("versículo não encontrado");
+      const text = (Array.isArray(verse.content) ? verse.content : [verse.content])
+        .filter((c) => typeof c === "string").join(" ").trim();
+      textCache[key] = text;
+      return text;
+    }
+
     let current = -1;
+    let token = 0;
 
     function render(index) {
       current = index;
+      const myToken = ++token;
       const x = FLAT[index];
       const refs = DATA[x.ab][String(x.c)][String(x.v)] || [];
+
       el("ref").textContent = `${NOMES[x.ab]} ${x.c}:${x.v}`;
-      el("refsub").textContent = refs.length + (refs.length === 1 ? " comentário de Emmanuel" : " comentários de Emmanuel");
+      el("count").textContent = "(" + refs.length + ")";
       el("caminho").href = caminhoUrl(x);
 
+      // Correlações (sempre disponíveis — embutidas)
       const ul = el("list");
       ul.innerHTML = "";
       for (const r of refs) {
         const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = commentUrl(x, r.code);
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.className = "entry";
         const t = document.createElement("span");
         t.className = "title";
         t.textContent = r.title;
-        li.appendChild(t);
+        a.appendChild(t);
         if (r.code) {
           const prefix = r.code.split(".")[0];
           const nome = SIGLAS[prefix];
           const s = document.createElement("span");
           s.className = "src";
           s.textContent = nome ? `${nome} — ${r.code}` : r.code;
-          li.appendChild(s);
+          a.appendChild(s);
         }
+        li.appendChild(a);
         ul.appendChild(li);
       }
+
+      // Texto do versículo (busca ao vivo; se falhar, esconde e mantém as correlações)
+      const box = el("verse");
+      box.classList.add("loading");
+      box.style.display = "";
+      box.textContent = "Carregando o versículo…";
+      fetchVerseText(x).then((text) => {
+        if (myToken !== token) return;
+        box.classList.remove("loading");
+        box.textContent = "“" + text + "”";
+      }).catch(() => {
+        if (myToken !== token) return;
+        box.style.display = "none";
+      });
     }
 
     function dayOfYear() {
