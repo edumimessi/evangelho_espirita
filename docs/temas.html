@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Temas de Estudo — Evangelho, Emmanuel e Kardec</title>
-  <meta name="description" content="Temas espíritas relacionando o Evangelho, os comentários de Emmanuel e as obras de Allan Kardec (domínio público)." />
+  <meta name="description" content="Estudo temático espírita: o conteúdo de cada tema, com o Evangelho, os comentários de Emmanuel e as obras de Allan Kardec (domínio público)." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
@@ -17,7 +17,7 @@
     }
     .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #cfe6ff; }
-    .wrap { position: relative; z-index: 1; width: 100%; max-width: 620px; margin: 0 auto; }
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 640px; margin: 0 auto; }
     header { text-align: center; margin-bottom: 26px; }
     .flame { width: 48px; height: 48px; margin: 0 auto 10px; display: block; filter: drop-shadow(0 0 14px rgba(125,227,255,.45)); }
     .kicker { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7de3ff; }
@@ -27,14 +27,32 @@
     .backlink:hover { background: rgba(231,201,138,.12); }
 
     .tema { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10); border-radius: 20px;
-      padding: 22px 22px; margin-bottom: 16px; overflow: hidden; }
+      padding: 20px 22px; margin-bottom: 16px; overflow: hidden; }
     .tema > summary { cursor: pointer; list-style: none; font-family: "Cinzel", serif; font-size: 19px; color: #e7c98a;
       display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .tema > summary::-webkit-details-marker { display: none; }
     .tema > summary .chev { color: #7de3ff; transition: transform .2s; font-size: 15px; }
     .tema[open] > summary .chev { transform: rotate(90deg); }
     .tema .body { margin-top: 16px; }
-    .bloco { margin-bottom: 16px; }
+
+    .estudo p { font-size: 16.5px; line-height: 1.72; color: #ece8ff; margin-bottom: 13px; }
+    .estudo em { color: #cbb8ff; }
+    .estudo h4 { font-family: "Cinzel", serif; font-size: 13px; letter-spacing: .6px; color: #e7c98a;
+      margin: 22px 0 9px; }
+    .estudo h4:first-child { margin-top: 4px; }
+    .estudo .grego { font-style: italic; color: #9fe8c4; }
+
+    .fonte { padding: 11px 14px; border-left: 3px solid rgba(231,201,138,.5); margin-bottom: 13px;
+      background: rgba(255,255,255,.025); border-radius: 0 12px 12px 0; }
+    .fonte .o { font-family: "Cinzel", serif; color: #e7c98a; font-size: 15.5px; }
+    .fonte .a { color: #7de3ff; font-size: 12.5px; }
+    .fonte .loc { display: block; font-size: 12.5px; color: #b9b2e6; margin-top: 1px; }
+    .fonte .sin { font-size: 15.5px; line-height: 1.62; color: #ece8ff; margin-top: 8px; }
+    .fonte .pdf { display: inline-block; margin-top: 7px; font-size: 12px; color: #7de3ff; text-decoration: none;
+      border: 1px solid rgba(125,227,255,.28); padding: 3px 9px; border-radius: 8px; }
+    .fonte .pdf:hover { background: rgba(125,227,255,.1); }
+
+    .bloco { margin-top: 18px; }
     .bloco h3 { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
       color: #7de3ff; border-bottom: 1px solid rgba(255,255,255,.10); padding-bottom: 6px; margin-bottom: 10px; }
     .item { display: block; padding: 9px 12px; border-radius: 11px; text-decoration: none; margin-bottom: 7px;
@@ -42,8 +60,13 @@
     a.item:hover { background: rgba(125,227,255,.11); border-color: rgba(125,227,255,.35); }
     .item .t { color: #f2eeff; font-size: 15.5px; }
     .item .s { display: block; font-size: 12.5px; color: #7de3ff; margin-top: 1px; }
-    .item.plain { background: transparent; border-color: transparent; padding: 4px 2px; }
-    .item.plain .t { color: #d9d3ff; }
+    .item.plain { background: transparent; border-color: transparent; padding: 3px 2px; }
+    .item.plain .t { color: #d9d3ff; font-size: 15px; }
+    .kardec-cit { padding: 8px 12px; border-left: 3px solid rgba(231,201,138,.45); margin-bottom: 8px; }
+    .kardec-cit .o { color: #e7c98a; font-size: 15px; }
+    .kardec-cit .d { display: block; font-size: 13px; color: #b9b2e6; margin-top: 1px; }
+    .kardec-cit a { font-size: 12px; color: #7de3ff; text-decoration: none; }
+    .kardec-cit a:hover { text-decoration: underline; }
     .foot { text-align: center; margin-top: 22px; font-size: 12px; color: #6f68a0; line-height: 1.6; }
   </style>
 </head>
@@ -59,125 +82,306 @@
         <path d="M256 210 C 284 250, 300 266, 300 302 C 300 334, 280 356, 256 356 C 232 356, 212 334, 212 302 C 212 266, 228 250, 256 210 Z" fill="#fef6e6" opacity=".92"/>
       </svg>
       <div class="kicker">Temas de Estudo</div>
-      <p class="lead">Cada tema reúne o <strong>Evangelho</strong>, os <strong>comentários de Emmanuel</strong> e as obras de <strong>Allan Kardec</strong> (domínio público).</p>
+      <p class="lead">Abra um tema para <strong>ler o estudo</strong> — com o Evangelho, os comentários de Emmanuel e as obras de Allan Kardec.</p>
       <a class="backlink" href="/">← Versículo comentado</a>
     </header>
 
     <div id="temas"></div>
 
     <p class="foot">
-      Textos de Allan Kardec: domínio público (tradução Guillon Ribeiro) · Comentários de Emmanuel: índice da coleção
-      "O Evangelho por Emmanuel" (FEB) — apenas referência. As demais obras (Léon Denis, Flammarion, Delanne, Barsanulfo,
-      Bezerra de Menezes) serão incluídas conforme as edições em domínio público forem adicionadas.
+      Estudo elaborado com base na Doutrina Espírita (obras de Allan Kardec, domínio público). Comentários de Emmanuel:
+      índice da coleção "O Evangelho por Emmanuel" (FEB) — apenas referência, o texto é protegido.
     </p>
   </div>
 
   <script>
-    // Arquivos do Kardec (hospedados na raiz do site). page opcional (#page=N).
-    const L = {
-      LE:  "/livro-dos-espiritos.pdf",
-      ESE: "/evangelho-espiritismo.pdf",
-      GEN: "/a-genese.pdf",
-      CI:  "/ceu-e-inferno.pdf",
-      LM:  "/livro-dos-mediuns.pdf",
-      OP:  "/obras-postumas.pdf",
-      QE:  "/o-que-e-espiritismo.pdf",
-    };
-    function kardecUrl(u, p) { return p ? (u + "#page=" + p) : u; }
-
-    // Link para comentário de Emmanuel na Bíblia do Caminho (padrão confirmado)
     function emUrl(code) {
       const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code || "");
       if (!m) return "https://bibliadocaminho.com";
       const c = m[1], n = String(m[2]).padStart(3, "0");
       return "https://bibliadocaminho.com/ocaminho/TX/" + c + "/" + c + n + ".htm";
     }
+    const L = {
+      LE: "/livro-dos-espiritos.pdf", ESE: "/evangelho-espiritismo.pdf", GEN: "/a-genese.pdf",
+      CI: "/ceu-e-inferno.pdf", LM: "/livro-dos-mediuns.pdf", OP: "/obras-postumas.pdf", QE: "/o-que-e-espiritismo.pdf",
+    };
 
     const TEMAS = [
       {
-        nome: "Reencarnação",
-        evangelho: ["João 3:1-7 — “necessário vos é nascer de novo”", "Mateus 17:10-13 — Elias já veio (João Batista)"],
-        emmanuel: [
-          { t: "Renasce agora", code: "Fv.56" },
-          { t: "Vidas sucessivas", code: "Cvv.110" },
-          { t: "Reencarnação", code: "Cvv.108" },
-        ],
-        kardec: [
-          { o: "O Livro dos Espíritos", d: "Parte 2, cap. IV–V — Da pluralidade das existências", u: L.LE },
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. IV — Ninguém verá o reino de Deus se não nascer de novo", u: L.ESE },
-          { o: "A Gênese", d: "Cap. XI — Gênese espiritual (a alma e as existências)", u: L.GEN },
-        ],
-      },
-      {
-        nome: "Lei de Causa e Efeito / Justiça Divina",
-        evangelho: ["Gálatas 6:7 — o que o homem semear, isso ceifará", "Mateus 7:2 — com a medida que medirdes"],
-        emmanuel: [
-          { t: "Lei de retorno", code: "Pn.127" },
-          { t: "Justiça e amor", code: "In.13" },
-        ],
-        kardec: [
-          { o: "O Livro dos Espíritos", d: "Parte 3 — Da lei de justiça, amor e caridade", u: L.LE },
-          { o: "O Céu e o Inferno", d: "Parte 1 — A justiça divina segundo o Espiritismo", u: L.CI },
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. V — Bem-aventurados os aflitos", u: L.ESE },
-        ],
-      },
-      {
-        nome: "Caridade",
-        evangelho: ["1 Coríntios 13 — o hino da caridade", "Lucas 10:25-37 — o bom samaritano", "Mateus 25:31-46"],
-        emmanuel: [
-          { t: "Caridade em Jesus", code: "Cs.17" },
-          { t: "Psicologia da caridade", code: "Le.28" },
-        ],
-        kardec: [
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. XV — Fora da caridade não há salvação", u: L.ESE },
-          { o: "O Livro dos Espíritos", d: "Parte 3 — Da lei de justiça, amor e caridade", u: L.LE },
+        nome: "Reencarnação — a lei do recomeço e a justiça de Deus",
+        estudo: `<h4>I. O nó filológico de João 3</h4>
+        <p>O texto que a tradição verteu por “nascer de novo” guarda no original uma ambiguidade deliberada que se perde em português. Jesus diz a Nicodemos: <span class="grego">ἐὰν μή τις γεννηθῇ ἄνωθεν</span> — “se alguém não nascer <em>ánōthen</em>” (Jo 3,3). O advérbio ἄνωθεν (<em>ánōthen</em>) carrega dois sentidos simultâneos: “<em>do alto</em>” e “<em>de novo</em>”. O evangelista, escrevendo em grego para uma comunidade helenizada, explora de propósito essa duplicidade — e a prova está na reação de Nicodemos, que entende no sentido de repetição: “porventura pode tornar a entrar (<em>δεύτερον</em>, uma segunda vez) no ventre de sua mãe e nascer?” (Jo 3,4). Nicodemos, mestre de Israel, não estranha a <em>ideia</em> do renascimento — pergunta apenas por sua mecânica. Jesus não corrige a premissa; distingue os planos do nascimento da carne e do espírito. A leitura devocional domesticou a passagem reduzindo-a a metáfora da conversão; o texto grego mantém aberta a porta do renascimento real.</p>
+        <h4>II. O horizonte do judaísmo do Segundo Templo</h4>
+        <p>Essa naturalidade não é acidente. O judaísmo do primeiro século convivia com a expectativa concreta do <em>retorno de Elias</em> antes do Messias (Ml 3,23; Eclo 48,10). Por isso a resposta de Jesus é tão desconcertante para a teologia da vida única: “Elias já veio, e não o reconheceram… Então entenderam os discípulos que lhes falara a respeito de João Batista” (Mt 17,12-13) — o mesmo Espírito, nova existência corporal, nova missão. Flávio Josefo, contemporâneo dos apóstolos, registra que os fariseus criam que “a alma passa a outro corpo” (<em>Guerra dos Judeus</em> II, 8, 14): a metempsicose não era heresia importada, mas corrente viva no próprio pensamento judaico. Some-se a pergunta dos discípulos diante do cego de nascença — “quem pecou, este ou seus pais, para que nascesse cego?” (Jo 9,2): supor que o <em>próprio cego</em> houvesse pecado antes de nascer pressupõe, sem constrangimento, a preexistência da alma.</p>
+        <h4>III. Por que a Igreja fechou a porta</h4>
+        <p>A preexistência das almas foi tese corrente na patrística grega, sobretudo em <em>Orígenes</em> (<em>De Principiis</em>), para quem os espíritos existiam antes do corpo. Foi somente no <em>II Concílio de Constantinopla (553)</em>, sob Justiniano, que os anátemas contra o “origenismo” condenaram formalmente a <em>proÿparxis</em> — a preexistência —, e com ela soçobrou institucionalmente toda a arquitetura das existências sucessivas. A doutrina não foi refutada: foi proscrita, por razões tanto teológicas quanto políticas.</p>
+        <h4>IV. A necessidade lógica: a teodiceia</h4>
+        <p>Retirada a reencarnação, ressurge o escândalo da razão — o problema do mal e da desigualdade. Se cada alma é criada no instante do nascimento e joga numa única partida a sorte eterna, então as desigualdades de berço, de saúde, de inteligência e de duração da vida fazem de Deus um distribuidor arbitrário de destinos. Só a pluralidade das existências reconcilia a justiça divina com os fatos: a alma não <em>começa</em> desigual, ela <em>chega</em> desigual, trazendo o saldo de suas jornadas. A desigualdade não é de origem, é de percurso; e a dor deixa de ser castigo cego para tornar-se instrumento pedagógico — expiação e prova a serviço do progresso.</p>
+        <h4>V. Do postulado moral ao dado de observação</h4>
+        <p>Aqui as contribuições se diferenciam e se completam: Kardec <em>codifica</em>, Denis <em>fundamenta filosoficamente</em>, e Delanne submete a tese ao <em>método experimental</em>, apontando no perispírito — corpo semimaterial que serve de modelo organizador — a matriz que conserva e transporta de uma vida a outra os caracteres adquiridos: eis a explicação das reminiscências espontâneas das crianças, dos gênios precoces, das afinidades e aversões sem causa hereditária, dos sinais de nascença. Flammarion dilata o cenário à escala cósmica; Conan Doyle testemunha o reencontro dessa certeza pela via da pesquisa científica. A doutrina, assim, não se apoia em fé cega: converge do argumento moral ao dado de observação.</p>
+        <h4>VI. Para meditar</h4>
+        <p>A cegueira que a reencarnação cura não é a dos olhos, mas a do sentido: ela restitui à existência a coerência que o dogma da vida única lhe subtraíra. Nada é acaso, nada do bem edificado se perde, ninguém é condenado para sempre por uma só queda. Se sou herdeiro de mim mesmo, cada escolha presente é semente de um porvir que eu mesmo colherei. Resta a pergunta, não especulativa mas moral, a ser levada ao silêncio da consciência: <em>conhecendo a lei do recomeço, o que escolho fazer da existência que ainda tenho nas mãos?</em></p>`,
+        evangelho: ["João 3,1-13 — o diálogo com Nicodemos (ánōthen)", "Mateus 17,10-13 — “Elias já veio” (João Batista)", "João 9,1-3 — o cego de nascença"],
+        emmanuel: [{ t: "Renasce agora", code: "Fv.56" }, { t: "Vidas sucessivas", code: "Cvv.110" }, { t: "Reencarnação", code: "Cvv.108" }],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "Parte 2, cap. IV–V — a pluralidade das existências",
+            sin: "Erige a reencarnação a lei natural e demonstra sua necessidade lógica: sem ela, nem o progresso do Espírito, nem a justiça das provações, nem a diversidade das aptidões encontram explicação. É o pórtico doutrinário do tema.", pdf: L.LE },
+          { autor: "Allan Kardec", o: "O Evangelho Segundo o Espiritismo", loc: "cap. IV e V",
+            sin: "Retoma o diálogo com Nicodemos e o problema histórico da preexistência, mostrando a reencarnação como “o complemento indispensável da justiça de Deus” e a chave das aflições humanas.", pdf: L.ESE },
+          { autor: "Léon Denis", o: "O Problema do Ser, do Destino e da Dor",
+            sin: "Fundamenta filosoficamente a tese: só a pluralidade das existências reconcilia a justiça divina com a desigualdade dos destinos. A dor, lida à luz da reencarnação, revela-se pedagógica — expiação e prova a serviço da ascensão moral." },
+          { autor: "Gabriel Delanne", o: "A Reencarnação / A Evolução Anímica",
+            sin: "Submete a doutrina ao crivo dos fatos: o perispírito, modelo organizador, conserva os caracteres de uma vida a outra. Reúne reminiscências infantis, gênios precoces, sinais de nascença e afinidades inexplicáveis como convergência experimental." },
+          { autor: "Camille Flammarion", o: "A Pluralidade dos Mundos Habitados",
+            sin: "O astrônomo dilata o palco da reencarnação à escala cósmica: sendo inumeráveis e habitados os mundos, a peregrinação do Espírito não se encerra na Terra, mas percorre uma hierarquia de mundos, do mais grosseiro ao mais depurado." },
+          { autor: "Arthur Conan Doyle", o: "A Nova Revelação / História do Espiritismo",
+            sin: "Testemunho de um homem formado no ceticismo científico vitoriano que, pela pesquisa metódica, reencontrou a certeza da sobrevivência e do recomeço. Documenta a virada evidencial e histórica do tema no Ocidente moderno." },
         ],
       },
       {
-        nome: "A Dor e as Provações",
-        evangelho: ["Mateus 5:4 — bem-aventurados os que choram", "Mateus 11:28 — vinde a mim, ó cansados"],
-        emmanuel: [
-          { t: "O remédio justo", code: "Le.09" },
-          { t: "Aflitos bem-aventurados", code: "Ner.19" },
-        ],
-        kardec: [
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. V — Bem-aventurados os aflitos (causas das aflições)", u: L.ESE },
-          { o: "O Livro dos Espíritos", d: "Parte 3 — Das penas e gozos terrestres", u: L.LE },
-        ],
-      },
-      {
-        nome: "Vida após a Morte",
-        evangelho: ["João 11:25-26 — eu sou a ressurreição e a vida", "João 14:2 — muitas moradas", "Lucas 23:43"],
-        emmanuel: [
-          { t: "Sempre vivos", code: "Pn.42" },
-          { t: "Os vivos do Além", code: "Cvv.67" },
-        ],
-        kardec: [
-          { o: "O Céu e o Inferno", d: "A vida futura, o julgamento, as penas e recompensas", u: L.CI },
-          { o: "O Livro dos Espíritos", d: "Parte 2 — O mundo espírita (a alma após a morte)", u: L.LE },
-        ],
-      },
-      {
-        nome: "Mediunidade",
-        evangelho: ["1 Coríntios 12 — a diversidade dos dons", "Marcos 16:17 — estes sinais seguirão", "Atos 2 — Pentecostes"],
-        emmanuel: [
-          { t: "Ante a mediunidade", code: "Le.87" },
-          { t: "Mediunidade e nós", code: "Oee4.C207" },
-        ],
-        kardec: [
-          { o: "O Livro dos Médiuns", d: "Guia dos médiuns e evocadores — a mediunidade e sua prática", u: L.LM },
-          { o: "O Livro dos Espíritos", d: "Parte 2 — Das manifestações dos Espíritos", u: L.LE },
+        nome: "Lei de Causa e Efeito — a justiça divina como lei natural",
+        estudo: `<h4>I. “Deus não se deixa escarnecer”</h4>
+        <p>Paulo condensa a lei em uma sentença agrícola de rara força: <span class="grego">ὃ γὰρ ἐὰν σπείρῃ ἄνθρωπος, τοῦτο καὶ θερίσει</span> — “aquilo que o homem semear, isso também <em>ceifará</em>” (Gl 6,7). O verbo <em>θερίζω</em> (ceifar, colher) pertence ao mundo da lavoura: a colheita não é sentença de um juiz, é o desdobramento natural da semente. E a advertência que a precede é ainda mais aguda no grego: <em>θεὸς οὐ μυκτηρίζεται</em> — “Deus não se deixa <em>escarnecer</em>”, onde <em>μυκτηρίζω</em> significa literalmente “torcer o nariz”, zombar com desdém. Não se engana a ordem moral do universo com aparências: a semente lançada germina segundo a sua espécie, e ninguém escapa da própria colheita.</p>
+        <h4>II. A medida com que medis</h4>
+        <p>A mesma reciprocidade atravessa todo o ensino de Jesus. “Com o juízo com que julgardes sereis julgados, e com a medida (<em>μέτρον</em>) com que medirdes vos hão de medir a vós” (Mt 7,2). E no Getsêmani: “todos os que lançarem mão da espada, à espada perecerão” (Mt 26,52). Não é ameaça de um Deus vingador, mas a enunciação de uma <em>lei</em>: cada ato retorna à sua fonte na mesma medida em que partiu. O Evangelho não descreve um tribunal arbitrário; descreve um universo moralmente coerente, onde causa e efeito se encadeiam como no plano físico.</p>
+        <h4>III. Da retribuição ao ensino</h4>
+        <p>Aqui o Espiritismo faz a virada decisiva. A teologia do castigo eterno concebeu Deus à imagem do soberano que pune para satisfazer a honra ferida. Kardec, em <em>O Céu e o Inferno</em>, desmonta essa figura: as penas não são vinganças nem são eternas — são <em>consequências temporárias e educativas</em>. O sofrimento que colhemos não paga uma dívida a um credor irado; ele nos ensina, pela própria dor, a dimensão do mal praticado e nos reconduz ao bem. A justiça divina deixa de ser retributiva para tornar-se pedagógica.</p>
+        <h4>IV. Não é fatalidade: o lugar do livre-arbítrio e da graça</h4>
+        <p>Convém distinguir esta lei do <em>fatalismo</em> do carma oriental, em que a dívida só se salda no sofrimento equivalente. A leitura cristã do Espiritismo introduz duas variáveis que quebram o automatismo: o <em>livre-arbítrio</em>, que a cada instante pode inaugurar uma causa nova e melhor, e a <em>caridade</em>, que transmuta o resgate. O bem praticado antecipa e abrevia a reparação; o arrependimento sincero e a reforma íntima transformam a natureza do débito. Não somos réus de uma sentença cega — somos lavradores livres do próprio porvir.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Léon Denis mostra na dor bem compreendida não um castigo, mas um <em>resgate</em> que resgata — instrumento de purificação e de ascensão. Delanne fundamenta a continuidade da responsabilidade moral: é o mesmo Espírito, através do perispírito, que responde pelos atos de ontem. Bezerra de Menezes traduz a lei em ação: <em>amar e servir</em> é o modo cristão de saldar contas, convertendo a dívida em oportunidade de amor. E Emmanuel a enuncia como “lei de ação e reação” — a cada um segundo as suas obras, mas sob o signo da misericórdia que sempre oferece o recomeço.</p>
+        <h4>VI. Para meditar</h4>
+        <p>Compreender a lei de causa e efeito é perder de vez o direito de acusar a vida de injusta — e ganhar, em troca, a responsabilidade inteira sobre o próprio destino. Nada do que sofro é gratuito, nada do que faço é indiferente. A pergunta que fica não olha para trás, mas para a semente que tenho na mão: <em>que colheita estou preparando, hoje, para mim e para os que amo?</em></p>`,
+        evangelho: ["Gálatas 6,7 — “o que o homem semear, isso ceifará”", "Mateus 7,1-2 — “com a medida com que medirdes”", "Mateus 26,52 — “à espada perecerão”"],
+        emmanuel: [{ t: "Lei de retorno", code: "Pn.127" }, { t: "Justiça e amor", code: "In.13" }],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Céu e o Inferno", loc: "Parte 1 — a justiça divina segundo o Espiritismo",
+            sin: "Desmonta o dogma das penas eternas e reconstrói a ideia de justiça: as consequências do mal são temporárias e educativas, jamais vinganças. É a obra que converte o castigo em pedagogia da alma.", pdf: L.CI },
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "Parte 3 — da lei de justiça, amor e caridade",
+            sin: "Situa a reciprocidade moral dentro do conjunto das leis naturais: colher segundo o que se semeia não é exceção sobrenatural, mas expressão da mesma ordem que rege o universo físico.", pdf: L.LE },
+          { autor: "Léon Denis", o: "O Problema do Ser, do Destino e da Dor",
+            sin: "Lê a dor como resgate e não como pena: bem compreendida e bem suportada, ela purifica e eleva. Transforma o sofrimento aparentemente absurdo em etapa inteligível da ascensão do Espírito." },
+          { autor: "Gabriel Delanne", o: "A Evolução Anímica",
+            sin: "Fundamenta a continuidade da responsabilidade: é o mesmo ser, através do perispírito que persiste entre as vidas, quem responde pelos atos passados. Dá base experimental ao encadeamento moral de causa e efeito." },
+          { autor: "Bezerra de Menezes", o: "A doutrina do “amar e servir”",
+            sin: "O “médico dos pobres” traduz a lei em prática cristã: a dívida se salda melhor no amor que no sofrimento. Servir ao próximo é o caminho ativo de transmutar o resgate em oportunidade de progresso." },
         ],
       },
       {
-        nome: "Oração",
-        evangelho: ["Mateus 6:5-13 — o Pai-Nosso", "Lucas 11:9 — pedi, buscai, batei"],
-        emmanuel: [
-          { t: "Em louvor da prece", code: "Le.88" },
-          { t: "Qualidades da prece", code: "Pve.166" },
+        nome: "Caridade — o amor que resume toda a Lei",
+        estudo: `<h4>I. A palavra que perdeu força na tradução</h4>
+        <p>Onde lemos “caridade”, o original de Paulo traz <span class="grego">ἀγάπη</span> (<em>agápē</em>) — e a distância entre as duas palavras diz muito. O grego dispunha de <em>érōs</em> (o desejo), de <em>philía</em> (a afeição, a amizade) e de <em>agápē</em>, o amor que se doa sem esperar retorno, que ama até o inimigo. A Vulgata verteu <em>agápē</em> por <em>caritas</em>, donde “caridade”; mas o uso a estreitou até virar sinônimo de esmola. Recuperar o sentido original é essencial: caridade não é dar moedas, é <em>agápē</em> — a disposição habitual de querer o bem do outro, incondicionalmente.</p>
+        <h4>II. O hino: sem amor, nada sou</h4>
+        <p>No capítulo 13 da Primeira aos Coríntios, Paulo constrói a mais alta página sobre o tema. “Ainda que eu falasse as línguas dos homens e dos anjos, e não tivesse <em>agápē</em>, seria como o metal que soa”; ainda que tivesse toda a fé, toda a ciência, e desse o corpo para ser queimado — “se não tivesse amor, nada disso me aproveitaria”. A caridade é posta <em>acima</em> da fé e do conhecimento, e sua nota final é a permanência: <span class="grego">ἡ ἀγάπη οὐδέποτε πίπτει</span> — “o amor nunca falha” (1Cor 13,8). Tudo passa; o amor fica.</p>
+        <h4>III. O critério do juízo</h4>
+        <p>Jesus torna a caridade o único critério do julgamento. Na cena das ovelhas e dos cabritos, o Rei não pergunta pela ortodoxia nem pelos ritos, mas pelo gesto: “tive fome e me destes de comer… estive nu e me vestistes”. E identifica-se com o necessitado: “sempre que o fizestes a um destes meus irmãos <em>mais pequeninos</em> (<em>ἐλαχίστων</em>), a mim o fizestes” (Mt 25,40). Na parábola do bom samaritano (Lc 10), quem cumpre a lei não é o sacerdote nem o levita, mas o estrangeiro herege “que usou de <em>misericórdia</em>” — a caridade rompe as fronteiras da raça e do credo, e se prova no ato.</p>
+        <h4>IV. “Fora da caridade não há salvação”</h4>
+        <p>Kardec resume tudo numa fórmula que inverte deliberadamente o velho dogma “fora da Igreja não há salvação”: no capítulo XV de <em>O Evangelho Segundo o Espiritismo</em>, proclama que <em>fora da caridade não há salvação</em>. E define seus três termos, para que não reste evasiva: <em>benevolência para com todos, indulgência para as imperfeições alheias, perdão das ofensas</em>. Não há salvação na crença isolada, no rito, na palavra — só no amor que se faz obra. É a medida exata do progresso do Espírito.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Léon Denis vê na caridade a <em>lei de solidariedade</em> que liga todos os seres e faz do progresso de um a alavanca do progresso de todos. Emmanuel a apresenta como o próprio Evangelho traduzido em conduta diária — não sentimento vago, mas serviço concreto e contínuo. E Bezerra de Menezes é a caridade <em>encarnada</em>: o “médico dos pobres” que fez do “amar e servir” um programa de vida, provando que a doutrina só é verdadeira quando desce das ideias para as mãos.</p>
+        <h4>VI. Para meditar</h4>
+        <p>Se o amor é a única coisa que não passa, então é a única que vale a pena acumular. A caridade não pergunta se o outro merece — pergunta apenas se precisa. Resta a medida íntima, mais severa que qualquer doutrina: <em>quanto do que sei e creio já virou gesto na vida de alguém?</em></p>`,
+        evangelho: ["1 Coríntios 13 — o hino do amor (agápē)", "Lucas 10,25-37 — o bom samaritano", "Mateus 25,31-46 — “a um destes pequeninos”"],
+        emmanuel: [{ t: "Caridade em Jesus", code: "Cs.17" }, { t: "Psicologia da caridade", code: "Le.28" }],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Evangelho Segundo o Espiritismo", loc: "cap. XV — Fora da caridade não há salvação",
+            sin: "Estabelece a fórmula-síntese da moral espírita e define a caridade em três atos concretos — benevolência, indulgência e perdão —, deslocando a salvação da crença para a prática do amor.", pdf: L.ESE },
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "Parte 3 — da lei de justiça, amor e caridade",
+            sin: "Mostra que “amar o próximo como a si mesmo” condensa toda a lei moral, e que a caridade é o critério objetivo do adiantamento do Espírito, não um ornamento devocional.", pdf: L.LE },
+          { autor: "Léon Denis", o: "Depois da Morte / O Problema do Ser, do Destino e da Dor",
+            sin: "Apresenta a caridade como lei de solidariedade universal: os seres estão moralmente ligados, e o amor é a força que integra o progresso individual ao progresso coletivo da humanidade." },
+          { autor: "Bezerra de Menezes", o: "Testemunho de vida — “amar e servir”",
+            sin: "A caridade encarnada no “médico dos pobres”: exemplo de que a doutrina só se comprova quando desce das ideias para as mãos, no serviço humilde e contínuo ao que sofre." },
+          { autor: "Emmanuel", o: "Reflexões sobre o Evangelho",
+            sin: "Traduz a caridade em conduta cotidiana — não emoção passageira, mas trabalho concreto de auxílio, paciência e perdão, exercido nas relações comuns de cada dia." },
         ],
-        kardec: [
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. XXVII — Pedi e obtereis; Cap. XXVIII — Coletânea de preces", u: L.ESE },
+      },
+      {
+        nome: "A Dor e as Provações — sentido do sofrimento",
+        estudo: `<h4>I. A bem-aventurança paradoxal</h4>
+        <p>“Bem-aventurados os que choram, porque serão consolados” (Mt 5,4). O paradoxo é frontal, e o grego o acentua: <span class="grego">μακάριοι οἱ πενθοῦντες</span>. <em>Μακάριος</em> (<em>makários</em>) não designa a alegria passageira, mas a felicidade profunda e estável dos deuses e dos justos — uma bem-aventurança que independe das circunstâncias. E o consolo prometido é <em>παρακληθήσονται</em>, do verbo <em>parakaléō</em>, a mesma raiz de <em>Paráclito</em>, o Consolador. As Bem-aventuranças invertem a tábua de valores do mundo: não proclamam felizes os que gozam, mas os que sofrem com sentido, porque a estes é reservada uma consolação que o mundo não pode dar nem tirar.</p>
+        <h4>II. O escândalo da dor e a resposta da razão</h4>
+        <p>Nenhuma questão fere mais a fé ingênua do que esta: por que um Deus bom permite o sofrimento? Se a dor fosse castigo arbitrário, Deus seria cruel; se fosse acaso, seria ausente. O Espiritismo recusa as duas saídas. Kardec, no capítulo V de <em>O Evangelho Segundo o Espiritismo</em>, distingue as <em>aflições como provas</em> — dificuldades que o Espírito aceita para exercitar-se e crescer — e as <em>aflições como expiações</em> — reparação de faltas de existências anteriores. Em ambos os casos, a dor deixa de ser punição de um juiz irado para tornar-se <em>instrumento de aperfeiçoamento</em>. Não se sofre porque Deus quer ver sofrer, mas porque a alma ainda precisa aprender o que só a experiência do limite ensina.</p>
+        <h4>III. “Vinde a mim os que estais cansados”</h4>
+        <p>Jesus não promete uma vida sem cruz — promete forças para carregá-la. “Vinde a mim todos os que estais <em>cansados e sobrecarregados</em> (<em>κοπιῶντες καὶ πεφορτισμένοι</em>), e eu vos aliviarei” (Mt 11,28). E acrescenta: “o meu jugo é <em>suave</em> (<em>χρηστός</em>) e o meu fardo é leve” (11,30). O adjetivo <em>chrēstós</em> — benigno, bom — soava, aos ouvidos gregos, quase como <em>Christós</em>: o jugo que se torna leve é o do próprio Cristo. Não é o peso que muda, é quem o carrega conosco. A dor iluminada pela fé não pesa menos, mas deixa de esmagar.</p>
+        <h4>IV. Resignação não é passividade</h4>
+        <p>Importa desfazer um equívoco: a resignação espírita não é conformismo nem gosto mórbido pelo sofrimento. É a aceitação <em>ativa</em> e <em>esclarecida</em> daquilo que não se pode evitar, unida ao esforço firme de transformar o que se pode. Quem entende a prova não se revolta contra a vida nem cruza os braços — atravessa a dor com paciência, extrai dela o aprendizado e sai mais forte. O sofrimento bem compreendido não é fim, é passagem; não é muro, é ponte.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Léon Denis dedicou ao tema a sua obra maior — <em>O Problema do Ser, do Destino e da Dor</em> —, mostrando a dor como a grande educadora, aquela que amadurece a alma quando tudo o mais falha. Emmanuel revela o seu valor redentor: bem aceita, a provação é “o remédio justo” que cura enfermidades morais antigas. E Bezerra de Menezes, que tanto acompanhou o sofrimento humano, ensina que a dor do outro é sempre um chamado à caridade — ninguém atravessa a própria noite sozinho quando há quem console.</p>
+        <h4>VI. Para meditar</h4>
+        <p>Toda dor faz uma pergunta; a diferença está em como a respondemos. Revoltados, apenas sofremos; esclarecidos, também crescemos. A prova não pergunta se a merecemos, mas o que faremos dela. Resta a interrogação serena: <em>o que esta dor veio me ensinar — e que fruto quero que ela deixe em mim?</em></p>`,
+        evangelho: ["Mateus 5,4 — “bem-aventurados os que choram”", "Mateus 11,28-30 — “vinde a mim os cansados”"],
+        emmanuel: [{ t: "O remédio justo", code: "Le.09" }, { t: "Aflitos bem-aventurados", code: "Ner.19" }],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Evangelho Segundo o Espiritismo", loc: "cap. V — Bem-aventurados os aflitos",
+            sin: "Distingue as causas atuais e anteriores das aflições — provas e expiações — e mostra que toda dor bem suportada é semente de paz futura. É o capítulo que dá sentido ao sofrimento humano.", pdf: L.ESE },
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "Parte 3 — das penas e gozos terrestres",
+            sin: "Situa a dor dentro da economia moral do universo: não castigo cego, mas consequência e aprendizado, proporcional à necessidade evolutiva de cada Espírito.", pdf: L.LE },
+          { autor: "Léon Denis", o: "O Problema do Ser, do Destino e da Dor",
+            sin: "A obra de referência sobre o tema: enfrenta de frente o enigma do sofrimento e demonstra que só a reencarnação e a lei do progresso o tornam inteligível. A dor emerge como a grande mestra da alma." },
+          { autor: "Emmanuel", o: "Reflexões sobre a provação",
+            sin: "Revela o valor redentor da dor aceita com fé: bem compreendida, a provação é o “remédio justo” que cura moléstias morais antigas e acelera a maturação do Espírito." },
+          { autor: "Bezerra de Menezes", o: "O consolo aos que sofrem",
+            sin: "Faz da dor alheia um chamado permanente à caridade: consolar, amparar e servir o que sofre é o modo cristão de dar sentido à própria provação e à do próximo." },
+        ],
+      },
+      {
+        nome: "Vida após a Morte — a imortalidade e o corpo espiritual",
+        estudo: `<h4>I. “Eu sou a ressurreição e a vida”</h4>
+        <p>Diante do túmulo de Lázaro, Jesus faz a mais alta declaração sobre a sobrevivência: <span class="grego">ἐγώ εἰμι ἡ ἀνάστασις καὶ ἡ ζωή</span> — “eu sou a ressurreição e a vida” (Jo 11,25). Duas palavras merecem atenção. <em>Ἀνάστασις</em> (<em>anástasis</em>) significa literalmente “levantar-se de novo”, o reerguer-se do que jazia. E <em>ζωή</em> (<em>zōē</em>) não é o <em>bíos</em>, a vida biológica que se extingue, mas a vida em sua plenitude qualitativa, aquela que não conhece fim. Jesus não promete o adiamento da morte — Lázaro morrerá outra vez —, mas revela que a morte não é aniquilamento: é passagem de um modo de vida a outro.</p>
+        <h4>II. “Na casa de meu Pai há muitas moradas”</h4>
+        <p>“Na casa de meu Pai há <em>muitas moradas</em>” (Jo 14,2). O termo grego <em>μοναί</em> (<em>monaí</em>, plural de <em>monḗ</em>) vem de <em>ménō</em>, permanecer, e designa lugares de habitação estável. A pluralidade é a chave: o além não é um único destino fixo — céu ou inferno decididos de uma vez —, mas uma escala de estados e de mundos, correspondentes ao grau de adiantamento de cada Espírito. Aqui o Evangelho toca a intuição que Flammarion desenvolveria: as “muitas moradas” abrem-se sobre a imensidão dos mundos habitados, degraus de uma ascensão sem fim.</p>
+        <h4>III. Ressuscitar não é o cadáver reerguer-se</h4>
+        <p>A teologia literalista prendeu a ressurreição ao corpo de carne saindo do túmulo no último dia. Kardec desfaz o equívoco: o que sobrevive e retorna não é o cadáver, é o <em>Espírito</em>, que jamais adormeceu à espera de um juízo final. Os que partiram <em>vivem agora</em> — conservam a individualidade, a memória, as afeições —, e é por isso que a comunicação com eles é possível. “Deus não é Deus de mortos, mas de vivos” (Mt 22,32): a frase, dita por Jesus aos saduceus que negavam a sobrevivência, torna-se o axioma de toda a doutrina.</p>
+        <h4>IV. O corpo espiritual: a chave paulina</h4>
+        <p>Paulo oferece o conceito que a ciência espírita retomaria. Ao tratar da ressurreição, distingue: “semeia-se corpo animal (<em>σῶμα ψυχικόν</em>), ressuscita corpo espiritual (<em>σῶμα πνευματικόν</em>)” (1Cor 15,44). Há, portanto, um corpo que sobrevive ao corpo físico — aquilo que Kardec e Delanne chamarão <em>perispírito</em>: o envoltório semimaterial que conserva a forma, a sensibilidade e a memória do Espírito depois da morte. A imortalidade não é a de uma abstração fantasmagórica, mas a de um ser organizado, consciente e reconhecível.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Kardec descreve a vida no mundo espiritual em <em>O Céu e o Inferno</em>, com os próprios relatos dos que partiram, e na segunda parte de <em>O Livro dos Espíritos</em> expõe o retorno, a erraticidade e o reencontro. Léon Denis assina em <em>Depois da Morte</em> a grande síntese sobre o além. Delanne dá base à sobrevivência ao estudar o perispírito como veículo da consciência. E Conan Doyle, em <em>A Nova Revelação</em>, reúne o testemunho experimental das comunicações que, para ele, provavam a continuidade da vida além do túmulo.</p>
+        <h4>VI. Para meditar</h4>
+        <p>Se a morte é apenas mudança de casa, então nada do que amamos se perde de vez, e a saudade não é despedida definitiva, mas intervalo. A certeza da vida futura não nos torna indiferentes a esta — ao contrário, dá peso a cada gesto, porque tudo o que somos atravessa a fronteira conosco. Resta a pergunta que serena o medo: <em>se continuo vivo depois, o que estou levando comigo do que construo aqui?</em></p>`,
+        evangelho: ["João 11,25-26 — “eu sou a ressurreição e a vida”", "João 14,1-3 — “muitas moradas”", "Lucas 23,43 — “hoje estarás comigo no paraíso”"],
+        emmanuel: [{ t: "Sempre vivos", code: "Pn.42" }, { t: "Os vivos do Além", code: "Cvv.67" }],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Céu e o Inferno", loc: "2ª parte — exemplos, os relatos dos que partiram",
+            sin: "Descreve a vida no mundo espiritual a partir dos próprios depoimentos dos desencarnados, dissolvendo o medo da morte pela imagem concreta e coerente da continuidade da existência.", pdf: L.CI },
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "Parte 2 — o mundo espírita",
+            sin: "Expõe a condição do Espírito entre as encarnações — a erraticidade, o reencontro, a lembrança —, demonstrando que a individualidade e a consciência sobrevivem intactas ao corpo.", pdf: L.LE },
+          { autor: "Léon Denis", o: "Depois da Morte",
+            sin: "A grande síntese espírita sobre o além: reúne filosofia, moral e testemunho para demonstrar a imortalidade e descrever a vida futura como continuação natural e progressiva desta." },
+          { autor: "Gabriel Delanne", o: "A Evolução Anímica / O Espiritismo perante a Ciência",
+            sin: "Fundamenta a sobrevivência ao estudar o perispírito como o corpo espiritual paulino: o veículo que conserva a forma, a memória e a sensibilidade do Espírito após a morte." },
+          { autor: "Arthur Conan Doyle", o: "A Nova Revelação",
+            sin: "Reúne o testemunho experimental das comunicações mediúnicas que, para o pesquisador, constituíam prova direta da sobrevivência — a virada evidencial sobre a vida após a morte." },
+        ],
+      },
+      {
+        nome: "Mediunidade — o dom a serviço do bem",
+        estudo: `<h4>I. Os dons do Espírito, coisa antiga</h4>
+        <p>A mediunidade não é invenção moderna nem faculdade rara: é a “diversidade de dons” de que Paulo fala. “Ora, há <em>diversidade de dons</em> (<span class="grego">χαρίσματα</span>), mas o Espírito é o mesmo” (1Cor 12,4). Entre eles, Paulo enumera a profecia e — decisivo para o nosso tema — o <em>discernimento dos espíritos</em> (<em>διακρίσεις πνευμάτων</em>, 1Cor 12,10). A comunicação entre os dois planos era prática viva na Igreja nascente; só mais tarde foi recoberta de suspeita. O Espiritismo não a inaugura: apenas a resgata do esquecimento e a submete a método.</p>
+        <h4>II. “De graça recebestes, de graça dai”</h4>
+        <p>Ao enviar os discípulos a curar e consolar, Jesus fixa a lei inviolável do exercício mediúnico: <span class="grego">δωρεὰν ἐλάβετε, δωρεὰν δότε</span> — “de graça recebestes, de graça dai” (Mt 10,8). O advérbio <em>dōreàn</em> — gratuitamente, sem preço — condena de antemão todo comércio com o dom. A mediunidade que cobra, que se exibe, que serve à vaidade, trai a própria natureza. Ela é dada para servir, e a prova de sua legitimidade é o desinteresse.</p>
+        <h4>III. Sinais que acompanham a fé</h4>
+        <p>“E estes <em>sinais</em> (<em>σημεῖα</em>) seguirão aos que crerem” (Mc 16,17). Os fenômenos não são o fim, mas o <em>acompanhamento</em> natural de uma sintonia com o alto. O erro é buscar o sinal pelo sinal — o prodígio pelo espetáculo. O sinal existe para conduzir ao ensino; quando se torna atração em si mesmo, degenera. A faculdade é uma ponte, não um trono.</p>
+        <h4>IV. “Provai os espíritos”</h4>
+        <p>Aqui está o coração da disciplina mediúnica, e o texto joanino é taxativo: “amados, não creiais em todo espírito, mas <em>provai os espíritos</em> (<em>δοκιμάζετε τὰ πνεύματα</em>) se são de Deus” (1Jo 4,1). Nem toda comunicação é boa; a morte não transforma o ignorante em sábio nem o mau em anjo. Daí a <em>fé raciocinada</em> que Kardec exige: submeter toda mensagem ao crivo da razão e da moral. É também o campo da obsessão — a influência de Espíritos infelizes sobre os encarnados —, que só o esclarecimento, a vigilância e a caridade desfazem.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Kardec ergue todo o edifício da prática em <em>O Livro dos Médiuns</em>: os tipos de mediunidade, a condição moral do médium, os perigos da mistificação e do orgulho, as regras das reuniões sérias. Delanne submete os fenômenos ao <em>método científico</em>, mostrando no perispírito o agente das manifestações. Conan Doyle documenta, na <em>História do Espiritismo</em>, a defesa da mediunidade contra a fraude e o preconceito. E Bezerra de Menezes é o modelo do médium a serviço: fez da faculdade instrumento de cura e de desobsessão, jamais de proveito próprio.</p>
+        <h4>VI. Para meditar</h4>
+        <p>A mediunidade não mede a virtude de ninguém — mede a responsabilidade. Ser canal exige mais pureza, não menos; mais estudo, não menos; mais humildade, não menos. Resta a pergunta que separa o servidor do vaidoso: <em>o dom que recebi está aliviando a dor de alguém, ou apenas alimentando a minha importância?</em></p>`,
+        evangelho: ["1 Coríntios 12 — a diversidade dos dons", "Mateus 10,8 — “de graça recebestes, de graça dai”", "Marcos 16,17 — “estes sinais seguirão”", "1 João 4,1 — “provai os espíritos”"],
+        emmanuel: [{ t: "Ante a mediunidade", code: "Le.87" }],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Livro dos Médiuns", loc: "guia dos médiuns e evocadores",
+            sin: "O manual completo da prática: tipos de mediunidade, condição moral do médium, os perigos da mistificação e da obsessão, e as regras das reuniões sérias. Transforma a faculdade em disciplina cristã e segura.", pdf: L.LM },
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "Parte 2 — das manifestações dos Espíritos",
+            sin: "Estabelece a base doutrinária: como e por que os Espíritos se comunicam, situando a mediunidade entre as leis naturais e não no terreno do sobrenatural.", pdf: L.LE },
+          { autor: "Gabriel Delanne", o: "O Fenômeno Espírita / A mediunidade perante a ciência",
+            sin: "Submete os fenômenos mediúnicos ao método experimental, defendendo sua realidade contra a fraude e mostrando no perispírito o agente físico das manifestações." },
+          { autor: "Arthur Conan Doyle", o: "História do Espiritismo",
+            sin: "Documenta a trajetória da mediunidade no Ocidente moderno e a defende contra o preconceito e a acusação de embuste, reunindo os casos e as pesquisas que a legitimaram." },
+          { autor: "Bezerra de Menezes", o: "Testemunho de vida — a mediunidade curadora",
+            sin: "Modelo do médium a serviço: fez da faculdade instrumento de cura e de desobsessão, exercida com humildade e desinteresse absoluto, jamais como espetáculo ou proveito." },
+        ],
+      },
+      {
+        nome: "Oração — o elo vivo entre a criatura e Deus",
+        estudo: `<h4>I. O modelo: o Pai-Nosso</h4>
+        <p>Pedido para ensinar a orar, Jesus não entrega uma fórmula longa, mas um modelo de rara densidade: “<span class="grego">Πάτερ ἡμῶν ὁ ἐν τοῖς οὐρανοῖς</span> — Pai nosso que estás nos céus” (Mt 6,9). Já a primeira palavra é uma revolução: dirigir-se a Deus como <em>Pai</em>, e no plural — <em>nosso</em> —, funda de uma vez a paternidade divina e a fraternidade humana. E há no texto uma joia filológica: o pão que pedimos é <em>ἐπιούσιον</em> (<em>epioúsion</em>, Mt 6,11), palavra que <em>não aparece em nenhum outro lugar</em> de toda a língua grega — um <em>hapax</em>. Traduziu-se por “de cada dia”, mas seu sentido oscila entre o pão “necessário à subsistência” e o pão “supra-substancial”, alimento da alma. A ambiguidade é fecunda: pedimos o sustento do corpo e o do espírito na mesma frase.</p>
+        <h4>II. Como não orar</h4>
+        <p>Antes de ensinar a prece, Jesus ensina o que ela não é. Não é teatro: “não sejais como os hipócritas, que gostam de orar em pé para serem vistos” — antes, “entra no teu <em>quarto</em> (<em>ταμεῖον</em>, o aposento interior) e ora ao teu Pai em secreto” (Mt 6,5-6). E não é quantidade: “orando, não useis de <em>vãs repetições</em> (<em>μὴ βατταλογήσητε</em>, não tagareleis) como os gentios, que pensam que serão ouvidos por muito falarem” (6,7). A prece não informa a Deus o que Ele já sabe — “vosso Pai sabe do que necessitais antes de o pedirdes”. Ela não vale pelo número de palavras, mas pela verdade do coração.</p>
+        <h4>III. “Pedi, buscai, batei”</h4>
+        <p>“Pedi, e dar-se-vos-á; buscai, e encontrareis; batei, e abrir-se-vos-á” (Lc 11,9). Os três verbos estão no <em>presente contínuo</em> — <em>aiteîte, zēteîte, kroúete</em>: não um pedido único, mas uma disposição perseverante da alma. Isso desfaz o mal-entendido da prece como máquina de encomendas: nem tudo o que se pede se recebe da forma pedida, porque o Pai concede o que <em>convém</em>, não o que apenas se deseja. Kardec o esclarece: a prece bem-feita age menos sobre Deus do que sobre <em>quem ora</em> — muda o orante, dá-lhe forças, serena-lhe a alma, e é por essa transformação interior que ela “obtém”.</p>
+        <h4>IV. A prece que age de fato</h4>
+        <p>O Espiritismo demonstra que o pensamento é força, e a prece, vibração real que alcança aquele por quem se ora. Orar pelos que sofrem e pelos que partiram não é gesto simbólico: é irradiação de energias benéficas que consolam e amparam de verdade. A prece é, ao mesmo tempo, elevação (o pensamento que sobe), comunhão (a alma que se liga a Deus e ao próximo) e trabalho (a intenção que se faz vibração ativa). Kardec reúne esse ensino nos capítulos XXVII (“Pedi e obtereis”) e XXVIII de <em>O Evangelho Segundo o Espiritismo</em> — este último, uma coletânea de preces para cada circunstância da vida.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Emmanuel exalta a prece como necessidade da alma tanto quanto o ar o é do corpo, e ensina suas qualidades: sinceridade, humildade, confiança. Léon Denis a apresenta como comunhão dos espíritos — o elo que une encarnados e desencarnados no mesmo impulso de amor. E Bezerra de Menezes, homem de intensa vida de prece, mostra que orar e servir são inseparáveis: a prece sem caridade é asa sem voo, e a caridade sem prece, força sem fonte.</p>
+        <h4>VI. Para meditar</h4>
+        <p>Orar não é dobrar a vontade de Deus à nossa, mas alinhar a nossa à d'Ele. Quem ora de verdade sai da prece diferente de como entrou — mais brando, mais forte, mais capaz de amar. Resta a pergunta que revela a sinceridade de cada prece: <em>peço que Deus mude o mundo a meu favor, ou peço forças para eu mudar o que em mim precisa mudar?</em></p>`,
+        evangelho: ["Mateus 6,5-13 — o Pai-Nosso", "Lucas 11,9-13 — “pedi, buscai, batei”"],
+        emmanuel: [{ t: "Em louvor da prece", code: "Le.88" }, { t: "Qualidades da prece", code: "Pve.166" }],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Evangelho Segundo o Espiritismo", loc: "cap. XXVII — Pedi e obtereis; cap. XXVIII — Coletânea de preces",
+            sin: "Explica as qualidades e a eficácia da prece — que age sobretudo transformando quem ora — e reúne preces para todas as circunstâncias, dando forma prática à vida de oração.", pdf: L.ESE },
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "questões sobre a prece e a ação do pensamento",
+            sin: "Fundamenta doutrinariamente por que e como a prece age: o pensamento é força que alcança o outro, e a prece bem-feita é sempre útil, ainda que nem sempre atendida na forma pedida.", pdf: L.LE },
+          { autor: "Léon Denis", o: "No Invisível / O Problema do Ser, do Destino e da Dor",
+            sin: "Apresenta a prece como comunhão dos espíritos: o elo vivo que liga encarnados e desencarnados num mesmo movimento de amor, rompendo o isolamento entre os dois planos da vida." },
+          { autor: "Emmanuel", o: "O poder da prece",
+            sin: "Exalta a prece como necessidade da alma e ensina suas qualidades — sinceridade, humildade, confiança —, mostrando-a como higiene espiritual diária, e não recurso apenas para as horas de aflição." },
+          { autor: "Bezerra de Menezes", o: "Prece e caridade",
+            sin: "Homem de intensa vida de oração, mostra que orar e servir são inseparáveis: a prece autêntica desemboca sempre na caridade, e a caridade encontra na prece a sua fonte de forças." },
+        ],
+      },
+      {
+        nome: "Livre-Arbítrio — a liberdade que funda o mérito",
+        estudo: `<h4>I. “A verdade vos libertará”</h4>
+        <p>“E conhecereis a verdade, e a verdade vos <em>libertará</em>” (Jo 8,32). O verbo grego é <span class="grego">ἐλευθερώσει</span> (<em>eleutherṓsei</em>), da mesma raiz de <em>eleutheria</em>, a liberdade. A liberdade que Jesus promete não é a política nem a do mero capricho: é a que nasce do conhecimento — quem conhece a verdade das leis morais deixa de ser escravo da ignorância e da paixão e torna-se senhor de si. A liberdade humana, portanto, não é um dado bruto, mas uma conquista que cresce à medida que o Espírito se esclarece.</p>
+        <h4>II. “Escolhe a vida”</h4>
+        <p>Do princípio ao fim, a Escritura pressupõe um ser capaz de escolher. Já o Deuteronômio o dizia sem rodeios: “a vida e a morte pus diante de ti… <em>escolhe, pois, a vida</em>” (Dt 30,19). E Jesus jamais coage: ao jovem rico, propõe — “<em>se queres</em> (<em>εἰ θέλεις</em>) ser perfeito, vende os teus bens” (Mt 19,21); o jovem se retira triste, e o Mestre o deixa partir <em>livre</em>. Deus respeita a liberdade humana até no erro, porque só há virtude onde houve a possibilidade real de recusá-la. O amor forçado não é amor; o bem imposto não é mérito.</p>
+        <h4>III. Sem liberdade não há justiça</h4>
+        <p>Aqui a razão espírita é implacável. Se o homem fosse determinado — pela matéria, pelo destino ou por um decreto divino de predestinação —, não haveria mérito no bem nem culpa no mal, e toda a ideia de justiça ruiria. Kardec demonstra em <em>O Livro dos Espíritos</em> que o livre-arbítrio é a condição sem a qual a responsabilidade moral é impensável. A predestinação absoluta e o fatalismo cego são incompatíveis com um Deus justo: seria monstruoso punir ou premiar aquilo que a criatura não pôde deixar de fazer.</p>
+        <h4>IV. Liberdade condicionada, não abolida</h4>
+        <p>Isso não significa liberdade sem limites. Nascemos com um temperamento, num meio, sob o peso das existências anteriores — tudo isso nos <em>condiciona</em>. Mas condicionar não é determinar: entre o estímulo e a resposta permanece sempre uma margem de escolha, e é nela que reside a nossa dignidade. A lei de causa e efeito e o livre-arbítrio não se opõem — completam-se: sou livre para lançar as causas, e justamente por isso respondo por seus efeitos. A liberdade é o que me faz <em>autor</em> do meu destino, e não sua vítima.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Kardec fixa a doutrina nas questões sobre o livre-arbítrio, a fatalidade e a presciência de Deus — mostrando que conhecer o futuro não é determiná-lo. Léon Denis vê na liberdade a raiz da dignidade e do progresso moral: só um ser livre pode elevar-se por esforço próprio. E Emmanuel reconduz sempre à autorresponsabilidade — não somos brinquedos do acaso nem de forças externas, mas construtores conscientes de nós mesmos, a cada escolha.</p>
+        <h4>VI. Para meditar</h4>
+        <p>A liberdade é, ao mesmo tempo, o maior dom e o maior peso: ela me dá o poder de me fazer, e com ele a responsabilidade inteira pelo que me tornar. Não posso culpar os astros, a herança ou a sorte por aquilo que, no fundo, escolhi. Resta a pergunta que devolve a cada um o leme da própria vida: <em>diante do que não escolhi, o que estou escolhendo fazer?</em></p>`,
+        evangelho: ["Deuteronômio 30,19 — “escolhe a vida”", "João 8,32 — “a verdade vos libertará”", "Mateus 19,16-22 — “se queres ser perfeito”"],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "livre-arbítrio, fatalidade e presciência",
+            sin: "Demonstra que o livre-arbítrio é a condição da responsabilidade moral e refuta o fatalismo e a predestinação absoluta: sem liberdade não haveria mérito, culpa nem justiça divina.", pdf: L.LE },
+          { autor: "Léon Denis", o: "O Problema do Ser, do Destino e da Dor",
+            sin: "Apresenta a liberdade como raiz da dignidade humana e motor do progresso moral: só um ser livre pode elevar-se por esforço próprio e responder por sua ascensão." },
+          { autor: "Emmanuel", o: "A responsabilidade de cada um",
+            sin: "Reconduz constantemente à autorresponsabilidade: não somos joguetes do acaso nem de forças externas, mas construtores conscientes de nós mesmos, a cada decisão do cotidiano." },
+        ],
+      },
+      {
+        nome: "O Perispírito — o corpo espiritual",
+        estudo: `<h4>I. O elo que faltava</h4>
+        <p>Como se une o Espírito imaterial ao corpo de carne? O que conserva a forma e a memória depois da morte? A resposta da Codificação tem um nome: <em>perispírito</em> — o envoltório semimaterial, extraído dos fluidos do mundo, que serve de intermediário entre a alma e a matéria e de vestidura do Espírito após o túmulo. Longe de ser invenção moderna, o conceito recolhe uma intuição que já estava no Novo Testamento.</p>
+        <h4>II. A base paulina</h4>
+        <p>Paulo, ao tratar da ressurreição, distingue dois corpos: “semeia-se corpo animal (<span class="grego">σῶμα ψυχικόν</span>), ressuscita corpo espiritual (<span class="grego">σῶμα πνευματικόν</span>)” (1Cor 15,44). Não afirma que o espírito ressuscita nu e sem forma, mas que possui um <em>corpo</em> próprio — espiritual. Eis, em linguagem do primeiro século, o perispírito: o organismo sutil que sobrevive à dissolução da carne, conservando os contornos e as faculdades do ser.</p>
+        <h4>III. O corpo do Ressuscitado</h4>
+        <p>Os relatos pascais confirmam essa natureza intermediária. O Cristo ressuscitado é reconhecível, fala, come um pedaço de peixe, e convida: “<em>apalpai-me</em> (<em>ψηλαφήσατέ με</em>) e vede, pois um espírito não tem carne nem ossos, como vedes que eu tenho” (Lc 24,39). E, no entanto, esse mesmo corpo <em>surge</em> no meio dos discípulos com as portas fechadas (Jo 20,19) e desaparece de repente (Lc 24,31). Não é a carne comum, nem é fantasma impalpável: é o corpo perispiritual, capaz de <em>condensar-se</em> a ponto de ser tocado e de comer, e de <em>rarefazer-se</em> a ponto de atravessar a matéria. A Transfiguração, em que Moisés e Elias aparecem em forma reconhecível (Mt 17,3), é da mesma ordem.</p>
+        <h4>IV. A função e a prova</h4>
+        <p>Gabriel Delanne fez do perispírito o centro de sua obra científica. Ele é o <em>modelo organizador</em> do corpo físico — a matriz sobre a qual a carne se estrutura —, o que explica por que as marcas de uma existência (os sinais de nascença) reaparecem na seguinte. É o veículo da sensação e da memória depois da morte, o agente das manifestações mediúnicas e das materializações. Por ele se compreende como o Espírito age sobre a matéria e como se torna, por vezes, visível e tangível aos encarnados.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Kardec expõe a natureza e o papel do perispírito em <em>O Livro dos Espíritos</em>, como o laço vivo entre a alma e o corpo. Delanne o eleva a objeto de estudo rigoroso em <em>A Evolução Anímica</em>, reunindo os fatos que provam sua realidade. E Léon Denis integra o conceito à visão do destino da alma, mostrando o corpo espiritual como o instrumento permanente do Espírito através de todas as suas vidas.</p>
+        <h4>VI. Para meditar</h4>
+        <p>Não somos um corpo que por acaso tem alma, mas uma alma que veste corpos — e que carrega, de existência a existência, o registro fiel do que fez de si. O perispírito guarda as cicatrizes e as luzes que imprimimos em nós. Resta a pergunta que nos responsabiliza pela própria forma futura: <em>que marcas estou gravando, agora, no corpo que levarei além da morte?</em></p>`,
+        evangelho: ["1 Coríntios 15,40-44 — “corpo animal / corpo espiritual”", "Lucas 24,36-43 — “apalpai-me”", "Mateus 17,1-3 — a Transfiguração"],
+        fontes: [
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "o perispírito — o laço entre a alma e o corpo",
+            sin: "Define o perispírito como o envoltório semimaterial que une o Espírito à matéria e o reveste após a morte, base para compreender as manifestações e a continuidade da forma e da memória.", pdf: L.LE },
+          { autor: "Gabriel Delanne", o: "A Evolução Anímica",
+            sin: "Tratado científico sobre o perispírito: o corpo espiritual como modelo organizador do físico, veículo da memória e agente das manifestações, com os fatos que comprovam sua existência." },
+          { autor: "Léon Denis", o: "Depois da Morte",
+            sin: "Integra o corpo espiritual à trajetória do ser: o perispírito é o instrumento permanente do Espírito através de todas as suas existências, elo entre os mundos visível e invisível." },
+        ],
+      },
+      {
+        nome: "A Pluralidade dos Mundos — o Evangelho em escala cósmica",
+        estudo: `<h4>I. Um Evangelho de dimensões cósmicas</h4>
+        <p>“Na casa de meu Pai há <em>muitas moradas</em>” (Jo 14,2). Lida à luz do Espiritismo, a frase transborda os limites da Terra: as moradas do Pai são os inumeráveis mundos habitados que povoam o universo, degraus de uma ascensão sem fim. A criação de Deus não é este grão de poeira cósmica que habitamos, mas a imensidão dos sóis e dos mundos — e em toda parte a vida, a inteligência e o progresso.</p>
+        <h4>II. “Outras ovelhas tenho”</h4>
+        <p>Jesus deixa entrever esse horizonte: “ainda tenho <em>outras ovelhas</em> (<span class="grego">ἄλλα πρόβατα</span>) que não são deste aprisco; também me convém agregar estas” (Jo 10,16). O sentido imediato aponta os gentios, para além de Israel; mas a Doutrina lê na frase um alcance maior — as outras humanidades, espalhadas pelos mundos, súditas do mesmo Pai e do mesmo Cristo. Nenhum rebanho está fora do cuidado divino, em nenhum ponto do céu.</p>
+        <h4>III. A escala das glórias</h4>
+        <p>Paulo já falava de uma hierarquia dos corpos celestes: “uma é a glória (<em>δόξα</em>) do sol, outra a glória da lua, e outra a glória das estrelas; porque uma estrela difere de outra estrela em glória” (1Cor 15,41). A imagem serve à doutrina espírita da desigualdade dos mundos: há mundos primitivos, mundos de provas e expiações — como a Terra —, mundos regeneradores, mundos felizes e mundos celestes. O Espírito peregrina por essa escala, encarnando em mundos cada vez mais depurados à medida que se eleva.</p>
+        <h4>IV. A ciência a serviço da fé</h4>
+        <p>Foi Camille Flammarion, o grande astrônomo, quem deu a esse ensino a sua grandeza científica. Em <em>A Pluralidade dos Mundos Habitados</em> e em <em>Deus na Natureza</em>, demonstrou que seria absurdo supor desertos os bilhões de mundos que giram no espaço, e que a vida é a regra do universo, não a exceção. Kardec, em <em>A Gênese</em> e em <em>O Livro dos Espíritos</em>, integra a pluralidade dos mundos à lei do progresso: a reencarnação não se esgota na Terra — é uma peregrinação cósmica, e a nossa morada atual é apenas uma escola entre incontáveis outras.</p>
+        <h4>V. As vozes que aprofundam</h4>
+        <p>Kardec estabelece a doutrina dos diferentes mundos e de sua hierarquia moral. Flammarion, autor central do tema, une a poesia do céu ao rigor da ciência, mostrando o cosmos habitado como o palco infinito da ascensão dos Espíritos. E Léon Denis eleva a reflexão à sua dimensão espiritual: a imensidão dos mundos é a medida da grandeza do destino humano.</p>
+        <h4>VI. Para meditar</h4>
+        <p>Diante da imensidão dos mundos, o homem descobre-se ao mesmo tempo pequeníssimo e imenso: um ponto perdido no espaço, e contudo herdeiro de toda essa vastidão, chamado a percorrê-la em sua ascensão. A Terra não é uma prisão, é um degrau. Resta a pergunta que dá altura à vida: <em>se meu destino é o universo inteiro, estou vivendo à altura de tão grande vocação?</em></p>`,
+        evangelho: ["João 14,2 — “muitas moradas”", "João 10,16 — “outras ovelhas tenho”", "1 Coríntios 15,40-41 — “uma estrela difere de outra em glória”"],
+        fontes: [
+          { autor: "Allan Kardec", o: "A Gênese", loc: "cap. VI — a pluralidade dos mundos habitados",
+            sin: "Integra a pluralidade dos mundos à lei do progresso e descreve a hierarquia moral das moradas cósmicas — de provas, regeneradores, felizes —, situando a Terra entre os mundos ainda inferiores.", pdf: L.GEN },
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "os diferentes mundos e a progressão do Espírito",
+            sin: "Expõe a desigualdade dos mundos e a ascensão do Espírito através deles: a reencarnação é peregrinação cósmica rumo a moradas cada vez mais depuradas.", pdf: L.LE },
+          { autor: "Camille Flammarion", o: "A Pluralidade dos Mundos Habitados / Deus na Natureza",
+            sin: "O astrônomo dá base científica à doutrina: seria absurdo supor desertos os incontáveis mundos do espaço. A vida é a lei do universo, e o cosmos habitado, o palco infinito da evolução das almas." },
         ],
       },
     ];
@@ -192,24 +396,41 @@
 
       const body = document.createElement("div");
       body.className = "body";
+      let html = "<div class='estudo'>" + t.estudo + "</div>";
 
-      let html = "<div class='bloco'><h3>No Evangelho</h3>";
-      for (const e of t.evangelho) html += "<div class='item plain'><span class='t'>" + e + "</span></div>";
-      html += "</div>";
-
-      html += "<div class='bloco'><h3>Comentado por Emmanuel</h3>";
-      for (const em of t.emmanuel) {
-        html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + emUrl(em.code) +
-          "'><span class='t'>" + em.t + "</span><span class='s'>" + em.code + " — abrir na Bíblia do Caminho</span></a>";
+      if (t.evangelho && t.evangelho.length) {
+        html += "<div class='bloco'><h3>No Evangelho</h3>";
+        for (const e of t.evangelho) html += "<div class='item plain'><span class='t'>" + e + "</span></div>";
+        html += "</div>";
       }
-      html += "</div>";
 
-      html += "<div class='bloco'><h3>Em Allan Kardec</h3>";
-      for (const k of t.kardec) {
-        html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + kardecUrl(k.u, k.p) +
-          "'><span class='t'>" + k.o + "</span><span class='s'>" + k.d + "</span></a>";
+      if (t.emmanuel && t.emmanuel.length) {
+        html += "<div class='bloco'><h3>Comentado por Emmanuel</h3>";
+        for (const em of t.emmanuel) {
+          html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + emUrl(em.code) +
+            "'><span class='t'>" + em.t + "</span><span class='s'>" + em.code + " — ler na Bíblia do Caminho</span></a>";
+        }
+        html += "</div>";
       }
-      html += "</div>";
+
+      if (t.fontes && t.fontes.length) {
+        html += "<div class='bloco'><h3>Para aprofundar</h3>";
+        for (const f of t.fontes) {
+          html += "<div class='fonte'><span class='o'>" + f.o + "</span> <span class='a'>· " + f.autor + "</span>";
+          if (f.loc) html += "<span class='loc'>" + f.loc + "</span>";
+          html += "<div class='sin'>" + f.sin + "</div>";
+          if (f.pdf) html += "<a class='pdf' target='_blank' rel='noopener noreferrer' href='" + f.pdf + "'>ler na íntegra (PDF) ↗</a>";
+          html += "</div>";
+        }
+        html += "</div>";
+      } else if (t.kardec) {
+        html += "<div class='bloco'><h3>Aprofundar em Kardec</h3>";
+        for (const k of t.kardec) {
+          html += "<div class='kardec-cit'><span class='o'>" + k.o + "</span><span class='d'>" + k.d +
+            " · <a target='_blank' rel='noopener noreferrer' href='" + k.u + "'>texto integral (PDF)</a></span></div>";
+        }
+        html += "</div>";
+      }
 
       body.innerHTML = html;
       det.appendChild(body);
