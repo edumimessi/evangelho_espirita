@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Temas de Estudo — Evangelho, Emmanuel e Kardec</title>
-  <meta name="description" content="Temas espíritas relacionando o Evangelho, os comentários de Emmanuel e as obras de Allan Kardec (domínio público)." />
+  <meta name="description" content="Estudo temático espírita: o conteúdo de cada tema, com o Evangelho, os comentários de Emmanuel e as obras de Allan Kardec (domínio público)." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
@@ -17,7 +17,7 @@
     }
     .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #cfe6ff; }
-    .wrap { position: relative; z-index: 1; width: 100%; max-width: 620px; margin: 0 auto; }
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 640px; margin: 0 auto; }
     header { text-align: center; margin-bottom: 26px; }
     .flame { width: 48px; height: 48px; margin: 0 auto 10px; display: block; filter: drop-shadow(0 0 14px rgba(125,227,255,.45)); }
     .kicker { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7de3ff; }
@@ -27,14 +27,18 @@
     .backlink:hover { background: rgba(231,201,138,.12); }
 
     .tema { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10); border-radius: 20px;
-      padding: 22px 22px; margin-bottom: 16px; overflow: hidden; }
+      padding: 20px 22px; margin-bottom: 16px; overflow: hidden; }
     .tema > summary { cursor: pointer; list-style: none; font-family: "Cinzel", serif; font-size: 19px; color: #e7c98a;
       display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .tema > summary::-webkit-details-marker { display: none; }
     .tema > summary .chev { color: #7de3ff; transition: transform .2s; font-size: 15px; }
     .tema[open] > summary .chev { transform: rotate(90deg); }
     .tema .body { margin-top: 16px; }
-    .bloco { margin-bottom: 16px; }
+
+    .estudo p { font-size: 16.5px; line-height: 1.65; color: #ece8ff; margin-bottom: 12px; }
+    .estudo em { color: #cbb8ff; }
+
+    .bloco { margin-top: 18px; }
     .bloco h3 { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
       color: #7de3ff; border-bottom: 1px solid rgba(255,255,255,.10); padding-bottom: 6px; margin-bottom: 10px; }
     .item { display: block; padding: 9px 12px; border-radius: 11px; text-decoration: none; margin-bottom: 7px;
@@ -42,8 +46,13 @@
     a.item:hover { background: rgba(125,227,255,.11); border-color: rgba(125,227,255,.35); }
     .item .t { color: #f2eeff; font-size: 15.5px; }
     .item .s { display: block; font-size: 12.5px; color: #7de3ff; margin-top: 1px; }
-    .item.plain { background: transparent; border-color: transparent; padding: 4px 2px; }
-    .item.plain .t { color: #d9d3ff; }
+    .item.plain { background: transparent; border-color: transparent; padding: 3px 2px; }
+    .item.plain .t { color: #d9d3ff; font-size: 15px; }
+    .kardec-cit { padding: 8px 12px; border-left: 3px solid rgba(231,201,138,.45); margin-bottom: 8px; }
+    .kardec-cit .o { color: #e7c98a; font-size: 15px; }
+    .kardec-cit .d { display: block; font-size: 13px; color: #b9b2e6; margin-top: 1px; }
+    .kardec-cit a { font-size: 12px; color: #7de3ff; text-decoration: none; }
+    .kardec-cit a:hover { text-decoration: underline; }
     .foot { text-align: center; margin-top: 22px; font-size: 12px; color: #6f68a0; line-height: 1.6; }
   </style>
 </head>
@@ -59,75 +68,59 @@
         <path d="M256 210 C 284 250, 300 266, 300 302 C 300 334, 280 356, 256 356 C 232 356, 212 334, 212 302 C 212 266, 228 250, 256 210 Z" fill="#fef6e6" opacity=".92"/>
       </svg>
       <div class="kicker">Temas de Estudo</div>
-      <p class="lead">Cada tema reúne o <strong>Evangelho</strong>, os <strong>comentários de Emmanuel</strong> e as obras de <strong>Allan Kardec</strong> (domínio público).</p>
+      <p class="lead">Abra um tema para <strong>ler o estudo</strong> — com o Evangelho, os comentários de Emmanuel e as obras de Allan Kardec.</p>
       <a class="backlink" href="/">← Versículo comentado</a>
     </header>
 
     <div id="temas"></div>
 
     <p class="foot">
-      Textos de Allan Kardec: domínio público (tradução Guillon Ribeiro) · Comentários de Emmanuel: índice da coleção
-      "O Evangelho por Emmanuel" (FEB) — apenas referência. As demais obras (Léon Denis, Flammarion, Delanne, Barsanulfo,
-      Bezerra de Menezes) serão incluídas conforme as edições em domínio público forem adicionadas.
+      Estudo elaborado com base na Doutrina Espírita (obras de Allan Kardec, domínio público). Comentários de Emmanuel:
+      índice da coleção "O Evangelho por Emmanuel" (FEB) — apenas referência, o texto é protegido.
     </p>
   </div>
 
   <script>
-    // Arquivos do Kardec (hospedados na raiz do site). page opcional (#page=N).
-    const L = {
-      LE:  "/livro-dos-espiritos.pdf",
-      ESE: "/evangelho-espiritismo.pdf",
-      GEN: "/a-genese.pdf",
-      CI:  "/ceu-e-inferno.pdf",
-      LM:  "/livro-dos-mediuns.pdf",
-      OP:  "/obras-postumas.pdf",
-      QE:  "/o-que-e-espiritismo.pdf",
-    };
-    function kardecUrl(u, p) { return p ? (u + "#page=" + p) : u; }
-
-    // Link para comentário de Emmanuel na Bíblia do Caminho (padrão confirmado)
     function emUrl(code) {
       const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code || "");
       if (!m) return "https://bibliadocaminho.com";
       const c = m[1], n = String(m[2]).padStart(3, "0");
       return "https://bibliadocaminho.com/ocaminho/TX/" + c + "/" + c + n + ".htm";
     }
+    const L = {
+      LE: "/livro-dos-espiritos.pdf", ESE: "/evangelho-espiritismo.pdf", GEN: "/a-genese.pdf",
+      CI: "/ceu-e-inferno.pdf", LM: "/livro-dos-mediuns.pdf", OP: "/obras-postumas.pdf", QE: "/o-que-e-espiritismo.pdf",
+    };
 
     const TEMAS = [
       {
         nome: "Reencarnação",
+        estudo: `<p>A Doutrina Espírita ensina que o Espírito é <em>imortal</em> e progride por meio de <em>sucessivas existências corporais</em>. Cada reencarnação é uma nova oportunidade de aprendizado, reparação e evolução moral — expressão da justiça e da misericórdia de Deus, que a ninguém condena eternamente por uma só vida.</p>
+        <p>Jesus indica essa verdade a Nicodemos: “necessário vos é nascer de novo” (João 3). E ao apontar João Batista como o Elias que havia de voltar (Mateus 17), mostra o retorno do Espírito. Kardec sistematiza o ensino em <em>O Livro dos Espíritos</em>, e Emmanuel o reafirma ao falar das “vidas sucessivas”.</p>`,
         evangelho: ["João 3:1-7 — “necessário vos é nascer de novo”", "Mateus 17:10-13 — Elias já veio (João Batista)"],
-        emmanuel: [
-          { t: "Renasce agora", code: "Fv.56" },
-          { t: "Vidas sucessivas", code: "Cvv.110" },
-          { t: "Reencarnação", code: "Cvv.108" },
-        ],
+        emmanuel: [{ t: "Renasce agora", code: "Fv.56" }, { t: "Vidas sucessivas", code: "Cvv.110" }, { t: "Reencarnação", code: "Cvv.108" }],
         kardec: [
           { o: "O Livro dos Espíritos", d: "Parte 2, cap. IV–V — Da pluralidade das existências", u: L.LE },
           { o: "O Evangelho Segundo o Espiritismo", d: "Cap. IV — Ninguém verá o reino de Deus se não nascer de novo", u: L.ESE },
-          { o: "A Gênese", d: "Cap. XI — Gênese espiritual (a alma e as existências)", u: L.GEN },
         ],
       },
       {
         nome: "Lei de Causa e Efeito / Justiça Divina",
+        estudo: `<p>Nenhuma ação fica sem consequência: “tudo o que o homem semear, isso também ceifará” (Gálatas 6:7). O Espiritismo mostra que colhemos, nesta e em outras vidas, os frutos do bem e do mal que praticamos — não como castigo de um Deus vingativo, mas como <em>lei natural</em> de reparação e aprendizado.</p>
+        <p>Assim se explicam as diferenças de destino e as provações: são resgates e experiências a serviço do progresso. Kardec expõe essa lei em <em>O Livro dos Espíritos</em> (lei de justiça, amor e caridade) e em <em>O Céu e o Inferno</em>, revelando a justiça divina como perfeita e educativa.</p>`,
         evangelho: ["Gálatas 6:7 — o que o homem semear, isso ceifará", "Mateus 7:2 — com a medida que medirdes"],
-        emmanuel: [
-          { t: "Lei de retorno", code: "Pn.127" },
-          { t: "Justiça e amor", code: "In.13" },
-        ],
+        emmanuel: [{ t: "Lei de retorno", code: "Pn.127" }, { t: "Justiça e amor", code: "In.13" }],
         kardec: [
           { o: "O Livro dos Espíritos", d: "Parte 3 — Da lei de justiça, amor e caridade", u: L.LE },
           { o: "O Céu e o Inferno", d: "Parte 1 — A justiça divina segundo o Espiritismo", u: L.CI },
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. V — Bem-aventurados os aflitos", u: L.ESE },
         ],
       },
       {
         nome: "Caridade",
+        estudo: `<p>“Fora da caridade não há salvação.” A caridade é o coração do Evangelho e a medida do progresso do Espírito. Não se resume à esmola material: é <em>benevolência para com todos, indulgência para as imperfeições alheias e perdão das ofensas</em> — amar ao próximo como a si mesmo.</p>
+        <p>Paulo a exalta como a maior das virtudes (1 Coríntios 13), e Jesus a coloca como critério do juízo (“fizestes a um destes pequeninos, a mim o fizestes” — Mateus 25). Kardec dedica a ela o capítulo XV de <em>O Evangelho Segundo o Espiritismo</em>.</p>`,
         evangelho: ["1 Coríntios 13 — o hino da caridade", "Lucas 10:25-37 — o bom samaritano", "Mateus 25:31-46"],
-        emmanuel: [
-          { t: "Caridade em Jesus", code: "Cs.17" },
-          { t: "Psicologia da caridade", code: "Le.28" },
-        ],
+        emmanuel: [{ t: "Caridade em Jesus", code: "Cs.17" }, { t: "Psicologia da caridade", code: "Le.28" }],
         kardec: [
           { o: "O Evangelho Segundo o Espiritismo", d: "Cap. XV — Fora da caridade não há salvação", u: L.ESE },
           { o: "O Livro dos Espíritos", d: "Parte 3 — Da lei de justiça, amor e caridade", u: L.LE },
@@ -135,49 +128,45 @@
       },
       {
         nome: "A Dor e as Provações",
+        estudo: `<p>“Bem-aventurados os aflitos, porque serão consolados.” As dores da vida não são acasos nem punições cegas: são <em>provações e expiações</em> úteis ao aperfeiçoamento do Espírito. Quem as compreende à luz do Espiritismo encontra sentido no sofrimento e paciência para atravessá-lo.</p>
+        <p>Jesus convida os cansados a virem a Ele (Mateus 11:28). Kardec, no capítulo V de <em>O Evangelho Segundo o Espiritismo</em>, explica as causas atuais e anteriores das aflições, mostrando que toda dor bem suportada é semente de paz futura.</p>`,
         evangelho: ["Mateus 5:4 — bem-aventurados os que choram", "Mateus 11:28 — vinde a mim, ó cansados"],
-        emmanuel: [
-          { t: "O remédio justo", code: "Le.09" },
-          { t: "Aflitos bem-aventurados", code: "Ner.19" },
-        ],
+        emmanuel: [{ t: "O remédio justo", code: "Le.09" }, { t: "Aflitos bem-aventurados", code: "Ner.19" }],
         kardec: [
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. V — Bem-aventurados os aflitos (causas das aflições)", u: L.ESE },
+          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. V — Bem-aventurados os aflitos", u: L.ESE },
           { o: "O Livro dos Espíritos", d: "Parte 3 — Das penas e gozos terrestres", u: L.LE },
         ],
       },
       {
         nome: "Vida após a Morte",
+        estudo: `<p>A morte não é o fim, mas a passagem para a verdadeira vida. “Eu sou a ressurreição e a vida” (João 11:25). O Espírito sobrevive ao corpo, conserva a individualidade e a consciência, e reencontra os que partiram antes — “na casa de meu Pai há muitas moradas” (João 14:2).</p>
+        <p>O Espiritismo demonstra a imortalidade e descreve a vida no mundo espiritual. Kardec reúne esse ensino em <em>O Céu e o Inferno</em> e na segunda parte de <em>O Livro dos Espíritos</em>, dissipando o medo da morte pela certeza da continuidade.</p>`,
         evangelho: ["João 11:25-26 — eu sou a ressurreição e a vida", "João 14:2 — muitas moradas", "Lucas 23:43"],
-        emmanuel: [
-          { t: "Sempre vivos", code: "Pn.42" },
-          { t: "Os vivos do Além", code: "Cvv.67" },
-        ],
+        emmanuel: [{ t: "Sempre vivos", code: "Pn.42" }, { t: "Os vivos do Além", code: "Cvv.67" }],
         kardec: [
           { o: "O Céu e o Inferno", d: "A vida futura, o julgamento, as penas e recompensas", u: L.CI },
-          { o: "O Livro dos Espíritos", d: "Parte 2 — O mundo espírita (a alma após a morte)", u: L.LE },
+          { o: "O Livro dos Espíritos", d: "Parte 2 — O mundo espírita", u: L.LE },
         ],
       },
       {
         nome: "Mediunidade",
-        evangelho: ["1 Coríntios 12 — a diversidade dos dons", "Marcos 16:17 — estes sinais seguirão", "Atos 2 — Pentecostes"],
-        emmanuel: [
-          { t: "Ante a mediunidade", code: "Le.87" },
-          { t: "Mediunidade e nós", code: "Oee4.C207" },
-        ],
+        estudo: `<p>A mediunidade é a faculdade que permite a comunicação entre encarnados e desencarnados. “Estes sinais seguirão aos que crerem” (Marcos 16:17); “de graça recebestes, de graça dai” (Mateus 10:8). É dom a serviço do bem, do consolo e do esclarecimento — nunca do lucro ou da vaidade.</p>
+        <p>Paulo já falava da diversidade dos dons espirituais (1 Coríntios 12). Kardec estabelece o estudo sério e disciplinado do tema em <em>O Livro dos Médiuns</em>, orientando a prática segura e cristã da mediunidade.</p>`,
+        evangelho: ["1 Coríntios 12 — a diversidade dos dons", "Marcos 16:17 — estes sinais seguirão", "Mateus 10:8"],
+        emmanuel: [{ t: "Ante a mediunidade", code: "Le.87" }, { t: "Mediunidade e nós", code: "Oee4.C207" }],
         kardec: [
-          { o: "O Livro dos Médiuns", d: "Guia dos médiuns e evocadores — a mediunidade e sua prática", u: L.LM },
+          { o: "O Livro dos Médiuns", d: "Guia dos médiuns e evocadores — a prática mediúnica", u: L.LM },
           { o: "O Livro dos Espíritos", d: "Parte 2 — Das manifestações dos Espíritos", u: L.LE },
         ],
       },
       {
         nome: "Oração",
+        estudo: `<p>A prece é o elo vivo entre a criatura e Deus. Jesus ensinou o Pai-Nosso (Mateus 6) e recomendou orar com simplicidade e confiança: “pedi, e dar-se-vos-á” (Lucas 11:9). Orar é elevar o pensamento, agradecer, pedir forças para o bem e enviar vibrações de amor a quem precisa.</p>
+        <p>O Espiritismo mostra a ação real da prece sobre nós e sobre os outros. Kardec trata das suas qualidades e eficácia nos capítulos XXVII e XXVIII de <em>O Evangelho Segundo o Espiritismo</em>, este último uma coletânea de preces.</p>`,
         evangelho: ["Mateus 6:5-13 — o Pai-Nosso", "Lucas 11:9 — pedi, buscai, batei"],
-        emmanuel: [
-          { t: "Em louvor da prece", code: "Le.88" },
-          { t: "Qualidades da prece", code: "Pve.166" },
-        ],
+        emmanuel: [{ t: "Em louvor da prece", code: "Le.88" }, { t: "Qualidades da prece", code: "Pve.166" }],
         kardec: [
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. XXVII — Pedi e obtereis; Cap. XXVIII — Coletânea de preces", u: L.ESE },
+          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. XXVII — Pedi e obtereis; Cap. XXVIII — Preces", u: L.ESE },
         ],
       },
     ];
@@ -192,22 +181,23 @@
 
       const body = document.createElement("div");
       body.className = "body";
+      let html = "<div class='estudo'>" + t.estudo + "</div>";
 
-      let html = "<div class='bloco'><h3>No Evangelho</h3>";
+      html += "<div class='bloco'><h3>No Evangelho</h3>";
       for (const e of t.evangelho) html += "<div class='item plain'><span class='t'>" + e + "</span></div>";
       html += "</div>";
 
       html += "<div class='bloco'><h3>Comentado por Emmanuel</h3>";
       for (const em of t.emmanuel) {
         html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + emUrl(em.code) +
-          "'><span class='t'>" + em.t + "</span><span class='s'>" + em.code + " — abrir na Bíblia do Caminho</span></a>";
+          "'><span class='t'>" + em.t + "</span><span class='s'>" + em.code + " — ler na Bíblia do Caminho</span></a>";
       }
       html += "</div>";
 
-      html += "<div class='bloco'><h3>Em Allan Kardec</h3>";
+      html += "<div class='bloco'><h3>Aprofundar em Kardec</h3>";
       for (const k of t.kardec) {
-        html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + kardecUrl(k.u, k.p) +
-          "'><span class='t'>" + k.o + "</span><span class='s'>" + k.d + "</span></a>";
+        html += "<div class='kardec-cit'><span class='o'>" + k.o + "</span><span class='d'>" + k.d +
+          " · <a target='_blank' rel='noopener noreferrer' href='" + k.u + "'>texto integral (PDF)</a></span></div>";
       }
       html += "</div>";
 
