@@ -114,16 +114,21 @@ const bibleRouter = router({
     .query(({ input }) => {
       const chapterIndex = getEmmanuelChapterIndex(input.bookAbbrev, input.chapter);
       // Enriquece cada referência com o nome amigável da fonte e URL direta.
-      const result: Record<string, { title: string; code: string | null; source: string | null; url: string | null }[]> = {};
+      const result: Record<string, { title: string; code: string | null; source: string | null; url: string | null; txUrl: string | null }[]> = {};
       for (const [verse, refs] of Object.entries(chapterIndex)) {
         result[verse] = refs.map((r) => {
           const prefix = r.code ? r.code.split(".")[0] : null;
-          // Usa source do índice se disponível, senão busca no mapa de siglas
           const source = r.source ?? (prefix ? emmanuelSiglas[prefix] ?? null : null);
-          return { title: r.title, code: r.code, source, url: r.url ?? null };
+          return {
+            title: r.title,
+            code: r.code,
+            source,
+            url: (r as any).url ?? null,       // URL TRP: versículo na Bíblia do Caminho
+            txUrl: (r as any).txUrl ?? null,   // URL TX: texto completo do comentário
+          };
         });
       }
-            return result;
+      return result;
     }),
 
   // Busca o texto completo de um comentário de Emmanuel na Bíblia do Caminho

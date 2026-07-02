@@ -440,9 +440,11 @@ export default function BibleReader() {
                                 {emmanuelRefs.map((ref, i) => {
                                   const refKey = `${verse.verse}-${i}`;
                                   const isRefOpen = expandedRefKey === refKey;
-                                  const refUrl = (ref as any).url ?? null;
-                                  const isLoadingThis = emmanuelTextLoading && emmanuelTextUrl === refUrl;
-                                  const textData = isRefOpen && emmanuelTextUrl === refUrl ? emmanuelTextData : null;
+                                  const refUrl = (ref as any).url ?? null;      // URL TRP: link externo
+                                  const refTxUrl = (ref as any).txUrl ?? null;  // URL TX: texto inline
+                                  const fetchUrl = refTxUrl || refUrl;           // prefere TX para buscar texto
+                                  const isLoadingThis = emmanuelTextLoading && emmanuelTextUrl === fetchUrl;
+                                  const textData = isRefOpen && emmanuelTextUrl === fetchUrl ? emmanuelTextData : null;
                                   return (
                                     <div key={i} className="space-y-1.5">
                                       <div className="text-xs leading-snug flex items-start gap-1.5">
@@ -454,7 +456,7 @@ export default function BibleReader() {
                                                 setExpandedRefKey(null);
                                               } else {
                                                 setExpandedRefKey(refKey);
-                                                if (refUrl) setEmmanuelTextUrl(refUrl);
+                                                if (fetchUrl) setEmmanuelTextUrl(fetchUrl);
                                               }
                                             }}
                                             className="text-left text-amber-200/90 hover:text-amber-200 font-medium transition-colors"
