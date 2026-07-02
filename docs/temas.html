@@ -35,8 +35,22 @@
     .tema[open] > summary .chev { transform: rotate(90deg); }
     .tema .body { margin-top: 16px; }
 
-    .estudo p { font-size: 16.5px; line-height: 1.65; color: #ece8ff; margin-bottom: 12px; }
+    .estudo p { font-size: 16.5px; line-height: 1.72; color: #ece8ff; margin-bottom: 13px; }
     .estudo em { color: #cbb8ff; }
+    .estudo h4 { font-family: "Cinzel", serif; font-size: 13px; letter-spacing: .6px; color: #e7c98a;
+      margin: 22px 0 9px; }
+    .estudo h4:first-child { margin-top: 4px; }
+    .estudo .grego { font-style: italic; color: #9fe8c4; }
+
+    .fonte { padding: 11px 14px; border-left: 3px solid rgba(231,201,138,.5); margin-bottom: 13px;
+      background: rgba(255,255,255,.025); border-radius: 0 12px 12px 0; }
+    .fonte .o { font-family: "Cinzel", serif; color: #e7c98a; font-size: 15.5px; }
+    .fonte .a { color: #7de3ff; font-size: 12.5px; }
+    .fonte .loc { display: block; font-size: 12.5px; color: #b9b2e6; margin-top: 1px; }
+    .fonte .sin { font-size: 15.5px; line-height: 1.62; color: #ece8ff; margin-top: 8px; }
+    .fonte .pdf { display: inline-block; margin-top: 7px; font-size: 12px; color: #7de3ff; text-decoration: none;
+      border: 1px solid rgba(125,227,255,.28); padding: 3px 9px; border-radius: 8px; }
+    .fonte .pdf:hover { background: rgba(125,227,255,.1); }
 
     .bloco { margin-top: 18px; }
     .bloco h3 { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
@@ -94,14 +108,34 @@
 
     const TEMAS = [
       {
-        nome: "Reencarnação",
-        estudo: `<p>A Doutrina Espírita ensina que o Espírito é <em>imortal</em> e progride por meio de <em>sucessivas existências corporais</em>. Cada reencarnação é uma nova oportunidade de aprendizado, reparação e evolução moral — expressão da justiça e da misericórdia de Deus, que a ninguém condena eternamente por uma só vida.</p>
-        <p>Jesus indica essa verdade a Nicodemos: “necessário vos é nascer de novo” (João 3). E ao apontar João Batista como o Elias que havia de voltar (Mateus 17), mostra o retorno do Espírito. Kardec sistematiza o ensino em <em>O Livro dos Espíritos</em>, e Emmanuel o reafirma ao falar das “vidas sucessivas”.</p>`,
-        evangelho: ["João 3:1-7 — “necessário vos é nascer de novo”", "Mateus 17:10-13 — Elias já veio (João Batista)"],
+        nome: "Reencarnação — a lei do recomeço e a justiça de Deus",
+        estudo: `<h4>I. O nó filológico de João 3</h4>
+        <p>O texto que a tradição verteu por “nascer de novo” guarda no original uma ambiguidade deliberada que se perde em português. Jesus diz a Nicodemos: <span class="grego">ἐὰν μή τις γεννηθῇ ἄνωθεν</span> — “se alguém não nascer <em>ánōthen</em>” (Jo 3,3). O advérbio ἄνωθεν (<em>ánōthen</em>) carrega dois sentidos simultâneos: “<em>do alto</em>” e “<em>de novo</em>”. O evangelista, escrevendo em grego para uma comunidade helenizada, explora de propósito essa duplicidade — e a prova está na reação de Nicodemos, que entende no sentido de repetição: “porventura pode tornar a entrar (<em>δεύτερον</em>, uma segunda vez) no ventre de sua mãe e nascer?” (Jo 3,4). Nicodemos, mestre de Israel, não estranha a <em>ideia</em> do renascimento — pergunta apenas por sua mecânica. Jesus não corrige a premissa; distingue os planos do nascimento da carne e do espírito. A leitura devocional domesticou a passagem reduzindo-a a metáfora da conversão; o texto grego mantém aberta a porta do renascimento real.</p>
+        <h4>II. O horizonte do judaísmo do Segundo Templo</h4>
+        <p>Essa naturalidade não é acidente. O judaísmo do primeiro século convivia com a expectativa concreta do <em>retorno de Elias</em> antes do Messias (Ml 3,23; Eclo 48,10). Por isso a resposta de Jesus é tão desconcertante para a teologia da vida única: “Elias já veio, e não o reconheceram… Então entenderam os discípulos que lhes falara a respeito de João Batista” (Mt 17,12-13) — o mesmo Espírito, nova existência corporal, nova missão. Flávio Josefo, contemporâneo dos apóstolos, registra que os fariseus criam que “a alma passa a outro corpo” (<em>Guerra dos Judeus</em> II, 8, 14): a metempsicose não era heresia importada, mas corrente viva no próprio pensamento judaico. Some-se a pergunta dos discípulos diante do cego de nascença — “quem pecou, este ou seus pais, para que nascesse cego?” (Jo 9,2): supor que o <em>próprio cego</em> houvesse pecado antes de nascer pressupõe, sem constrangimento, a preexistência da alma.</p>
+        <h4>III. Por que a Igreja fechou a porta</h4>
+        <p>A preexistência das almas foi tese corrente na patrística grega, sobretudo em <em>Orígenes</em> (<em>De Principiis</em>), para quem os espíritos existiam antes do corpo. Foi somente no <em>II Concílio de Constantinopla (553)</em>, sob Justiniano, que os anátemas contra o “origenismo” condenaram formalmente a <em>proÿparxis</em> — a preexistência —, e com ela soçobrou institucionalmente toda a arquitetura das existências sucessivas. A doutrina não foi refutada: foi proscrita, por razões tanto teológicas quanto políticas.</p>
+        <h4>IV. A necessidade lógica: a teodiceia</h4>
+        <p>Retirada a reencarnação, ressurge o escândalo da razão — o problema do mal e da desigualdade. Se cada alma é criada no instante do nascimento e joga numa única partida a sorte eterna, então as desigualdades de berço, de saúde, de inteligência e de duração da vida fazem de Deus um distribuidor arbitrário de destinos. Só a pluralidade das existências reconcilia a justiça divina com os fatos: a alma não <em>começa</em> desigual, ela <em>chega</em> desigual, trazendo o saldo de suas jornadas. A desigualdade não é de origem, é de percurso; e a dor deixa de ser castigo cego para tornar-se instrumento pedagógico — expiação e prova a serviço do progresso.</p>
+        <h4>V. Do postulado moral ao dado de observação</h4>
+        <p>Aqui as contribuições se diferenciam e se completam: Kardec <em>codifica</em>, Denis <em>fundamenta filosoficamente</em>, e Delanne submete a tese ao <em>método experimental</em>, apontando no perispírito — corpo semimaterial que serve de modelo organizador — a matriz que conserva e transporta de uma vida a outra os caracteres adquiridos: eis a explicação das reminiscências espontâneas das crianças, dos gênios precoces, das afinidades e aversões sem causa hereditária, dos sinais de nascença. Flammarion dilata o cenário à escala cósmica; Conan Doyle testemunha o reencontro dessa certeza pela via da pesquisa científica. A doutrina, assim, não se apoia em fé cega: converge do argumento moral ao dado de observação.</p>
+        <h4>VI. Para meditar</h4>
+        <p>A cegueira que a reencarnação cura não é a dos olhos, mas a do sentido: ela restitui à existência a coerência que o dogma da vida única lhe subtraíra. Nada é acaso, nada do bem edificado se perde, ninguém é condenado para sempre por uma só queda. Se sou herdeiro de mim mesmo, cada escolha presente é semente de um porvir que eu mesmo colherei. Resta a pergunta, não especulativa mas moral, a ser levada ao silêncio da consciência: <em>conhecendo a lei do recomeço, o que escolho fazer da existência que ainda tenho nas mãos?</em></p>`,
+        evangelho: ["João 3,1-13 — o diálogo com Nicodemos (ánōthen)", "Mateus 17,10-13 — “Elias já veio” (João Batista)", "João 9,1-3 — o cego de nascença"],
         emmanuel: [{ t: "Renasce agora", code: "Fv.56" }, { t: "Vidas sucessivas", code: "Cvv.110" }, { t: "Reencarnação", code: "Cvv.108" }],
-        kardec: [
-          { o: "O Livro dos Espíritos", d: "Parte 2, cap. IV–V — Da pluralidade das existências", u: L.LE },
-          { o: "O Evangelho Segundo o Espiritismo", d: "Cap. IV — Ninguém verá o reino de Deus se não nascer de novo", u: L.ESE },
+        fontes: [
+          { autor: "Allan Kardec", o: "O Livro dos Espíritos", loc: "Parte 2, cap. IV–V — a pluralidade das existências",
+            sin: "Erige a reencarnação a lei natural e demonstra sua necessidade lógica: sem ela, nem o progresso do Espírito, nem a justiça das provações, nem a diversidade das aptidões encontram explicação. É o pórtico doutrinário do tema.", pdf: L.LE },
+          { autor: "Allan Kardec", o: "O Evangelho Segundo o Espiritismo", loc: "cap. IV e V",
+            sin: "Retoma o diálogo com Nicodemos e o problema histórico da preexistência, mostrando a reencarnação como “o complemento indispensável da justiça de Deus” e a chave das aflições humanas.", pdf: L.ESE },
+          { autor: "Léon Denis", o: "O Problema do Ser, do Destino e da Dor",
+            sin: "Fundamenta filosoficamente a tese: só a pluralidade das existências reconcilia a justiça divina com a desigualdade dos destinos. A dor, lida à luz da reencarnação, revela-se pedagógica — expiação e prova a serviço da ascensão moral." },
+          { autor: "Gabriel Delanne", o: "A Reencarnação / A Evolução Anímica",
+            sin: "Submete a doutrina ao crivo dos fatos: o perispírito, modelo organizador, conserva os caracteres de uma vida a outra. Reúne reminiscências infantis, gênios precoces, sinais de nascença e afinidades inexplicáveis como convergência experimental." },
+          { autor: "Camille Flammarion", o: "A Pluralidade dos Mundos Habitados",
+            sin: "O astrônomo dilata o palco da reencarnação à escala cósmica: sendo inumeráveis e habitados os mundos, a peregrinação do Espírito não se encerra na Terra, mas percorre uma hierarquia de mundos, do mais grosseiro ao mais depurado." },
+          { autor: "Arthur Conan Doyle", o: "A Nova Revelação / História do Espiritismo",
+            sin: "Testemunho de um homem formado no ceticismo científico vitoriano que, pela pesquisa metódica, reencontrou a certeza da sobrevivência e do recomeço. Documenta a virada evidencial e histórica do tema no Ocidente moderno." },
         ],
       },
       {
@@ -194,12 +228,24 @@
       }
       html += "</div>";
 
-      html += "<div class='bloco'><h3>Aprofundar em Kardec</h3>";
-      for (const k of t.kardec) {
-        html += "<div class='kardec-cit'><span class='o'>" + k.o + "</span><span class='d'>" + k.d +
-          " · <a target='_blank' rel='noopener noreferrer' href='" + k.u + "'>texto integral (PDF)</a></span></div>";
+      if (t.fontes && t.fontes.length) {
+        html += "<div class='bloco'><h3>Para aprofundar</h3>";
+        for (const f of t.fontes) {
+          html += "<div class='fonte'><span class='o'>" + f.o + "</span> <span class='a'>· " + f.autor + "</span>";
+          if (f.loc) html += "<span class='loc'>" + f.loc + "</span>";
+          html += "<div class='sin'>" + f.sin + "</div>";
+          if (f.pdf) html += "<a class='pdf' target='_blank' rel='noopener noreferrer' href='" + f.pdf + "'>ler na íntegra (PDF) ↗</a>";
+          html += "</div>";
+        }
+        html += "</div>";
+      } else if (t.kardec) {
+        html += "<div class='bloco'><h3>Aprofundar em Kardec</h3>";
+        for (const k of t.kardec) {
+          html += "<div class='kardec-cit'><span class='o'>" + k.o + "</span><span class='d'>" + k.d +
+            " · <a target='_blank' rel='noopener noreferrer' href='" + k.u + "'>texto integral (PDF)</a></span></div>";
+        }
+        html += "</div>";
       }
-      html += "</div>";
 
       body.innerHTML = html;
       det.appendChild(body);
