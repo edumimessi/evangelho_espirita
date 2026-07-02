@@ -44,7 +44,6 @@
     .item .s { display: block; font-size: 12.5px; color: #7de3ff; margin-top: 1px; }
     .item.plain { background: transparent; border-color: transparent; padding: 4px 2px; }
     .item.plain .t { color: #d9d3ff; }
-    .aviso { font-size: 12px; color: #6f68a0; margin-top: 4px; }
     .foot { text-align: center; margin-top: 22px; font-size: 12px; color: #6f68a0; line-height: 1.6; }
   </style>
 </head>
@@ -74,17 +73,18 @@
   </div>
 
   <script>
-    // Arquivos do Kardec (a serem colocados em /livros/). O #page será
-    // adicionado depois que os PDFs forem enviados e os sumários lidos.
+    // Arquivos do Kardec (hospedados na raiz do site). page opcional (#page=N).
     const L = {
-      LE:  "/livros/livro-dos-espiritos.pdf",
-      ESE: "/livros/evangelho-espiritismo.pdf",
-      GEN: "/livros/a-genese.pdf",
-      CI:  "/livros/ceu-e-inferno.pdf",
-      LM:  "/livros/livro-dos-mediuns.pdf",
-      OP:  "/livros/obras-postumas.pdf",
-      QE:  "/livros/o-que-e-espiritismo.pdf",
+      LE:  "/livro-dos-espiritos.pdf",
+      ESE: "/evangelho-espiritismo.pdf",
+      GEN: "/a-genese.pdf",
+      CI:  "/ceu-e-inferno.pdf",
+      LM:  "/livro-dos-mediuns.pdf",
+      OP:  "/obras-postumas.pdf",
+      QE:  "/o-que-e-espiritismo.pdf",
     };
+    function kardecUrl(u, p) { return p ? (u + "#page=" + p) : u; }
+
     // Link para comentário de Emmanuel na Bíblia do Caminho (padrão confirmado)
     function emUrl(code) {
       const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code || "");
@@ -193,12 +193,10 @@
       const body = document.createElement("div");
       body.className = "body";
 
-      // Evangelho
       let html = "<div class='bloco'><h3>No Evangelho</h3>";
       for (const e of t.evangelho) html += "<div class='item plain'><span class='t'>" + e + "</span></div>";
       html += "</div>";
 
-      // Emmanuel (links)
       html += "<div class='bloco'><h3>Comentado por Emmanuel</h3>";
       for (const em of t.emmanuel) {
         html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + emUrl(em.code) +
@@ -206,10 +204,9 @@
       }
       html += "</div>";
 
-      // Kardec (links para os PDFs)
       html += "<div class='bloco'><h3>Em Allan Kardec</h3>";
       for (const k of t.kardec) {
-        html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + k.u +
+        html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + kardecUrl(k.u, k.p) +
           "'><span class='t'>" + k.o + "</span><span class='s'>" + k.d + "</span></a>";
       }
       html += "</div>";
