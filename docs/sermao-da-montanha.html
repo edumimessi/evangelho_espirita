@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Sermão da Montanha — estudo verso a verso</title>
+  <meta name="description" content="Estudo espírita verso a verso do Sermão da Montanha (Mateus 5–7): o texto, a exegese do original e a luz de Kardec, Emmanuel e dos autores clássicos." />
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      min-height: 100vh; padding: 32px 20px 56px; font-family: "Crimson Pro", Georgia, serif; color: #e6e2ff;
+      background: radial-gradient(ellipse at 50% 12%, #241a52 0%, #140f33 55%, #080614 100%); background-attachment: fixed;
+    }
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #cfe6ff; }
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 640px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 26px; }
+    .flame { width: 48px; height: 48px; margin: 0 auto 10px; display: block; filter: drop-shadow(0 0 14px rgba(125,227,255,.45)); }
+    .kicker { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7de3ff; }
+    .lead { font-size: 15px; color: #b9b2e6; margin-top: 8px; }
+    .navlinks { margin-top: 14px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .backlink { display: inline-block; font-size: 13px; color: #e7c98a; text-decoration: none;
+      border: 1px solid rgba(231,201,138,.35); padding: 7px 14px; border-radius: 10px; }
+    .backlink:hover { background: rgba(231,201,138,.12); }
+
+    .intro { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 16px;
+      padding: 16px 18px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; color: #d9d3ff; }
+
+    .peri { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10); border-radius: 20px;
+      padding: 20px 22px; margin-bottom: 16px; overflow: hidden; }
+    .peri > summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .peri > summary::-webkit-details-marker { display: none; }
+    .peri .ref { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #7de3ff; }
+    .peri .tit { font-family: "Cinzel", serif; font-size: 18px; color: #e7c98a; margin-top: 3px; }
+    .peri > summary .chev { color: #7de3ff; transition: transform .2s; font-size: 15px; }
+    .peri[open] > summary .chev { transform: rotate(90deg); }
+    .peri .body { margin-top: 16px; }
+
+    .texto { border-left: 3px solid rgba(125,227,255,.4); padding: 4px 0 4px 16px; margin-bottom: 6px;
+      font-style: italic; color: #ece8ff; font-size: 16px; line-height: 1.6; }
+    .texto b { color: #f7e9c6; font-style: normal; font-weight: 600; }
+
+    .estudo p { font-size: 16.5px; line-height: 1.72; color: #ece8ff; margin-bottom: 13px; }
+    .estudo em { color: #cbb8ff; }
+    .estudo h4 { font-family: "Cinzel", serif; font-size: 13px; letter-spacing: .6px; color: #e7c98a; margin: 22px 0 9px; }
+    .estudo h4:first-child { margin-top: 4px; }
+    .estudo .grego { font-style: italic; color: #9fe8c4; }
+
+    .bloco { margin-top: 18px; }
+    .bloco h3 { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #7de3ff; border-bottom: 1px solid rgba(255,255,255,.10); padding-bottom: 6px; margin-bottom: 10px; }
+    .fonte { padding: 11px 14px; border-left: 3px solid rgba(231,201,138,.5); margin-bottom: 13px;
+      background: rgba(255,255,255,.025); border-radius: 0 12px 12px 0; }
+    .fonte .o { font-family: "Cinzel", serif; color: #e7c98a; font-size: 15.5px; }
+    .fonte .a { color: #7de3ff; font-size: 12.5px; }
+    .fonte .loc { display: block; font-size: 12.5px; color: #b9b2e6; margin-top: 1px; }
+    .fonte .sin { font-size: 15.5px; line-height: 1.62; color: #ece8ff; margin-top: 8px; }
+    .fonte .pdf { display: inline-block; margin-top: 7px; font-size: 12px; color: #7de3ff; text-decoration: none;
+      border: 1px solid rgba(125,227,255,.28); padding: 3px 9px; border-radius: 8px; }
+    .fonte .pdf:hover { background: rgba(125,227,255,.1); }
+    .lerlink { display: inline-block; margin-top: 6px; font-size: 12.5px; color: #7de3ff; text-decoration: none; }
+    .lerlink:hover { text-decoration: underline; }
+    .foot { text-align: center; margin-top: 22px; font-size: 12px; color: #6f68a0; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="wrap">
+    <header>
+      <svg class="flame" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs><linearGradient id="f" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#7de3ff"/><stop offset="45%" stop-color="#9a6bff"/><stop offset="100%" stop-color="#e7c98a"/>
+        </linearGradient></defs>
+        <path d="M256 120 C 306 190, 342 214, 342 288 C 342 352, 302 392, 256 392 C 210 392, 170 352, 170 288 C 170 214, 206 190, 256 120 Z" fill="url(#f)"/>
+        <path d="M256 210 C 284 250, 300 266, 300 302 C 300 334, 280 356, 256 356 C 232 356, 212 334, 212 302 C 212 266, 228 250, 256 210 Z" fill="#fef6e6" opacity=".92"/>
+      </svg>
+      <div class="kicker">O Sermão da Montanha</div>
+      <p class="lead">Estudo <strong>verso a verso</strong> de Mateus 5–7 — o texto, a exegese do original e a luz da Doutrina.</p>
+      <div class="navlinks">
+        <a class="backlink" href="/">← Versículo comentado</a>
+        <a class="backlink" href="/temas.html">Temas de Estudo</a>
+      </div>
+    </header>
+
+    <div class="intro">
+      O Sermão da Montanha (Mateus 5 a 7) é a carta magna da moral cristã — o coração do Evangelho, onde Jesus
+      proclama a lei nova, não gravada em pedra, mas no espírito. Estudamos aqui cada trecho de perto: o texto,
+      o sentido do original grego e o comentário à luz de Kardec, de Emmanuel e dos autores clássicos.
+    </div>
+
+    <div id="pericopes"></div>
+
+    <p class="foot">
+      Estudo elaborado com base na Doutrina Espírita (obras de Allan Kardec, domínio público) e na exegese do texto grego.
+      Comentários de Emmanuel citados como referência; o texto integral é protegido.
+    </p>
+  </div>
+
+  <script>
+    const L = {
+      LE: "/livro-dos-espiritos.pdf", ESE: "/evangelho-espiritismo.pdf", GEN: "/a-genese.pdf",
+      CI: "/ceu-e-inferno.pdf", LM: "/livro-dos-mediuns.pdf", OP: "/obras-postumas.pdf", QE: "/o-que-e-espiritismo.pdf",
+    };
+
+    const PERICOPES = [
+      {
+        ref: "Mateus 5,1-12",
+        titulo: "As Bem-aventuranças",
+        ler: "https://bibliadocaminho.com/ocaminho/TRP/Mt/Mt05.htm",
+        texto: `Vendo Jesus as multidões, subiu a um monte; e, sentando-se, aproximaram-se dele os seus discípulos, e ele os ensinava, dizendo:<br>
+        “<b>Bem-aventurados os pobres de espírito</b>, porque deles é o reino dos céus;<br>
+        bem-aventurados os que choram, porque serão consolados;<br>
+        bem-aventurados os mansos, porque herdarão a terra;<br>
+        bem-aventurados os que têm fome e sede de justiça, porque serão fartos;<br>
+        bem-aventurados os misericordiosos, porque alcançarão misericórdia;<br>
+        bem-aventurados os limpos de coração, porque verão a Deus;<br>
+        bem-aventurados os pacificadores, porque serão chamados filhos de Deus;<br>
+        bem-aventurados os que sofrem perseguição por causa da justiça, porque deles é o reino dos céus.”`,
+        estudo: `<h4>I. O novo Sinai</h4>
+        <p>“Vendo as multidões, <em>subiu ao monte</em>; e, <em>sentando-se</em>, ensinava” (Mt 5,1-2). Cada gesto é significativo. Onde Moisés <em>subira</em> ao Sinai para <em>receber</em> a Lei escrita em tábuas de pedra, Jesus sobe ao monte para <em>proclamá-la</em> de si mesmo — não mais gravada fora, mas no espírito. E ensina <em>sentado</em>, a posição do mestre que fala com autoridade própria. Mateus apresenta assim o Sermão: a lei nova, interior, que não revoga a antiga, mas a leva à sua plenitude.</p>
+        <h4>II. A felicidade paradoxal — <span class="grego">makários</span></h4>
+        <p>Oito vezes ressoa a palavra <span class="grego">μακάριος</span> (<em>makários</em>). Não traduz a alegria passageira, mas a <em>felicidade profunda e estável</em> dos que vivem em harmonia com Deus — uma bem-aventurança que independe das circunstâncias exteriores. E o escândalo é frontal: Jesus proclama felizes justamente aqueles que o mundo tem por infelizes — os pobres, os que choram, os perseguidos. As Bem-aventuranças invertem, uma a uma, a tábua de valores humana: a verdadeira grandeza mora onde os olhos da carne só veem pequenez.</p>
+        <h4>III. Os pobres de espírito e os que choram</h4>
+        <p>“<em>Pobres de espírito</em>” (<em>ptōchoì tō pneúmati</em>) não são os tolos, mas os <em>humildes</em> — os que nada julgam possuir de si diante de Deus e por isso estão de mãos abertas para receber: deles é o Reino, porque a alma cheia de si não tem lugar para o alto. Aos “<em>que choram</em>” (<em>penthoûntes</em>) promete-se o consolo (<em>paráklēsis</em>, a mesma raiz de <em>Paráclito</em>): a dor bem vivida não é castigo, mas semente de paz — o Espiritismo lê aqui as provações que amadurecem o Espírito.</p>
+        <h4>IV. Os mansos e os que têm fome de justiça</h4>
+        <p>Os “<em>mansos</em>” (<em>praeîs</em>) “herdarão a terra”: a mansidão não é fraqueza, mas a força que renuncia à violência — vence sem esmagar, e por isso perdura. E os que “<em>têm fome e sede de justiça</em>” (<em>dikaiosýnē</em>): não os satisfeitos, mas os que <em>desejam ardentemente</em> o bem e a retidão, com a urgência de quem tem fome. A santidade não é um estado morno de contentamento; é um apetite de justiça que só a plenitude de Deus fartará.</p>
+        <h4>V. Os misericordiosos e os limpos de coração</h4>
+        <p>“<em>Misericordiosos</em>” (<em>eleḗmones</em>) “alcançarão misericórdia”: a mesma lei de reciprocidade do perdão — a medida com que medimos volta sobre nós. E os “<em>limpos de coração</em>” (<em>katharoì tē kardía</em>) “verão a Deus”: a pureza aqui é a da <em>intenção</em>, o coração sem duplicidade, o “olho simples” que ilumina todo o corpo (Mt 6,22). Só o coração limpo de segundas intenções enxerga a Deus — porque só vê a Deus quem O procura sem se procurar a si mesmo.</p>
+        <h4>VI. Os pacificadores e os perseguidos</h4>
+        <p>“<em>Pacificadores</em>” (<em>eirēnopoioí</em>) — literalmente <em>fazedores de paz</em>: não os que apenas evitam o conflito, mas os que <em>constroem</em> a concórdia, e por isso “serão chamados filhos de Deus”, pois imitam a obra do Pai. Por fim, os “<em>perseguidos por causa da justiça</em>”: a última bem-aventurança tem o preço da fidelidade. Manter o bem quando ele custa é a prova mais alta — e a estes, como aos primeiros, pertence o Reino: o círculo se fecha onde começou.</p>
+        <h4>VII. O retrato do próprio Cristo</h4>
+        <p>Lidas em conjunto, as Bem-aventuranças são o <em>autorretrato de Jesus</em> — humilde, manso, sedento de justiça, misericordioso, puro, pacificador, perseguido — e, ao mesmo tempo, o <em>mapa da ascensão da alma</em>: os degraus por onde o Espírito sobe, da humildade que abre a porta até a fidelidade que enfrenta a cruz. Não são oito grupos de pessoas, mas oito virtudes de um mesmo coração em marcha para Deus.</p>`,
+        fontes: [
+          { autor: "Allan Kardec", o: "O Evangelho Segundo o Espiritismo", loc: "cap. V, VII, IX e X — as Bem-aventuranças",
+            sin: "Kardec dedica capítulos inteiros às Bem-aventuranças — os aflitos (V), os pobres de espírito (VII), os que têm puro o coração e os mansos e pacíficos (IX), os misericordiosos (X) —, explicando cada uma à luz da justiça e do progresso.", pdf: L.ESE },
+          { autor: "Emmanuel", o: "Comentários ao Sermão da Montanha",
+            sin: "Traduz as Bem-aventuranças em atitudes concretas do cotidiano: a humildade, a mansidão e a misericórdia como exercícios diários, e não ideais distantes, ao alcance de cada um em cada relação." },
+          { autor: "Léon Denis", o: "O Problema do Ser, do Destino e da Dor",
+            sin: "Ilumina a bem-aventurança dos que choram e dos perseguidos: a dor e a provação, compreendidas à luz da reencarnação, revelam-se instrumentos de purificação e de elevação moral." },
+        ],
+      },
+    ];
+
+    const box = document.getElementById("pericopes");
+    for (const p of PERICOPES) {
+      const det = document.createElement("details");
+      det.className = "peri";
+      const sum = document.createElement("summary");
+      sum.innerHTML = "<div><div class='ref'>" + p.ref + "</div><div class='tit'>" + p.titulo + "</div></div><span class='chev'>▶</span>";
+      det.appendChild(sum);
+
+      const body = document.createElement("div");
+      body.className = "body";
+      let html = "";
+      if (p.texto) html += "<div class='texto'>" + p.texto + "</div>";
+      if (p.ler) html += "<a class='lerlink' target='_blank' rel='noopener noreferrer' href='" + p.ler + "'>↗ ler o capítulo na Bíblia do Caminho</a>";
+      html += "<div class='estudo'>" + p.estudo + "</div>";
+
+      if (p.fontes && p.fontes.length) {
+        html += "<div class='bloco'><h3>Para aprofundar</h3>";
+        for (const f of p.fontes) {
+          html += "<div class='fonte'><span class='o'>" + f.o + "</span> <span class='a'>· " + f.autor + "</span>";
+          if (f.loc) html += "<span class='loc'>" + f.loc + "</span>";
+          html += "<div class='sin'>" + f.sin + "</div>";
+          if (f.pdf) html += "<a class='pdf' target='_blank' rel='noopener noreferrer' href='" + f.pdf + "'>ler na íntegra (PDF) ↗</a>";
+          html += "</div>";
+        }
+        html += "</div>";
+      }
+
+      body.innerHTML = html;
+      det.appendChild(body);
+      box.appendChild(det);
+    }
+
+    (function () {
+      const c = document.getElementById("stars");
+      for (let i = 0; i < 40; i++) {
+        const s = document.createElement("i");
+        s.style.left = Math.random() * 100 + "%"; s.style.top = Math.random() * 100 + "%";
+        s.style.opacity = (0.2 + Math.random() * 0.5).toFixed(2);
+        c.appendChild(s);
+      }
+    })();
+  </script>
+</body>
+</html>
