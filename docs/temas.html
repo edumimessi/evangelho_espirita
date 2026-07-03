@@ -102,7 +102,7 @@
     function emUrl(code) {
       const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code || "");
       if (!m) return "https://bibliadocaminho.com";
-      const c = m[1], n = String(m[2]).padStart(3, "0");
+      const c = m[1], n = m[2];
       return "https://bibliadocaminho.com/ocaminho/TX/" + c + "/" + c + n + ".htm";
     }
     const L = {
