@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Evangelho Segundo o Espiritismo — Kardec e os comentários de Emmanuel</title>
+  <meta name="description" content="Os capítulos de O Evangelho Segundo o Espiritismo (Allan Kardec): o texto do Evangelho, a lição de Kardec e os comentários de Emmanuel correspondentes." />
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      min-height: 100vh; padding: 32px 20px 56px; font-family: "Crimson Pro", Georgia, serif; color: #e6e2ff;
+      background: radial-gradient(ellipse at 50% 12%, #241a52 0%, #140f33 55%, #080614 100%); background-attachment: fixed;
+    }
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #cfe6ff; }
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 640px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 26px; }
+    .flame { width: 48px; height: 48px; margin: 0 auto 10px; display: block; filter: drop-shadow(0 0 14px rgba(125,227,255,.45)); }
+    .kicker { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7de3ff; }
+    .lead { font-size: 15px; color: #b9b2e6; margin-top: 8px; }
+    .navlinks { margin-top: 14px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .backlink { display: inline-block; font-size: 13px; color: #e7c98a; text-decoration: none;
+      border: 1px solid rgba(231,201,138,.35); padding: 7px 14px; border-radius: 10px; }
+    .backlink:hover { background: rgba(231,201,138,.12); }
+
+    .intro { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 16px;
+      padding: 16px 18px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; color: #d9d3ff; }
+
+    .cap { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10); border-radius: 20px;
+      padding: 20px 22px; margin-bottom: 16px; overflow: hidden; }
+    .cap > summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .cap > summary::-webkit-details-marker { display: none; }
+    .cap .ref { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #7de3ff; }
+    .cap .tit { font-family: "Cinzel", serif; font-size: 18px; color: #e7c98a; margin-top: 3px; }
+    .cap > summary .chev { color: #7de3ff; transition: transform .2s; font-size: 15px; }
+    .cap[open] > summary .chev { transform: rotate(90deg); }
+    .cap .body { margin-top: 16px; }
+
+    .evang { border-left: 3px solid rgba(125,227,255,.4); padding: 4px 0 4px 16px; margin-bottom: 6px;
+      font-style: italic; color: #ece8ff; font-size: 16px; line-height: 1.6; }
+    .evang b { color: #f7e9c6; font-style: normal; font-weight: 600; }
+
+    .bloco { margin-top: 18px; }
+    .bloco h3 { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #7de3ff; border-bottom: 1px solid rgba(255,255,255,.10); padding-bottom: 6px; margin-bottom: 10px; }
+    .kardec p { font-size: 16.5px; line-height: 1.7; color: #ece8ff; margin-bottom: 11px; }
+    .kardec em { color: #cbb8ff; }
+    .kardec .cit { border-left: 3px solid rgba(231,201,138,.5); padding: 2px 0 2px 14px; color: #f2ecda; font-style: italic; }
+
+    .item { display: block; padding: 9px 12px; border-radius: 11px; text-decoration: none; margin-bottom: 7px;
+      background: rgba(125,227,255,.05); border: 1px solid rgba(125,227,255,.14); transition: all .16s; color: inherit; }
+    a.item:hover { background: rgba(125,227,255,.11); border-color: rgba(125,227,255,.35); }
+    .item .t { color: #f2eeff; font-size: 15.5px; }
+    .item .s { display: block; font-size: 12.5px; color: #7de3ff; margin-top: 1px; }
+    .pdf { display: inline-block; margin-top: 4px; font-size: 12px; color: #7de3ff; text-decoration: none;
+      border: 1px solid rgba(125,227,255,.28); padding: 4px 10px; border-radius: 8px; }
+    .pdf:hover { background: rgba(125,227,255,.1); }
+    .foot { text-align: center; margin-top: 22px; font-size: 12px; color: #6f68a0; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="wrap">
+    <header>
+      <svg class="flame" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs><linearGradient id="f" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#7de3ff"/><stop offset="45%" stop-color="#9a6bff"/><stop offset="100%" stop-color="#e7c98a"/>
+        </linearGradient></defs>
+        <path d="M256 120 C 306 190, 342 214, 342 288 C 342 352, 302 392, 256 392 C 210 392, 170 352, 170 288 C 170 214, 206 190, 256 120 Z" fill="url(#f)"/>
+        <path d="M256 210 C 284 250, 300 266, 300 302 C 300 334, 280 356, 256 356 C 232 356, 212 334, 212 302 C 212 266, 228 250, 256 210 Z" fill="#fef6e6" opacity=".92"/>
+      </svg>
+      <div class="kicker">O Evangelho Segundo o Espiritismo</div>
+      <p class="lead">Os capítulos de <strong>Allan Kardec</strong> — o texto do Evangelho, a lição de Kardec e os comentários de Emmanuel.</p>
+      <div class="navlinks">
+        <a class="backlink" href="/">← Versículo comentado</a>
+        <a class="backlink" href="/temas.html">Temas</a>
+        <a class="backlink" href="/sermao-da-montanha.html">Sermão</a>
+        <a class="backlink" href="/parabolas.html">Parábolas</a>
+      </div>
+    </header>
+
+    <div class="intro">
+      <em>O Evangelho Segundo o Espiritismo</em> (Allan Kardec, 1864) reúne o ensino moral de Jesus explicado à luz da
+      Doutrina. Aqui cada capítulo traz o <strong>texto evangélico</strong>, a <strong>lição de Kardec</strong> (domínio público)
+      e os <strong>comentários de Emmanuel</strong> correspondentes — estes citados como referência e com link para a
+      Bíblia do Caminho, pois o texto de Emmanuel é protegido. O texto integral de Kardec está no PDF de cada capítulo.
+    </div>
+
+    <div id="caps"></div>
+
+    <p class="foot">
+      Texto de Allan Kardec: domínio público. Comentários de Emmanuel (coleção “O Evangelho por Emmanuel”, FEB):
+      referência (título e livro-fonte), com link para a Bíblia do Caminho — o texto é protegido.
+    </p>
+  </div>
+
+  <script>
+    const L_ESE = "/evangelho-espiritismo.pdf";
+    function emUrl(code) {
+      const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code || "");
+      if (!m) return "https://bibliadocaminho.com";
+      const c = m[1], n = m[2];
+      return "https://bibliadocaminho.com/ocaminho/TX/" + c + "/" + c + n + ".htm";
+    }
+
+    const CAPITULOS = [
+      {
+        ref: "Capítulo V",
+        titulo: "Bem-aventurados os aflitos",
+        evangelho: `“Bem-aventurados os que choram, porque serão consolados… Bem-aventurados os que têm fome e sede de justiça, porque serão fartos… Bem-aventurados os que sofrem perseguição por causa da justiça, porque deles é o reino dos céus.” <b>(Mateus 5,4-10)</b>`,
+        kardec: `<p>Kardec dedica este capítulo a dar sentido ao sofrimento humano. As aflições da vida, ensina, não são acasos nem castigos de um Deus vingativo: têm sempre uma <em>causa</em> — atual ou anterior — e uma <em>utilidade</em>, pois trabalham o Espírito para o bem.</p>
+        <p>Distinguem-se as <em>provas</em>, dificuldades que a alma aceita para exercitar-se e progredir, das <em>expiações</em>, reparações de faltas de existências passadas. Em ambos os casos, a dor bem compreendida deixa de esmagar e passa a instruir.</p>
+        <p class="cit">“A resignação cristã é a coragem que faz suportar, sem murmurar, o que não se pode evitar.” E a consolação prometida não é vã: é a certeza, dada pelo Espiritismo, de que nenhuma lágrima é perdida e de que a paz futura é o fruto da provação atravessada com fé.</p>`,
+        emmanuel: [
+          { t: "Aflitos bem-aventurados", code: "Ner.19" },
+          { t: "O remédio justo", code: "Le.09" },
+          { t: "Aflição e tranquilidade", code: "Cel.27" },
+          { t: "Não te aflijas", code: "Rct.06" },
+          { t: "Desespero", code: "Ho.12" },
+        ],
+      },
+      {
+        ref: "Capítulo XII",
+        titulo: "Amai os vossos inimigos",
+        evangelho: `“Ouvistes que foi dito: Amarás o teu próximo e odiarás o teu inimigo. Eu, porém, vos digo: <b>amai os vossos inimigos, bendizei os que vos maldizem, fazei bem aos que vos odeiam, e orai pelos que vos perseguem</b>… para que sejais filhos do vosso Pai que está nos céus.” <b>(Mateus 5,43-45)</b>`,
+        kardec: `<p>Neste capítulo Kardec mostra que amar os inimigos é o ponto mais alto — e mais difícil — da moral cristã, e a verdadeira pedra de toque da caridade. Amá-los não significa ter por eles a mesma afeição que se tem pelos amigos; significa <em>não lhes querer mal, perdoar sem reservas e retribuir o mal com o bem</em>.</p>
+        <p>O Espiritismo dá a razão profunda desse dever: à luz da reencarnação, o inimigo de hoje pode ser um desafeto de outras vidas, aproximado de nós justamente para que a cadeia do ódio se rompa. Perdoar é encerrar o ciclo do mal e libertar-se dele.</p>
+        <p class="cit">“Se amais apenas os que vos amam, que recompensa tereis? Não fazem os publicanos o mesmo?” — o mérito começa onde termina a reciprocidade, no amor que se estende a quem nos fere.</p>`,
+        emmanuel: [
+          { t: "Na senda do Cristo", code: "Pve.16" },
+          { t: "Razões para amar os inimigos", code: "Bp.27" },
+          { t: "Credores diferentes", code: "Vl.41" },
+          { t: "Imunização espiritual", code: "Cel.48" },
+          { t: "Amando os inimigos", code: "Mpo.17" },
+        ],
+      },
+    ];
+
+    const box = document.getElementById("caps");
+    for (const c of CAPITULOS) {
+      const det = document.createElement("details");
+      det.className = "cap";
+      const sum = document.createElement("summary");
+      sum.innerHTML = "<div><div class='ref'>" + c.ref + "</div><div class='tit'>" + c.titulo + "</div></div><span class='chev'>▶</span>";
+      det.appendChild(sum);
+
+      const body = document.createElement("div");
+      body.className = "body";
+      let html = "";
+      if (c.evangelho) html += "<div class='evang'>" + c.evangelho + "</div>";
+      html += "<div class='bloco'><h3>A lição de Kardec</h3><div class='kardec'>" + c.kardec + "</div>";
+      html += "<a class='pdf' target='_blank' rel='noopener noreferrer' href='" + L_ESE + "'>ler o capítulo na íntegra (PDF) ↗</a></div>";
+
+      if (c.emmanuel && c.emmanuel.length) {
+        html += "<div class='bloco'><h3>Comentado por Emmanuel</h3>";
+        for (const em of c.emmanuel) {
+          html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + emUrl(em.code) +
+            "'><span class='t'>" + em.t + "</span><span class='s'>" + em.code + " — ler na Bíblia do Caminho</span></a>";
+        }
+        html += "</div>";
+      }
+
+      body.innerHTML = html;
+      det.appendChild(body);
+      box.appendChild(det);
+    }
+
+    (function () {
+      const c = document.getElementById("stars");
+      for (let i = 0; i < 40; i++) {
+        const s = document.createElement("i");
+        s.style.left = Math.random() * 100 + "%"; s.style.top = Math.random() * 100 + "%";
+        s.style.opacity = (0.2 + Math.random() * 0.5).toFixed(2);
+        c.appendChild(s);
+      }
+    })();
+  </script>
+</body>
+</html>
