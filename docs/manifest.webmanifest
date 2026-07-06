@@ -1,0 +1,17 @@
+{
+  "name": "Evangelho — Meditação Diária",
+  "short_name": "Meditação",
+  "description": "Meditação diária do Evangelho com os comentários de Emmanuel e trechos de Kardec.",
+  "start_url": "/meditacao.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#140f33",
+  "theme_color": "#140f33",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
