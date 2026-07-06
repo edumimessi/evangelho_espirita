@@ -114,6 +114,7 @@
         ref: "Capítulo V",
         titulo: "Bem-aventurados os aflitos",
         evangelho: `“Bem-aventurados os que choram, porque serão consolados… Bem-aventurados os que têm fome e sede de justiça, porque serão fartos… Bem-aventurados os que sofrem perseguição por causa da justiça, porque deles é o reino dos céus.” <b>(Mateus 5,4-10)</b>`,
+        ler: "https://bibliadocaminho.com/ocaminho/TRP/Mt/Mt05.htm",
         kardec: `<p>Kardec dedica este capítulo a dar sentido ao sofrimento humano. As aflições da vida, ensina, não são acasos nem castigos de um Deus vingativo: têm sempre uma <em>causa</em> — atual ou anterior — e uma <em>utilidade</em>, pois trabalham o Espírito para o bem.</p>
         <p>Distinguem-se as <em>provas</em>, dificuldades que a alma aceita para exercitar-se e progredir, das <em>expiações</em>, reparações de faltas de existências passadas. Em ambos os casos, a dor bem compreendida deixa de esmagar e passa a instruir.</p>
         <p class="cit">“A resignação cristã é a coragem que faz suportar, sem murmurar, o que não se pode evitar.” E a consolação prometida não é vã: é a certeza, dada pelo Espiritismo, de que nenhuma lágrima é perdida e de que a paz futura é o fruto da provação atravessada com fé.</p>`,
@@ -129,6 +130,7 @@
         ref: "Capítulo XII",
         titulo: "Amai os vossos inimigos",
         evangelho: `“Ouvistes que foi dito: Amarás o teu próximo e odiarás o teu inimigo. Eu, porém, vos digo: <b>amai os vossos inimigos, bendizei os que vos maldizem, fazei bem aos que vos odeiam, e orai pelos que vos perseguem</b>… para que sejais filhos do vosso Pai que está nos céus.” <b>(Mateus 5,43-45)</b>`,
+        ler: "https://bibliadocaminho.com/ocaminho/TRP/Mt/Mt05.htm",
         kardec: `<p>Neste capítulo Kardec mostra que amar os inimigos é o ponto mais alto — e mais difícil — da moral cristã, e a verdadeira pedra de toque da caridade. Amá-los não significa ter por eles a mesma afeição que se tem pelos amigos; significa <em>não lhes querer mal, perdoar sem reservas e retribuir o mal com o bem</em>.</p>
         <p>O Espiritismo dá a razão profunda desse dever: à luz da reencarnação, o inimigo de hoje pode ser um desafeto de outras vidas, aproximado de nós justamente para que a cadeia do ódio se rompa. Perdoar é encerrar o ciclo do mal e libertar-se dele.</p>
         <p class="cit">“Se amais apenas os que vos amam, que recompensa tereis? Não fazem os publicanos o mesmo?” — o mérito começa onde termina a reciprocidade, no amor que se estende a quem nos fere.</p>`,
@@ -154,7 +156,8 @@
       body.className = "body";
       let html = "";
       if (c.evangelho) html += "<div class='evang'>" + c.evangelho + "</div>";
-      html += "<div class='bloco'><h3>A lição de Kardec</h3><div class='kardec'>" + c.kardec + "</div>";
+      if (c.ler) html += "<a class='pdf' target='_blank' rel='noopener noreferrer' href='" + c.ler + "'>↗ ler o trecho na Bíblia do Caminho</a>";
+      html += "<div class='bloco' style='margin-top:16px'><h3>A lição de Kardec</h3><div class='kardec'>" + c.kardec + "</div>";
       html += "<a class='pdf' target='_blank' rel='noopener noreferrer' href='" + L_ESE + "'>ler o capítulo na íntegra (PDF) ↗</a></div>";
 
       if (c.emmanuel && c.emmanuel.length) {
