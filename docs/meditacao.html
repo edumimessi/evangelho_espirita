@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Meditação do Dia — Evangelho e Espiritismo</title>
+  <meta name="description" content="Sua meditação diária: um versículo do Evangelho comentado por Emmanuel ou um trecho de O Evangelho Segundo o Espiritismo, alternando a cada dia. Com lembrete." />
+  <meta name="theme-color" content="#140f33" />
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Meditação" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body { min-height: 100vh; padding: max(32px, env(safe-area-inset-top)) 20px 56px; font-family: "Crimson Pro", Georgia, serif; color: #e6e2ff;
+      background: radial-gradient(ellipse at 50% 12%, #241a52 0%, #140f33 55%, #080614 100%); background-attachment: fixed; }
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #cfe6ff; }
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 620px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 20px; }
+    .flame { width: 44px; height: 44px; margin: 0 auto 8px; display: block; filter: drop-shadow(0 0 14px rgba(125,227,255,.45)); }
+    .kicker { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7de3ff; }
+    .data { font-size: 14px; color: #b9b2e6; margin-top: 6px; text-transform: capitalize; }
+
+    .card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10); border-radius: 20px; padding: 22px; }
+    .badge { display:inline-block; font-family:"Cinzel",serif; font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase;
+      color:#0f0c26; background:#e7c98a; padding:4px 10px; border-radius:20px; }
+    .badge.k { background:#9fe8c4; }
+    .ref { font-family: "Cinzel", serif; font-size: 15px; color: #e7c98a; margin: 12px 0 2px; }
+    .texto { font-size: 18px; line-height: 1.72; color: #f0edff; margin: 12px 0 4px; text-align: justify; }
+    .fonte { text-align: right; font-size: 12.5px; color: #8f88c0; font-style: italic; margin-top: 8px; }
+
+    .bloco { margin-top: 20px; }
+    .bloco h3 { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #7de3ff; border-bottom: 1px solid rgba(255,255,255,.10); padding-bottom: 6px; margin-bottom: 10px; }
+    .item { display: block; padding: 9px 12px; border-radius: 11px; text-decoration: none; margin-bottom: 7px;
+      background: rgba(125,227,255,.05); border: 1px solid rgba(125,227,255,.14); color: inherit; }
+    a.item:hover { background: rgba(125,227,255,.11); }
+    .item .t { color: #f2eeff; font-size: 15.5px; }
+    .item .s { display: block; font-size: 12.5px; color: #7de3ff; margin-top: 1px; }
+    .sem { font-size: 13.5px; color: #8f88c0; font-style: italic; }
+
+    .lembrete { margin-top: 16px; background: rgba(231,201,138,.06); border: 1px solid rgba(231,201,138,.22);
+      border-radius: 16px; padding: 16px 18px; }
+    .lembrete h3 { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #e7c98a; margin-bottom: 4px; }
+    .lembrete p { font-size: 13.5px; color: #cbb8ff; margin-bottom: 12px; line-height: 1.5; }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    input[type=time] { font-family: "Crimson Pro", serif; font-size: 16px; color: #f0edff; background: rgba(0,0,0,.25);
+      border: 1px solid rgba(231,201,138,.35); border-radius: 10px; padding: 9px 12px; }
+    .btn { font-family: "Cinzel", serif; font-size: 13px; cursor: pointer; border-radius: 12px; padding: 11px 16px;
+      border: 1px solid rgba(231,201,138,.4); background: rgba(231,201,138,.14); color: #f7e9c6; }
+    .btn:hover { background: rgba(231,201,138,.24); }
+    .btn.cy { border-color: rgba(125,227,255,.35); background: rgba(125,227,255,.1); color: #cdefff; }
+
+    .navlinks { margin-top: 22px; display: flex; gap: 9px; justify-content: center; flex-wrap: wrap; }
+    .backlink { font-size: 12.5px; color: #b9b2e6; text-decoration: none; border: 1px solid rgba(255,255,255,.14); padding: 6px 12px; border-radius: 10px; }
+    .backlink:hover { background: rgba(255,255,255,.06); }
+    .foot { text-align: center; margin-top: 18px; font-size: 11.5px; color: #6f68a0; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="wrap">
+    <header>
+      <svg class="flame" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs><linearGradient id="f" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#7de3ff"/><stop offset="45%" stop-color="#9a6bff"/><stop offset="100%" stop-color="#e7c98a"/>
+        </linearGradient></defs>
+        <path d="M256 120 C 306 190, 342 214, 342 288 C 342 352, 302 392, 256 392 C 210 392, 170 352, 170 288 C 170 214, 206 190, 256 120 Z" fill="url(#f)"/>
+        <path d="M256 210 C 284 250, 300 266, 300 302 C 300 334, 280 356, 256 356 C 232 356, 212 334, 212 302 C 212 266, 228 250, 256 210 Z" fill="#fef6e6" opacity=".92"/>
+      </svg>
+      <div class="kicker">Meditação do Dia</div>
+      <div class="data" id="data">…</div>
+    </header>
+
+    <div class="card">
+      <span class="badge" id="badge">…</span>
+      <div class="ref" id="ref"></div>
+      <div class="texto" id="texto">Preparando a meditação…</div>
+      <div class="fonte" id="fonte"></div>
+
+      <div class="bloco">
+        <h3>Comentado por Emmanuel</h3>
+        <div id="emm"></div>
+      </div>
+
+      <div class="lembrete">
+        <h3>🔔 Lembrete diário</h3>
+        <p>Escolha um horário e adicione ao seu calendário — o celular te lembra todo dia de meditar.</p>
+        <div class="row">
+          <input type="time" id="hora" value="07:00" />
+          <button class="btn" id="criar">Criar lembrete diário</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="navlinks">
+      <a class="backlink" href="/">Versículo comentado</a>
+      <a class="backlink" href="/temas.html">Temas</a>
+      <a class="backlink" href="/sermao-da-montanha.html">Sermão</a>
+      <a class="backlink" href="/parabolas.html">Parábolas</a>
+      <a class="backlink" href="/evangelho-segundo-espiritismo.html">Kardec</a>
+    </div>
+
+    <p class="foot" id="instala"></p>
+    <p class="foot">
+      Texto bíblico: domínio público. Comentários de Emmanuel: referência com link para a Bíblia do Caminho (texto protegido).
+      Kardec: <em>O Evangelho Segundo o Espiritismo</em>, domínio público.
+    </p>
+  </div>
+
+  <script src="/med-data.js"></script>
+  <script>
+    const el = (id) => document.getElementById(id);
+    const pad2 = (n) => String(n).padStart(2, "0");
+    function emUrl(code) {
+      const m = /^([A-Za-zç]+)\.(\d+)$/.exec(code || "");
+      if (!m) return "https://bibliadocaminho.com";
+      return "https://bibliadocaminho.com/ocaminho/TX/" + m[1] + "/" + m[1] + m[2] + ".htm";
+    }
+    function renderEmm(list) {
+      let html = "";
+      if (list && list.length) {
+        for (const e of list) {
+          const nome = SIGLAS[(e.code || "").split(".")[0]];
+          html += "<a class='item' target='_blank' rel='noopener noreferrer' href='" + emUrl(e.code) +
+            "'><span class='t'>" + e.t + "</span><span class='s'>" + (nome ? nome + " — " + e.code : e.code) + " — ler na Bíblia do Caminho</span></a>";
+        }
+      } else html = "<div class='sem'>Sem comentário indexado para hoje.</div>";
+      el("emm").innerHTML = html;
+    }
+
+    // data e dia
+    const now = new Date();
+    el("data").textContent = now.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    const dayNum = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+    const isKardec = (dayNum % 2 === 0);
+    const idx = Math.floor(dayNum / 2);
+
+    async function fetchVerseText(ab, c, v) {
+      const url = "https://bible.helloao.org/api/por_blj/" + API_ID[ab] + "/" + c + ".json";
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const items = (data && data.chapter && data.chapter.content) || [];
+      const verse = items.find((it) => it.type === "verse" && it.number === v);
+      if (!verse) throw new Error("versículo não encontrado");
+      return (Array.isArray(verse.content) ? verse.content : [verse.content]).filter((c) => typeof c === "string").join(" ").trim();
+    }
+
+    async function montar() {
+      if (isKardec && typeof KARDEC !== "undefined" && KARDEC.length) {
+        const k = KARDEC[idx % KARDEC.length];
+        el("badge").textContent = "O Evangelho Segundo o Espiritismo";
+        el("badge").className = "badge k";
+        el("ref").textContent = "Capítulo " + k.c + " — " + (KTITLES[k.c] || "");
+        el("texto").textContent = "“" + k.t + "”";
+        el("fonte").textContent = "— Allan Kardec, cap. " + k.c;
+        renderEmm(KEMM[k.c] || []);
+      } else {
+        const p = VERSES[idx % VERSES.length];
+        el("badge").textContent = "Evangelho comentado por Emmanuel";
+        el("badge").className = "badge";
+        el("ref").textContent = NOMES[p.ab] + " " + p.c + ":" + p.v;
+        el("fonte").textContent = "— " + NOMES[p.ab] + " " + p.c + ":" + p.v;
+        renderEmm(p.emm);
+        el("texto").textContent = "Carregando o versículo…";
+        try { el("texto").textContent = "“" + (await fetchVerseText(p.ab, p.c, p.v)) + "”"; }
+        catch (e) { el("texto").textContent = "(Não foi possível carregar o texto agora — veja o comentário abaixo ou tente com internet.)"; }
+      }
+    }
+    montar();
+
+    // lembrete .ics
+    el("criar").addEventListener("click", function () {
+      const [hh, mm] = (el("hora").value || "07:00").split(":");
+      const d = new Date(); d.setHours(+hh, +mm, 0, 0);
+      const p = (n) => String(n).padStart(2, "0");
+      const dt = d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "T" + p(+hh) + p(+mm) + "00";
+      const ics = [
+        "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//estudoese//meditacao//PT-BR", "CALSCALE:GREGORIAN",
+        "BEGIN:VEVENT", "UID:med-" + Date.now() + "@estudoese.com.br", "DTSTAMP:" + dt,
+        "DTSTART:" + dt, "DURATION:PT10M", "RRULE:FREQ=DAILY",
+        "SUMMARY:🕯️ Meditação do Evangelho",
+        "DESCRIPTION:Sua meditação diária. Abra: https://estudoese.com.br/meditacao.html",
+        "URL:https://estudoese.com.br/meditacao.html",
+        "BEGIN:VALARM", "TRIGGER:PT0M", "ACTION:DISPLAY", "DESCRIPTION:Meditação do Evangelho", "END:VALARM",
+        "END:VEVENT", "END:VCALENDAR"
+      ].join("\r\n");
+      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "meditacao-diaria.ics";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    });
+
+    // PWA
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+    }
+    let deferred;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault(); deferred = e;
+      el("instala").innerHTML = "<button class='btn cy' id='inst'>📲 Instalar como app</button>";
+      el("inst").addEventListener("click", async () => { deferred.prompt(); deferred = null; el("instala").textContent = ""; });
+    });
+
+    (function () {
+      const c = el("stars");
+      for (let i = 0; i < 36; i++) {
+        const s = document.createElement("i");
+        s.style.left = Math.random() * 100 + "%"; s.style.top = Math.random() * 100 + "%";
+        s.style.opacity = (0.2 + Math.random() * 0.5).toFixed(2);
+        c.appendChild(s);
+      }
+    })();
+  </script>
+</body>
+</html>

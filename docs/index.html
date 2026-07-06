@@ -7,6 +7,9 @@
   <meta name="description" content="Cada versículo do Evangelho com o texto e a correlação dos comentários de Emmanuel (título e livro-fonte), com link para a Bíblia do Caminho." />
   <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
+  <meta name="theme-color" content="#140f33" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
@@ -72,6 +75,7 @@
       <ul id="list"></ul>
       <div class="actions">
         <a class="btn ghost" id="caminho" href="#" target="_blank" rel="noopener noreferrer">📖 Estudar na Bíblia do Caminho</a>
+        <a class="btn ghost" href="/meditacao.html">🕯️ Meditação do Dia (com lembrete)</a>
         <a class="btn ghost" href="/temas.html">📚 Temas de Estudo (Kardec, Emmanuel…)</a>
         <a class="btn ghost" href="/sermao-da-montanha.html">📖 Sermão da Montanha (verso a verso)</a>
         <a class="btn ghost" href="/parabolas.html">📜 As Parábolas de Jesus</a>
@@ -251,6 +255,11 @@
     });
     el("novo").addEventListener("click", novo);
     render(dayOfYear() % FLAT.length);
+  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+    }
   </script>
 </body>
 </html>
