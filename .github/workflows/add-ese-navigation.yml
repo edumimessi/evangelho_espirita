@@ -1,0 +1,81 @@
+name: Adicionar acesso ao Estudo ESE
+
+on:
+  push:
+    paths:
+      - ".github/workflows/add-ese-navigation.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  adicionar-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Inserir links nas páginas principais
+        shell: python
+        run: |
+          from pathlib import Path
+
+          replacements = {
+              "docs/index.html": (
+                  '        <a class="btn ghost" href="/evangelho-segundo-espiritismo.html">📕 O Evangelho Segundo o Espiritismo</a>\n',
+                  '        <a class="btn ghost" href="/evangelho-segundo-espiritismo.html">📕 O Evangelho Segundo o Espiritismo</a>\n'
+                  '        <a class="btn ghost" href="/ese/">🔎 Estudo por capítulos + NEPE Search</a>\n',
+              ),
+              "docs/temas.html": (
+                  '      <a class="backlink" href="/">← Versículo comentado</a>\n',
+                  '      <a class="backlink" href="/">← Versículo comentado</a>\n'
+                  '      <a class="backlink" href="/ese/">Estudo ESE + NEPE</a>\n',
+              ),
+              "docs/sermao-da-montanha.html": (
+                  '        <a class="backlink" href="/">← Versículo comentado</a>\n',
+                  '        <a class="backlink" href="/">← Versículo comentado</a>\n'
+                  '        <a class="backlink" href="/ese/">Estudo ESE + NEPE</a>\n',
+              ),
+              "docs/parabolas.html": (
+                  '        <a class="backlink" href="/">← Versículo comentado</a>\n',
+                  '        <a class="backlink" href="/">← Versículo comentado</a>\n'
+                  '        <a class="backlink" href="/ese/">Estudo ESE + NEPE</a>\n',
+              ),
+              "docs/evangelho-segundo-espiritismo.html": (
+                  '        <a class="backlink" href="/">← Versículo comentado</a>\n',
+                  '        <a class="backlink" href="/">← Versículo comentado</a>\n'
+                  '        <a class="backlink" href="/ese/">Estudo por capítulos + NEPE</a>\n',
+              ),
+              "docs/meditacao.html": (
+                  '<div class="navlinks"><a class="backlink" href="/">Versículo comentado</a><a class="backlink" href="/temas.html">Temas</a>',
+                  '<div class="navlinks"><a class="backlink" href="/">Versículo comentado</a><a class="backlink" href="/ese/">Estudo ESE + NEPE</a><a class="backlink" href="/temas.html">Temas</a>',
+              ),
+          }
+
+          changed = []
+          for filename, (anchor, replacement) in replacements.items():
+              path = Path(filename)
+              text = path.read_text(encoding="utf-8")
+              if 'href="/ese/"' in text:
+                  print(f"{filename}: link já existente")
+                  continue
+              if anchor not in text:
+                  raise RuntimeError(f"Ponto de inserção não encontrado em {filename}")
+              path.write_text(text.replace(anchor, replacement, 1), encoding="utf-8")
+              changed.append(filename)
+              print(f"{filename}: link inserido")
+
+          if not changed:
+              print("Nenhuma alteração necessária.")
+
+      - name: Salvar alterações
+        run: |
+          if git diff --quiet; then
+            echo "Nenhuma alteração para salvar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html docs/temas.html docs/sermao-da-montanha.html docs/parabolas.html docs/evangelho-segundo-espiritismo.html docs/meditacao.html
+          git commit -m "Adiciona acesso ao estudo ESE e NEPE nas páginas"
+          git push
