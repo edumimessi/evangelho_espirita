@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estudo do Evangelho Segundo o Espiritismo</title>
+  <meta name="description" content="Acesso aos capítulos de O Evangelho Segundo o Espiritismo e às ferramentas de pesquisa do NEPE Search." />
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+  <meta name="theme-color" content="#140f33" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      padding: 30px 18px 56px;
+      font-family: "Crimson Pro", Georgia, serif;
+      color: #ece8ff;
+      background: radial-gradient(ellipse at 50% 8%, #2a1d5e 0%, #140f33 48%, #080614 100%);
+      background-attachment: fixed;
+    }
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #cfe6ff; }
+    .wrap { position: relative; z-index: 1; width: min(920px, 100%); margin: 0 auto; }
+    header { text-align: center; margin-bottom: 26px; }
+    .flame { width: 52px; height: 52px; margin: 0 auto 10px; filter: drop-shadow(0 0 15px rgba(125,227,255,.45)); }
+    .kicker { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7de3ff; }
+    h1 { margin: 8px 0 8px; font-family: "Cinzel", serif; font-size: clamp(24px, 5vw, 38px); line-height: 1.18; }
+    .lead { max-width: 720px; margin: 0 auto; color: #b9b2e6; font-size: 17px; line-height: 1.5; }
+    .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 18px; }
+    .nav a, .tool a, .chapter a { text-decoration: none; }
+    .nav a { color: #e7c98a; border: 1px solid rgba(231,201,138,.34); padding: 8px 14px; border-radius: 11px; }
+    .nav a:hover { background: rgba(231,201,138,.1); }
+    section { margin-top: 25px; }
+    .section-title { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase; color: #7de3ff; margin: 0 0 12px; }
+    .tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .tool a, .chapter {
+      display: block;
+      height: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.11);
+      background: rgba(255,255,255,.045);
+      transition: .17s ease;
+    }
+    .tool a:hover, .chapter:hover { transform: translateY(-1px); border-color: rgba(125,227,255,.42); background: rgba(125,227,255,.075); }
+    .tool strong, .chapter-title { display: block; color: #f5f1ff; font-family: "Cinzel", serif; font-size: 14px; }
+    .tool span, .chapter-theme { display: block; margin-top: 5px; color: #aaa2d9; font-size: 14px; line-height: 1.35; }
+    .chapters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+    .chapter { display: flex; gap: 13px; align-items: flex-start; }
+    .number { flex: 0 0 36px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: rgba(125,227,255,.11); color: #7de3ff; font-family: "Cinzel", serif; font-weight: 700; }
+    .chapter-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+    .chapter-links a { font-size: 13px; padding: 5px 9px; border-radius: 8px; color: #cdefff; border: 1px solid rgba(125,227,255,.25); background: rgba(125,227,255,.06); }
+    .chapter-links a:last-child { color: #ead39f; border-color: rgba(231,201,138,.28); background: rgba(231,201,138,.06); }
+    .foot { text-align: center; color: #726aa4; font-size: 13px; margin-top: 28px; line-height: 1.5; }
+    @media (max-width: 680px) { .tools, .chapters { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <main class="wrap">
+    <header>
+      <svg class="flame" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs><linearGradient id="f" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#7de3ff"/><stop offset="45%" stop-color="#9a6bff"/><stop offset="100%" stop-color="#e7c98a"/></linearGradient></defs>
+        <path d="M256 120 C306 190 342 214 342 288 C342 352 302 392 256 392 C210 392 170 352 170 288 C170 214 206 190 256 120Z" fill="url(#f)"/>
+        <path d="M256 210 C284 250 300 266 300 302 C300 334 280 356 256 356 C232 356 212 334 212 302 C212 266 228 250 256 210Z" fill="#fef6e6" opacity=".92"/>
+      </svg>
+      <div class="kicker">Estudo aprofundado</div>
+      <h1>O Evangelho Segundo o Espiritismo</h1>
+      <p class="lead">Escolha um capítulo e aprofunde a leitura com o texto do site, a Bíblia do Caminho e as referências do NEPE Search.</p>
+      <nav class="nav">
+        <a href="/">← Página inicial</a>
+        <a href="/evangelho-segundo-espiritismo.html">Trecho ao acaso</a>
+        <a href="/temas.html">Temas de estudo</a>
+      </nav>
+    </header>
+
+    <section aria-labelledby="pesquisa">
+      <h2 class="section-title" id="pesquisa">Pesquisa complementar no NEPE Search</h2>
+      <div class="tools">
+        <div class="tool"><a href="https://search.nepebrasil.org/pesquisa-biblica?advanced_search_tab=1" target="_blank" rel="noopener noreferrer"><strong>Pesquisa na Bíblia ↗</strong><span>Localize palavras e expressões nas traduções bíblicas disponíveis.</span></a></div>
+        <div class="tool"><a href="https://search.nepebrasil.org/pesquisa-espirita?advanced_search_tab=2" target="_blank" rel="noopener noreferrer"><strong>Obras literárias ↗</strong><span>Pesquise por palavra, autor, médium e obra espírita.</span></a></div>
+        <div class="tool"><a href="https://search.nepebrasil.org/tema/" target="_blank" rel="noopener noreferrer"><strong>Temas ↗</strong><span>Explore temas relacionados e suas referências cruzadas.</span></a></div>
+        <div class="tool"><a href="https://search.nepebrasil.org/pesquisa-dicionario" target="_blank" rel="noopener noreferrer"><strong>Dicionários ↗</strong><span>Consulte vocábulos bíblicos, espíritas, etimológicos e Strong.</span></a></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="capitulos">
+      <h2 class="section-title" id="capitulos">Capítulos</h2>
+      <div class="chapters" id="chapterList"></div>
+    </section>
+
+    <p class="foot">Estudo e organização: estudoese.com.br · As fontes externas abrem em nova guia.</p>
+  </main>
+
+  <script>
+    const chapters = [
+      [1,"Não vim destruir a Lei","As três revelações; Moisés; Cristo e Espiritismo","Ev01.htm"],
+      [2,"Meu reino não é deste mundo","Vida futura e realeza de Jesus","Ev02.htm"],
+      [3,"Há muitas moradas na casa de meu Pai","Estados da alma e mundos habitados","Ev03.htm"],
+      [4,"Ninguém poderá ver o reino de Deus se não nascer de novo","Reencarnação e ressurreição","Ev04.htm"],
+      [5,"Bem-aventurados os aflitos","Justiça e causas das aflições","Ev05a.htm"],
+      [6,"O Cristo consolador","O jugo leve e a consolação","Ev06.htm"],
+      [7,"Bem-aventurados os pobres de espírito","Orgulho, humildade e inteligência","Ev07.htm"],
+      [8,"Bem-aventurados os que têm puro o coração","Pureza, simplicidade e pensamento","Ev08.htm"],
+      [9,"Bem-aventurados os que são brandos e pacíficos","Mansidão, paciência e violência","Ev09.htm"],
+      [10,"Bem-aventurados os que são misericordiosos","Perdão, indulgência e benevolência","Ev10.htm"],
+      [11,"Amar o próximo como a si mesmo","O maior mandamento e a regra áurea","Ev11.htm"],
+      [12,"Amai os vossos inimigos","Retribuir o mal com o bem","Ev12.htm"],
+      [13,"Que vossa mão esquerda não saiba o que dê a direita","Caridade material e moral","Ev13.htm"],
+      [14,"Honrai a vosso pai e a vossa mãe","Piedade filial e parentesco espiritual","Ev14.htm"],
+      [15,"Fora da caridade não há salvação","Salvação e bom samaritano","Ev15.htm"],
+      [16,"Não se pode servir a Deus e a Mamon","Riqueza, miséria e desapego","Ev16.htm"],
+      [17,"Sede perfeitos","Homem de bem e perfeição moral","Ev17.htm"],
+      [18,"Muitos os chamados, poucos os escolhidos","A porta estreita e o festim das bodas","Ev18.htm"],
+      [19,"A fé transporta montanhas","Poder e natureza da fé","Ev19.htm"],
+      [20,"Os trabalhadores da última hora","Missão dos espíritas","Ev20.htm"],
+      [21,"Haverá falsos cristos e falsos profetas","A árvore se conhece pelos frutos","Ev21.htm"],
+      [22,"Não separeis o que Deus juntou","Casamento e divórcio","Ev22.htm"],
+      [23,"Estranha moral","Família, renúncia e sentido espiritual","Ev23.htm"],
+      [24,"Não ponhais a candeia debaixo do alqueire","Luz, ensino e parábolas","Ev24.htm"],
+      [25,"Buscai e achareis","Ajuda-te e o céu te ajudará","Ev25.htm"],
+      [26,"Dai gratuitamente o que gratuitamente recebestes","Cura, mediunidade e dinheiro","Ev26.htm"],
+      [27,"Pedi e obtereis","Qualidades e eficácia da prece","Ev27.htm"],
+      [28,"Coletânea de preces espíritas","Preces por si, pelos outros e pelos mortos","Ev28P1.htm"]
+    ];
+
+    document.getElementById("chapterList").innerHTML = chapters.map(([n,title,theme,path]) => `
+      <article class="chapter">
+        <div class="number">${n}</div>
+        <div>
+          <span class="chapter-title">${title}</span>
+          <span class="chapter-theme">${theme}</span>
+          <div class="chapter-links">
+            <a href="https://search.nepebrasil.org/book-part/?book=23&chapter=${n}" target="_blank" rel="noopener noreferrer">NEPE Search ↗</a>
+            <a href="https://bibliadocaminho.com/ocaminho/TKP/Ev/${path}" target="_blank" rel="noopener noreferrer">Bíblia do Caminho ↗</a>
+          </div>
+        </div>
+      </article>`).join("");
+
+    (function () {
+      const c = document.getElementById("stars");
+      for (let i = 0; i < 48; i++) {
+        const s = document.createElement("i");
+        s.style.left = Math.random() * 100 + "%";
+        s.style.top = Math.random() * 100 + "%";
+        s.style.opacity = (0.18 + Math.random() * 0.55).toFixed(2);
+        c.appendChild(s);
+      }
+    })();
+  </script>
+  <script data-goatcounter="https://estudoese.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
