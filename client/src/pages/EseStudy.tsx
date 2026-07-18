@@ -37,6 +37,30 @@ const ESE_CHAPTERS = [
 ];
 
 const BIBLIA_CAMINHO_BASE = "https://bibliadocaminho.com/ocaminho/TKP/Ev/";
+const NEPE_ESE_BASE = "https://search.nepebrasil.org/book-part/?book=23&chapter=";
+
+const NEPE_RESEARCH_LINKS = [
+  {
+    title: "Pesquisa na Bíblia",
+    description: "Pesquise palavras e expressões em diferentes traduções bíblicas.",
+    url: "https://search.nepebrasil.org/pesquisa-biblica?advanced_search_tab=1",
+  },
+  {
+    title: "Obras Literárias",
+    description: "Consulte livros espíritas por palavra, autor ou médium.",
+    url: "https://search.nepebrasil.org/pesquisa-espirita?advanced_search_tab=2",
+  },
+  {
+    title: "Temas",
+    description: "Explore referências bíblicas e espíritas organizadas por assunto.",
+    url: "https://search.nepebrasil.org/tema/",
+  },
+  {
+    title: "Dicionários",
+    description: "Consulte vocábulos bíblicos, espíritas, etimológicos e Strong.",
+    url: "https://search.nepebrasil.org/pesquisa-dicionario",
+  },
+];
 
 export default function EseStudy() {
   const { user } = useAuth();
@@ -71,6 +95,30 @@ export default function EseStudy() {
               Contendo a explicação das máximas morais do Cristo em concordância com o Espiritismo e suas aplicações às diversas circunstâncias da vida.
             </p>
           </div>
+
+          <section className="mb-8">
+            <div className="flex items-center gap-2 mb-3">
+              <ExternalLink className="w-4 h-4 text-amber-400" />
+              <h2 className="font-cinzel text-xs tracking-[1.5px] uppercase text-amber-300">Pesquisa complementar no NEPE Search</h2>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {NEPE_RESEARCH_LINKS.map((link) => (
+                <a
+                  key={link.title}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-start gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.04] hover:border-amber-400/40 hover:bg-white/[0.07] transition-all duration-200 no-underline"
+                >
+                  <ExternalLink className="w-4 h-4 mt-0.5 text-amber-400 flex-shrink-0" />
+                  <div>
+                    <span className="font-cinzel text-sm font-semibold text-white group-hover:text-amber-100 block">{link.title}</span>
+                    <span className="text-xs text-indigo-300/60 font-serif leading-relaxed">{link.description}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
 
           <div className="grid gap-3">
             {ESE_CHAPTERS.map((ch, idx) => (
@@ -119,19 +167,34 @@ export default function EseStudy() {
           <p className="text-indigo-200/70 italic font-serif">{chapter!.theme}</p>
         </div>
 
-        {/* Link to Bíblia do Caminho */}
-        <a
-          href={`${BIBLIA_CAMINHO_BASE}${chapter!.url}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.04] hover:border-amber-400/50 hover:bg-white/[0.07] transition-all duration-200 no-underline mb-8"
-        >
-          <ExternalLink className="w-5 h-5 text-amber-400 flex-shrink-0" />
-          <div>
-            <span className="font-cinzel text-sm font-semibold text-white block">Ler na Bíblia do Caminho</span>
-            <span className="text-xs text-indigo-300/60 font-serif">Texto integral com referências cruzadas</span>
-          </div>
-        </a>
+        {/* External study sources */}
+        <div className="grid gap-3 sm:grid-cols-2 mb-8">
+          <a
+            href={`${BIBLIA_CAMINHO_BASE}${chapter!.url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.04] hover:border-amber-400/50 hover:bg-white/[0.07] transition-all duration-200 no-underline"
+          >
+            <ExternalLink className="w-5 h-5 text-amber-400 flex-shrink-0" />
+            <div>
+              <span className="font-cinzel text-sm font-semibold text-white block">Ler na Bíblia do Caminho</span>
+              <span className="text-xs text-indigo-300/60 font-serif">Texto integral com referências cruzadas</span>
+            </div>
+          </a>
+
+          <a
+            href={`${NEPE_ESE_BASE}${chapter!.num}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.04] hover:border-cyan-400/50 hover:bg-white/[0.07] transition-all duration-200 no-underline"
+          >
+            <ExternalLink className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+            <div>
+              <span className="font-cinzel text-sm font-semibold text-white block">Estudar no NEPE Search</span>
+              <span className="text-xs text-indigo-300/60 font-serif">Capítulo completo, temas e referências relacionadas</span>
+            </div>
+          </a>
+        </div>
 
         {/* Study content */}
         {studyQuery.isLoading && (
